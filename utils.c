@@ -40,8 +40,8 @@ char	*ft_strjoin(char *s1, char *s2)
 		j++;
 	}
 	res[i + j] = '\0';
-	free(s1);
-	free(s2);
+	if (s1)
+		free(s1);
 	return (res);
 }
 
@@ -59,6 +59,7 @@ char	*ft_readfd(int fd)
 		size = read(fd, buff, 50);
 		buff[size] = '\0';
 		res = ft_strjoin(res, buff);
+		free(buff);
 	}
 	return (res);
 }

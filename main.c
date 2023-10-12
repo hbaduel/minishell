@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+char	*terminal;
+
 char	*ft_cmdpath(char *cmd, char **envp)
 {
 	pid_t	cpid;
@@ -29,7 +31,7 @@ char	*ft_cmdpath(char *cmd, char **envp)
 	return (res);
 }
 
-void	ft_chooseaction(char *terminal)
+void	ft_chooseaction(void)
 {
 	int		i;
 
@@ -40,14 +42,14 @@ void	ft_chooseaction(char *terminal)
 		{
 			if (terminal[i + 1] == '<')
 			{
-				ft_heredoc(limiter);
+				ft_heredoc("fin");
 				i++;
 			}
 			else
-				redir_input();
+				//redir_input();
 			i++;
 		}
-		if (terminal[i] == '>')
+		/*if (terminal[i] == '>')
 		{
 			if (terminal[i + 1] == '>')
 			{
@@ -57,14 +59,13 @@ void	ft_chooseaction(char *terminal)
 			else
 				redir_outputput();
 			i++;
-		}
+		}*/
+		i++;
 	}
 }
 
 void	ft_readterminal(void)
 {
-	char	*terminal;
-
 	while (1)
 	{
 		terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
@@ -73,8 +74,8 @@ void	ft_readterminal(void)
 			free(terminal);
 			return ;
 		}
-		add_history(terminal);
 		ft_chooseaction(terminal);
+		add_history(terminal);
 		free(terminal);
 	}
 }

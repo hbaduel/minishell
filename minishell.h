@@ -16,12 +16,11 @@
 # define BLUE  "\e[1;34m"
 # define PURPLE  "\e[1;35m"
 # define WHITE  "\e[1;37m"
-# define MAX_HISTORY_SIZE 100
-
 
 void	ft_exiterror(char *str);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_readfd(int fd);
+char	*ft_heredoc(char *limiter);
 int		ft_strcmp(char *s1, char *s2);
 
 #endif
