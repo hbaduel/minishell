@@ -32,14 +32,14 @@ char	*ft_cmdpath(char *cmd, char **envp)
 
 void	ft_chooseaction(t_data *data, char **envp)
 {
-	int		i;
-
-	i = 0;
-	while (terminal[i])
+    t_parse *current = parse;
+	int	i = 0;
+    while (current != NULL)
 	{
-		if (terminal[i] == '<')
+        if (current->type == CMD)
 		{
-			if (terminal[i + 1] == '<')
+            printf("Command : ");
+            while (current->args[i] != NULL)
 			{
 				ft_heredoc("fin");
 				i++;
@@ -71,13 +71,14 @@ void	ft_chooseaction(t_data *data, char **envp)
 void	ft_readterminal(t_data *data, char **envp)
 {
 	pid_t	cpid;
-	char	*temp;
+    char *temp;
+    t_parse *parse;
 
 	temp = NULL;
-	while (1)
+    while (1)
 	{
-		terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
-		if (ft_strcmp(terminal, "exit") == 0)
+        terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
+        if (ft_strcmp(terminal, "exit") == 0)
 		{
 			free(terminal);
 			return ;
@@ -97,7 +98,8 @@ void	ft_readterminal(t_data *data, char **envp)
 	}
 }
 
-int	main(int argc, char **argv, char **envp)
+
+int		main(int argc, char **argv, char **envp)
 {
 	t_data	*data;
 
