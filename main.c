@@ -32,14 +32,14 @@ char	*ft_cmdpath(char *cmd, char **envp)
 
 void	ft_chooseaction(t_data *data, char **envp)
 {
-    t_parse *current = parse;
+    t_parse *current = NULL;
 	int	i = 0;
     while (current != NULL)
 	{
         if (current->type == CMD)
 		{
             printf("Command : ");
-            while (current->args[i] != NULL)
+            if (current->args[i] != NULL)
 			{
 				ft_heredoc("fin");
 				i++;
@@ -106,6 +106,7 @@ int		main(int argc, char **argv, char **envp)
 	data = malloc(sizeof(t_data));
 	data->infilefd = 0;
 	data->outfilefd = 1;
+	data->ncmd = 0;
 	ft_readterminal(data, envp);
 	rl_clear_history();
 	return (0);

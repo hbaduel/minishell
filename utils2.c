@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-size_t	ft_strlcpy(char *dest, char *src, size_t size)
+int ft_strlcpy(char *dest, char *src, int size)
 {
-	size_t	len;
+	int    len;
 
 	len = 0;
 	if (size == 0)
@@ -49,7 +49,7 @@ char    *ft_strtok(char *str, char *delim)
     token_start = next_token;
     while (*next_token != '\0' && strchr(delim, *next_token) == NULL)
         next_token++;
-    if (*next_token != '\0') 
+    if (*next_token != '\0')
     {
         *next_token = '\0';  // Marque la fin du token.
         next_token++;

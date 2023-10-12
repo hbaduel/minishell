@@ -23,6 +23,8 @@
 # define SEPARATEUR 2
 # define INFILE     3
 # define OUTFILE    4
+# define HEREDOC    5
+# define APPEND     6
 
 typedef struct s_parse {
     int     type;           /*pour identifier le type de commande*/
@@ -54,6 +56,6 @@ char	*ft_cmdpath(char *cmd, char **envp);
 char	*ft_strtok(char *str, char *delim);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
-int		ft_strlcpy(char *dest, char *src, size_t size);
+int		ft_strlcpy(char *dest, char *src, int size);
 
 #endif
