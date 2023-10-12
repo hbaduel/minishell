@@ -15,8 +15,6 @@ char	*ft_cmdpath(char *cmd, char **envp)
 	if (pipe(tubefd) == -1)
 		ft_exiterror("pipe");
 	cpid = fork();
-	if (cpid == -1)
-		ft_exiterror("fork");
 	if (cpid == 0)
 	{
 		close(tubefd[0]);
@@ -27,11 +25,12 @@ char	*ft_cmdpath(char *cmd, char **envp)
 	waitpid(cpid, NULL, 0);
 	close(tubefd[1]);
 	res = ft_readfd(tubefd[0]);
+	res[ft_strlen(res) - 1] = '\0';
 	close(tubefd[0]);
 	return (res);
 }
 
-void	ft_chooseaction(t_data *data)
+void	ft_chooseaction(t_data *data, char **envp)
 {
 	int		i;
 
@@ -53,11 +52,11 @@ void	ft_chooseaction(t_data *data)
 		{
 			if (terminal[i + 1] == '>')
 			{
-				redir_append("res", data);
+				redir_output("res", data, 1);
 				i++;
 			}
 			else
-				redir_output("res", data);
+				redir_output("res", data, 0);
 			i++;
 		}
 		i++;
@@ -69,7 +68,7 @@ void	ft_chooseaction(t_data *data)
 	exit(0);
 }
 
-void	ft_readterminal(t_data *data)
+void	ft_readterminal(t_data *data, char **envp)
 {
 	pid_t	cpid;
 
@@ -85,7 +84,7 @@ void	ft_readterminal(t_data *data)
 		if (cpid == -1)
 			ft_exiterror("fork");
 		if (cpid == 0)
-			ft_chooseaction(data);
+			ft_chooseaction(data, envp);
 		waitpid(cpid, NULL, 0);
 		add_history(terminal);
 		free(terminal);
@@ -98,7 +97,8 @@ int	main(int argc, char **argv, char **envp)
 
 	data = malloc(sizeof(t_data));
 	data->infilefd = 0;
-	ft_readterminal(data);
+	data->outfilefd = 1;
+	ft_readterminal(data, envp);
 	rl_clear_history();
 	return (0);
 }

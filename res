@@ -1,0 +1,16 @@
+total 76
+-rw-r--r-- 1 hbaduel hbaduel   338 Oct 12 16:56 Makefile
+-rw-r--r-- 1 hbaduel hbaduel   865 Oct 12 14:17 heredoc.c
+-rw-r--r-- 1 hbaduel hbaduel  2728 Oct 12 17:28 heredoc.o
+-rw-r--r-- 1 hbaduel hbaduel  1700 Oct 12 17:24 main.c
+-rw-r--r-- 1 hbaduel hbaduel  4656 Oct 12 17:28 main.o
+-rwxr-xr-x 1 hbaduel hbaduel 17352 Oct 12 17:28 minishell
+-rw-r--r-- 1 hbaduel hbaduel   986 Oct 12 17:09 minishell.h
+-rw-r--r-- 1 hbaduel hbaduel   996 Oct 12 17:28 pipe.c
+-rw-r--r-- 1 hbaduel hbaduel  3216 Oct 12 17:28 pipe.o
+-rw-r--r-- 1 hbaduel hbaduel   478 Oct 12 16:52 redir.c
+-rw-r--r-- 1 hbaduel hbaduel  2008 Oct 12 17:28 redir.o
+-rwxr-xr-x 1 hbaduel hbaduel     0 Oct 12 17:29 res
+-rw-r--r-- 1 hbaduel hbaduel    15 Oct 12 16:38 test
+-rw-r--r-- 1 hbaduel hbaduel  1060 Oct 12 17:16 utils.c
+-rw-r--r-- 1 hbaduel hbaduel  2920 Oct 12 17:28 utils.o

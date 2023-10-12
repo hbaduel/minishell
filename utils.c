@@ -31,6 +31,7 @@ int	ft_strlen(char *str)
 		i++;
 	return (i);
 }
+
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*res;

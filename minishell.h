@@ -23,16 +23,20 @@ typedef struct	s_data
 {
 	int	infilefd;
 	int	outfilefd;
+	int	ncmd;
 }				t_data;
 
 void	ft_exiterror(char *str);
 void	ft_putstr_fd(char *str, int fd);
 void	ft_heredoc(char *limiter);
 void	redir_input(char *file, t_data *data);
-void	redir_output(char *file, t_data *data);
-void	redir_append(char *file, t_data *data);
+void	redir_output(char *file, t_data *data, int which);
+void	ft_pipe(t_data *data, char **envp);
+void	ft_execcmd(char **cmd, char **envp);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_readfd(int fd);
+char	*ft_cmdpath(char *cmd, char **envp);
 int		ft_strcmp(char *s1, char *s2);
+int		ft_strlen(char *str);
 
 #endif
