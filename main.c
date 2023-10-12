@@ -71,7 +71,9 @@ void	ft_chooseaction(t_data *data, char **envp)
 void	ft_readterminal(t_data *data, char **envp)
 {
 	pid_t	cpid;
+	char	*temp;
 
+	temp = NULL;
 	while (1)
 	{
 		terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
@@ -81,13 +83,17 @@ void	ft_readterminal(t_data *data, char **envp)
 			return ;
 		}
 		cpid = fork();
-		if (cpid == -1)
-			ft_exiterror("fork");
 		if (cpid == 0)
 			ft_chooseaction(data, envp);
 		waitpid(cpid, NULL, 0);
-		add_history(terminal);
-		free(terminal);
+		if (ft_strcmp(terminal, temp) != 0)
+		{
+			add_history(terminal);
+			free(temp);
+			temp = terminal;
+		}
+		else
+			free(terminal);
 	}
 }
 
