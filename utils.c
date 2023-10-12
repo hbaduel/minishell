@@ -1,6 +1,10 @@
 #include "minishell.h"
 
-
+void	ft_exiterror(char *str)
+{
+	perror(str);
+	exit(1);
+}
 
 int	ft_strlen(char *str)
 {
