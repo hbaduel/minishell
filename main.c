@@ -31,7 +31,7 @@ char	*ft_cmdpath(char *cmd, char **envp)
 	return (res);
 }
 
-void	ft_chooseaction(void)
+void	ft_chooseaction(t_data *data)
 {
 	int		i;
 
@@ -46,7 +46,7 @@ void	ft_chooseaction(void)
 				i++;
 			}
 			else
-				//redir_input();
+				redir_input("test", data);
 			i++;
 		}
 		/*if (terminal[i] == '>')
@@ -62,9 +62,11 @@ void	ft_chooseaction(void)
 		}*/
 		i++;
 	}
+	if (data->infilefd != -1)
+		close(data->infilefd);
 }
 
-void	ft_readterminal(void)
+void	ft_readterminal(t_data *data)
 {
 	while (1)
 	{
@@ -74,7 +76,7 @@ void	ft_readterminal(void)
 			free(terminal);
 			return ;
 		}
-		ft_chooseaction(terminal);
+		ft_chooseaction(data);
 		add_history(terminal);
 		free(terminal);
 	}
@@ -82,7 +84,11 @@ void	ft_readterminal(void)
 
 int	main(int argc, char **argv, char **envp)
 {
-	ft_readterminal();
+	t_data	*data;
+
+	data = malloc(sizeof(t_data));
+	data->infilefd = -1;
+	ft_readterminal(data);
 	rl_clear_history();
 	return (0);
 }
