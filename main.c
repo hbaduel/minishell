@@ -2,6 +2,11 @@
 
 char	*terminal;
 
+void	ft_kill()
+{
+	kill(-1, SIGQUIT);
+}
+
 char	*ft_cmdpath(char *cmd, char **envp)
 {
 	pid_t	cpid;
@@ -32,34 +37,22 @@ char	*ft_cmdpath(char *cmd, char **envp)
 
 void	ft_chooseaction(t_data *data, char **envp)
 {
-    t_parse *current = NULL;
-	int	i = 0;
-    while (current != NULL)
+	t_parse *current = NULL;
+	while (1)
 	{
-        if (current->type == CMD)
-		{
-            printf("Command : ");
-            if (current->args[i] != NULL)
-			{
-				ft_heredoc("fin");
-				i++;
-			}
-			else
-				redir_input("test", data);
-			i++;
-		}
-		if (terminal[i] == '>')
-		{
-			if (terminal[i + 1] == '>')
-			{
-				redir_output("res", data, 1);
-				i++;
-			}
-			else
-				redir_output("res", data, 0);
-			i++;
-		}
-		i++;
+		ft_putstr_fd("mes grosses couilles", 1);
+	}
+	while (current != NULL)
+	{
+		if (current->type == APPEND)
+			redir_output("res", data, 1);
+		if (current->type == OUTFILE)
+			redir_output("res", data, 0);
+		if (current->type == HEREDOC)
+			ft_heredoc("fin");
+		if (current->type == INFILE)
+			redir_input("test", data);
+		current = current->next;
 	}
 	if (data->infilefd != 0)
 		close(data->infilefd);
@@ -70,23 +63,26 @@ void	ft_chooseaction(t_data *data, char **envp)
 
 void	ft_readterminal(t_data *data, char **envp)
 {
-	pid_t	cpid;
-    char *temp;
-    t_parse *parse;
+	char *temp;
 
 	temp = NULL;
-    while (1)
+	while (1)
 	{
-        terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
-        if (ft_strcmp(terminal, "exit") == 0)
+		terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
+		if (!terminal)
+		{
+			free(data);
+			exit(0);
+		}
+		if (ft_strcmp(terminal, "exit") == 0)
 		{
 			free(terminal);
 			return ;
 		}
-		cpid = fork();
-		if (cpid == 0)
+		data->cpid = fork();
+		if (data->cpid == 0)
 			ft_chooseaction(data, envp);
-		waitpid(cpid, NULL, 0);
+		waitpid(data->cpid, NULL, 0);
 		if (ft_strcmp(terminal, temp) != 0)
 		{
 			add_history(terminal);
@@ -103,6 +99,10 @@ int		main(int argc, char **argv, char **envp)
 {
 	t_data	*data;
 
+	(void) argc;
+	(void) argv;
+	signal(SIGINT, ft_kill);
+	//signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
 	data->infilefd = 0;
 	data->outfilefd = 1;

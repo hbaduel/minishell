@@ -10,6 +10,7 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 
 # define BLACK  "\e[1;30m"
 # define RED  "\e[1;31m"
@@ -39,6 +40,7 @@ typedef struct	s_data
 	int	infilefd;
 	int	outfilefd;
 	int	ncmd;
+    pid_t   cpid;
 }				t_data;
 
 void	ft_exiterror(char *str);
