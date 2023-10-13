@@ -1,10 +1,11 @@
 #include "minishell.h"
 
 char	*terminal;
+t_data	*data;
 
 void	ft_kill()
 {
-	kill(-1, SIGQUIT);
+	kill(data->cpid, SIGKILL);
 }
 
 char	*ft_cmdpath(char *cmd, char **envp)
@@ -38,10 +39,6 @@ char	*ft_cmdpath(char *cmd, char **envp)
 void	ft_chooseaction(t_data *data, char **envp)
 {
 	t_parse *current = NULL;
-	while (1)
-	{
-		ft_putstr_fd("mes grosses couilles", 1);
-	}
 	while (current != NULL)
 	{
 		if (current->type == APPEND)
@@ -68,6 +65,7 @@ void	ft_readterminal(t_data *data, char **envp)
 	temp = NULL;
 	while (1)
 	{
+		data->cpid = 1;
 		terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
 		if (!terminal)
 		{
@@ -97,12 +95,12 @@ void	ft_readterminal(t_data *data, char **envp)
 
 int		main(int argc, char **argv, char **envp)
 {
-	t_data	*data;
+	//t_data	*data;
 
 	(void) argc;
 	(void) argv;
 	signal(SIGINT, ft_kill);
-	//signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
 	data->infilefd = 0;
 	data->outfilefd = 1;

@@ -40,6 +40,7 @@ typedef struct	s_data
 	int	infilefd;
 	int	outfilefd;
 	int	ncmd;
+    int exit;
     pid_t   cpid;
 }				t_data;
 
@@ -51,6 +52,7 @@ void	redir_output(char *file, t_data *data, int which);
 void	ft_pipe(t_data *data, char **envp);
 void	ft_execcmd(char **cmd, char **envp);
 void	ft_free_parse(t_parse *parse);
+void	ft_pwd(int outfd);
 t_parse	*ft_parse(char *terminal);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_readfd(int fd);
