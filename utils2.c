@@ -29,30 +29,31 @@ char	*ft_strdup(char *s)
 	return (str);
 }
 
-char    *ft_strtok(char *str, char *delim)
+char    *ft_strtok(char *str, char delim)
 {
     char    *next_token;  // Pointeur pour stocker l'état entre les appels.
-    char    *token_start;
+    int     start;
+    int     end;
+    int     i;
 
-    next_token = NULL;
-    if (str != NULL)
-        next_token = str;
-    else if (next_token == NULL)
-        return NULL;
-    while (*next_token != '\0' && strchr(delim, *next_token) != NULL)
-        next_token++;
-    if (*next_token == '\0')
+    if (!str)
+        return (NULL);
+    start = 0;
+    while (str[start] == delim && str[start])
+        start++;
+    if (str[start] == '\0')
+        return (NULL);
+    end = start;
+    while (str[end] != delim && str[end])
+        end++;
+    next_token = malloc(sizeof(char) * (end - start + 1));
+    i = 0;
+    while (start < end)
     {
-        next_token = NULL;
-        return NULL;
+        next_token[i] = str[start];
+        start++;
+        i++;
     }
-    token_start = next_token;
-    while (*next_token != '\0' && strchr(delim, *next_token) == NULL)
-        next_token++;
-    if (*next_token != '\0')
-    {
-        *next_token = '\0';  // Marque la fin du token.
-        next_token++;
-    }
-    return token_start;
+    next_token[i] = '\0';
+    return (next_token);
 }
