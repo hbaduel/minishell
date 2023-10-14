@@ -59,7 +59,7 @@ t_parse	*ft_parse(char *terminal);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_readfd(int fd);
 char	*ft_cmdpath(char *cmd, char **envp);
-char	*ft_strtok(char *str, char *delim);
+char	*ft_strtok(char *str, char delim);
 char	*ft_strdup(char *s);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
