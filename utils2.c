@@ -57,3 +57,52 @@ char    *ft_strtok(char *str, char delim)
     next_token[i] = '\0';
     return (next_token);
 }
+
+char    *ft_cut_terminal(char *terminal, char *token)
+{
+    char    *newterminal;
+    int start;
+    int tokenlen;
+    int i;
+
+    start = 0;
+    tokenlen = ft_strlen(token);
+    i = 0;
+    while (terminal[start] == ' ')
+        start++;
+    newterminal = (char *)malloc(sizeof(char) * ft_strlen(terminal) - start - tokenlen + 1);
+    if (newterminal == 0)
+        return (NULL);
+    while (terminal)
+    {
+        newterminal[i] = terminal[start + tokenlen];
+        i++;
+        start++;
+    }
+    newterminal[i] = '\0';
+    return (newterminal);
+}
+
+void    ft_realloc(char ***args, char *token)
+{
+    int current_size;
+    int i;
+    char    **new_args;
+
+    current_size = 0;
+    i = 0;
+    while ((*args)[current_size] != NULL)
+        current_size++;
+    new_args = malloc(sizeof(char*) * (current_size + 2));
+    if (new_args == NULL)
+        ft_exiterror("Erreur d'allocation mémoire\n");
+    while (*args)
+    {
+        new_args[i] = (*args)[i];
+        i++;
+    }
+    new_args[i] = token;
+    new_args[i + 1] = NULL;
+    free(*args);
+    *args = new_args;
+}
