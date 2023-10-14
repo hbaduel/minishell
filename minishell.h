@@ -21,7 +21,7 @@
 # define WHITE  "\e[1;37m"
 # define NOTHING    0
 # define CMD        1
-# define SEPARATEUR 2
+# define PIPE       2
 # define INFILE     3
 # define OUTFILE    4
 # define HEREDOC    5
@@ -29,10 +29,10 @@
 
 typedef struct s_parse {
     int     type;           /*pour identifier le type de commande*/
-    char    *other;
     char    **args;         /*pour stocker les arguments de la commande*/
     struct s_parse  *next;
-
+    struct s_parse  *previous;
+    struct s_data   *data;
 }       t_parse;
 
 typedef struct	s_data
@@ -42,6 +42,7 @@ typedef struct	s_data
 	int	ncmd;
     int exit;
     pid_t   cpid;
+    struct t_parse  *parse;
 }				t_data;
 
 void	ft_exiterror(char *str);
@@ -52,12 +53,14 @@ void	redir_output(char *file, t_data *data, int which);
 void	ft_pipe(t_data *data, char **envp);
 void	ft_execcmd(char **cmd, char **envp);
 void	ft_free_parse(t_parse *parse);
+void    ft_print_tokens(t_parse *parse);
 void	ft_pwd(int outfd);
 t_parse	*ft_parse(char *terminal);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_readfd(int fd);
 char	*ft_cmdpath(char *cmd, char **envp);
 char	*ft_strtok(char *str, char *delim);
+char	*ft_strdup(char *s);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 int		ft_strlcpy(char *dest, char *src, int size);
