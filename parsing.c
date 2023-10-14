@@ -115,7 +115,7 @@ t_parse *ft_parse(char *terminal)
         if (current == NULL)
             first = new;
         else
-            current->next = new;
+            new = current->next;
         current = new;
         token = ft_strtok(NULL, " ");
     }
