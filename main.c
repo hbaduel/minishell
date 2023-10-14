@@ -108,6 +108,7 @@ int		main(int argc, char **argv, char **envp)
 	data->outfilefd = 1;
 	data->ncmd = 0;
 	ft_readterminal(data, envp);
+	ft_parse(terminal);
 	rl_clear_history();
 	return (0);
 }
