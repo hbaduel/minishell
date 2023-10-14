@@ -25,8 +25,6 @@ void ft_print_tokens(t_parse *parse)
     }
 }
 
-
-
 t_parse *ft_parse(char *terminal)
 {
     t_parse *first;
@@ -38,7 +36,7 @@ t_parse *ft_parse(char *terminal)
     current = first;
     current->previous = NULL;
     token = ft_strtok(terminal, ' ');
-    ft_cut_terminal(terminal, token);
+    terminal = ft_cut_terminal(terminal, token);
     while (token != NULL)
     {
         if (ft_strcmp(token, "<") == 0)
@@ -73,57 +71,55 @@ t_parse *ft_parse(char *terminal)
         {
             current->type = PIPE;
             current->args = malloc(sizeof(char *) * 2);
-            current->data->ncmd += 1;
             current->args[0] = ft_strdup("|");
             current->args[1] = NULL;
         }
         else
         {
-            if (current->previous->type == CMD)
+            if (!current->previous)
             {
-                ft_realloc(&current->previous->args, token);
-                current->previous->args[1] = ft_strdup(token);
-                current->args[2] = NULL;
+                current->type = CMD;
+                current->args = malloc(sizeof(char *) * 2);
+                current->args[0] = ft_strdup(token);
+                current->args[1] = NULL;
+            }
+            else if (current->previous->type == CMD)
+            {
+                current->previous->args = ft_realloc(current->previous->args, token);
+                current = current->previous;
+                free(current->next);
             }
             else if (current->previous->type == INFILE)
             {
-                current->type = INFILE;
-                current->args = malloc(sizeof(char *) * 2);
-                current->args[0] = ft_strdup(token);
-                current->args[1] = NULL;
-
+                current->previous->args = ft_realloc(current->previous->args, token);
+                current = current->previous;
+                free(current->next);
             }
             else if (current->previous->type == OUTFILE)
             {
-                current->type = OUTFILE;
-                current->args = malloc(sizeof(char *) * 2);
-                current->args[0] = ft_strdup(token);
-                current->args[1] = NULL;
+                current->previous->args = ft_realloc(current->previous->args, token);
+                current = current->previous;
+                free(current->next);
             }
             else if (current->previous->type == HEREDOC)
             {
-                current->type = HEREDOC;
-                current->args = malloc(sizeof(char *) * 2);
-                current->args[0] = ft_strdup(token);
-                current->args[1] = NULL;
+                current->previous->args = ft_realloc(current->previous->args, token);
+                current = current->previous;
+                free(current->next);
             }
             else if (current->previous->type == APPEND)
             {
-                current->type = APPEND;
-                current->args = malloc(sizeof(char *) * 2);
-                current->args[0] = ft_strdup(token);
-                current->args[1] = NULL;
+                current->previous->args = ft_realloc(current->previous->args, token);
+                current = current->previous;
+                free(current->next);
             }
-            else
-            current->type = CMD;
-            current->args = malloc(sizeof(char *) * 2);
-            current->args[0] = ft_strdup(token);
-            current->args[1] = NULL;
         }
         current->next = malloc(sizeof(t_parse));
         current->next->previous = current;
         current = current->next;
+        free(token);
         token = ft_strtok(terminal, ' ');
+        terminal = ft_cut_terminal(terminal, token);
     }
     current->previous->next = NULL;
     free(current);
@@ -133,19 +129,36 @@ t_parse *ft_parse(char *terminal)
 // int main(void)
 // {
 //     t_data  data;
+//     t_parse *test;
+//     t_parse *temp;
 //     int i;
 
-//     data.parse = ft_parse("< test grep test");
-//     // while(data.parse)
-//     // {
-//     //     printf("Type : %d\n", data.parse->type);
-//     //     i = 0;
-//     //     while(data.parse->args[i])
-//     //     {
-//     //         printf("%s\n", data.parse->args[i]);
-//     //         i++;
-//     //     }
-//     //     data.parse = data.parse->next;
-//     // }
+//     data.parse = ft_parse(ft_strdup("< infile wc -l"));
+//     test = data.parse;
+//     while(data.parse)
+//     {
+//         printf("Type : %d\n", data.parse->type);
+//         i = 0;
+//         while(data.parse->args[i])
+//         {
+//             printf("%s ", data.parse->args[i]);
+//             i++;
+//         }
+//         printf("\n");
+//         data.parse = data.parse->next;
+//     }
+//     while(test)
+//     {
+//         i = 0;
+//         while (test->args[i])
+//         {
+//             free(test->args[i]);
+//             i++;
+//         }
+//         free(test->args);
+//         temp = test;
+//         test = test->next;
+//         free(temp);
+//     }
 //     return (0);
 // }
