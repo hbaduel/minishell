@@ -42,7 +42,7 @@ typedef struct	s_data
 	int	ncmd;
     int exit;
     pid_t   cpid;
-    struct t_parse  *parse;
+    t_parse *parse;
 }				t_data;
 
 void	ft_exiterror(char *str);
