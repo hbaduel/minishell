@@ -55,6 +55,7 @@ void	ft_execcmd(char **cmd, char **envp);
 void	ft_free_parse(t_parse *parse);
 void    ft_print_tokens(t_parse *parse);
 void	ft_pwd(int outfd);
+void	ft_echo(t_parse	*parse, int outfd);
 t_parse	*ft_parse(char *terminal);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_readfd(int fd);

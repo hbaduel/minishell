@@ -1,6 +1,6 @@
 NAME = minishell
 
-SRC = main.c utils.c heredoc.c redir.c pipe.c utils2.c parsing.c builtin/pwd.c
+SRC = main.c utils.c heredoc.c redir.c pipe.c utils2.c parsing.c builtin/pwd.c builtin/echo.c
 
 OBJS = ${SRC:%.c=%.o}
 
