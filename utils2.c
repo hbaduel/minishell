@@ -41,6 +41,8 @@ char    *ft_strtok(char *str, char delim)
     start = 0;
     while (str[start] == delim && str[start])
         start++;
+    if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{')
+        ft_check_quote(str);
     if (str[start] == '\0')
         return (NULL);
     end = start;
@@ -57,6 +59,7 @@ char    *ft_strtok(char *str, char delim)
     next_token[i] = '\0';
     return (next_token);
 }
+
 
 char    *ft_cut_terminal(char *terminal, char *token)
 {
