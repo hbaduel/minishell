@@ -4,7 +4,7 @@ char	*terminal;
 
 // void	ft_kill()
 // {
-// 	kill(data->cpid, SIGKILL);
+// 	kill(cpid, SIGKILL);
 // }
 
 char	*ft_cmdpath(char *cmd, char **envp)
@@ -41,6 +41,8 @@ void	ft_chooseaction(t_data *data, char **envp)
 	t_parse	*redir;
 	pid_t	cpid;
 
+	if (pipe(data->tubefd) == -1)
+		ft_exiterror("pipe");
 	current = ft_parse(terminal);
 	redir = current;
 	while (redir)
@@ -59,8 +61,10 @@ void	ft_chooseaction(t_data *data, char **envp)
 	if (cpid == 0)
 	{
 		dup2(data->infilefd, 0);
-		dup2(data->outfilefd, 1);
 		//if (data->ncmd == 1)
+		dup2(data->outfilefd, 1); // a mettre dans le if
+		//close(data->pipefd[0]);
+		//close(data->pipefd[1]);
 		while (current)
 		{
 			if (current->type == CMD)
@@ -76,6 +80,8 @@ void	ft_chooseaction(t_data *data, char **envp)
 		close(data->outfilefd);
 	data->infilefd = 0;
 	data->outfilefd = 1;
+	close(data->tubefd[0]);
+	close(data->tubefd[1]);
 }
 
 void	ft_readterminal(t_data *data, char **envp)
@@ -85,7 +91,6 @@ void	ft_readterminal(t_data *data, char **envp)
 	temp = NULL;
 	while (1)
 	{
-		data->cpid = 1;
 		terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
 		if (!terminal)
 		{

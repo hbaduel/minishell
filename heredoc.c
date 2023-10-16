@@ -44,6 +44,8 @@ void	ft_heredoc(char *limiter, t_data *data)
 			free(heredoc);
 			//if (data->ncmd == 0)
 			ft_putstr_fd(res, data->outfilefd);
+			// else
+			// 	ft_putstr_fd(res, pipefd[1]);
 			free(res);
 			return ;
 		}

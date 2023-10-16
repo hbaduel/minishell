@@ -45,8 +45,7 @@ typedef struct	s_data
 	int	infilefd;
 	int	outfilefd;
 	int	ncmd;
-    int exit;
-    pid_t   cpid;
+    int tubefd[2];
     t_parse *parse;
 }				t_data;
 
@@ -58,8 +57,8 @@ void	ft_pipe(t_data *data, char **envp);
 void	ft_execcmd(t_data *data, char **cmd, char **envp);
 void	ft_free_parse(t_parse *parse);
 void    ft_print_tokens(t_parse *parse);
-void	ft_pwd(int outfd);
-void	ft_echo(t_parse	*parse, int outfd);
+void	ft_pwd(char **cmd);
+void	ft_echo(char **cmd);
 t_parse	*ft_parse(char *terminal);
 char	*ft_strjoin(char *s1, char *s2, int dofree);
 char	*ft_readfd(int fd);
