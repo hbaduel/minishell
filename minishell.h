@@ -66,7 +66,7 @@ t_parse	*ft_parse(char *terminal);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_readfd(int fd);
 char	*ft_cmdpath(char *cmd, char **envp);
-char	*ft_strtok(char *str, char delim);
+char	*ft_strtok(char **terminal, char delim);
 char	*ft_strdup(char *s);
 char    *ft_cut_terminal(char *terminal, char *token);
 char    *ft_add_space(char *str, char c, char *cc);

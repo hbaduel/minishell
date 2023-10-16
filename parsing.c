@@ -25,73 +25,7 @@
 //     }
 // }
 
-char    *ft_add_space(char *str, char c, char *cc)
-{
-    char    *new_str;
-    int i;
-    int j;
 
-    i = 0;
-    j = 0;
-    if (cc == 0)
-    {
-        new_str = malloc(sizeof(char) * (ft_strlen(str) + 2));
-        while (str[j])
-        {
-            if (str[j] == c)
-            {
-                new_str[i] = str[j];
-                i++;
-                new_str[i] = ' ';
-            }
-            else
-                new_str[i] = str[j];
-            i++;
-            j++;
-        }
-    }
-    if (c == 0)
-    {
-        new_str = malloc(sizeof(char) * (ft_strlen(str) + 2));
-        while (str[j])
-        {
-            if (str[j] == cc[1] && str[j - 1] == cc[0])
-            {
-                new_str[i] = str[j];
-                i++;
-                new_str[i] = ' ';
-            }
-            else
-                new_str[i] = str[j];
-            i++;
-            j++;
-        }
-    }
-    free(str);
-    return (new_str);
-}
-
-char    *ft_check_filename(char *str)
-{
-    int i;
-
-    i = 0;
-    while (str[i])
-    {
-    if ((str[i] == '>') && (str[i + 1] == '>' ) && str[i + 2] != ' ')
-        str = ft_add_space(str, 0, ">>");
-    else if ((str[i] == '<') && (str[i + 1] == '<' ) && str[i + 2] != ' ')
-        str = ft_add_space(str, 0, "<<");
-    else if ((str[i] == '>') && (str[i + 1] != ' ' ))
-        str = ft_add_space(str, '>', 0);
-    else if ((str[i] == '<') && (str[i + 1] != ' ' ))
-        str = ft_add_space(str, '<', 0);
-    else if ((str[i] == '|') && (str[i + 1] != ' ' ))
-        str = ft_add_space(str, '|', 0);
-    i++;
-    }
-    return (str);
-}
 
 t_parse *ft_parse(char *terminal)
 {
@@ -103,7 +37,7 @@ t_parse *ft_parse(char *terminal)
     first = malloc(sizeof(t_parse));
     current = first;
     current->previous = NULL;
-    token = ft_strtok(terminal, ' ');
+    token = ft_strtok(&terminal, ' ');
     terminal = ft_cut_terminal(terminal, token);
     while (token != NULL)
     {
@@ -202,7 +136,7 @@ t_parse *ft_parse(char *terminal)
         current->next->previous = current;
         current = current->next;
         free(token);
-        token = ft_strtok(terminal, ' ');
+        token = ft_strtok(&terminal, ' ');
         terminal = ft_cut_terminal(terminal, token);
     }
     current->previous->next = NULL;
