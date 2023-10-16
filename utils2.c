@@ -45,6 +45,7 @@ char    *ft_strtok(char *str, char delim)
       //  ft_check_quote(str);
     if (str[start] == '\0')
         return (NULL);
+    str = ft_check_filename(str);
     end = start;
     while (str[end] != delim && str[end])
         end++;
