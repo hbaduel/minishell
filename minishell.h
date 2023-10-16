@@ -26,6 +26,8 @@
 # define OUTFILE    4
 # define HEREDOC    5
 # define APPEND     6
+# define FILENAME   7
+
 
 typedef struct s_parse {
     int     type;           /*pour identifier le type de commande*/
