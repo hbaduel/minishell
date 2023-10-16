@@ -69,6 +69,8 @@ t_parse *ft_parse(char *terminal)
         }
         else if (ft_strcmp(token, "|") == 0)
         {
+            if (terminal[0] == "|")
+                ft_exiterror("Minishell : parse error near '|'\n");
             current->type = PIPE;
             current->args = malloc(sizeof(char *) * 2);
             current->args[0] = ft_strdup("|");

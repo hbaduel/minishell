@@ -43,6 +43,7 @@ typedef struct	s_data
 	int	outfilefd;
 	int	ncmd;
     int exit;
+    int pipe_detector;
     pid_t   cpid;
     t_parse *parse;
 }				t_data;
