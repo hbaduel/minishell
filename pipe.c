@@ -5,10 +5,19 @@ void	ft_execcmd(char **cmd, char **envp)
 	char	*path;
 
 	path = ft_cmdpath(cmd[0], envp);
+	if (!path[0])
+	{
+		free(path);
+		path = ft_strjoin("minishell: command not found: ", cmd[0]);
+		ft_putstr_fd(path, 1);
+		ft_putstr_fd("\n", 1);
+		exit(0);
+	}
 	if (execve(path, cmd, envp) == -1)
 	{
 		free(path);
 		ft_exiterror("execve");
+		exit (0);
 	}
 }
 

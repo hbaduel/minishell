@@ -27,7 +27,7 @@
 # define HEREDOC    5
 # define APPEND     6
 # define INCOMPLET  7
-# define OUTCOMPlET 8
+# define OUTCOMPLET 8
 # define HDCOMPLET  9
 # define APPENDCOMP 10
 
@@ -52,9 +52,8 @@ typedef struct	s_data
 
 void	ft_exiterror(char *str);
 void	ft_putstr_fd(char *str, int fd);
-void	ft_heredoc(char *limiter);
-void	redir_input(char *file, t_data *data);
-void	redir_output(char *file, t_data *data, int which);
+void	ft_heredoc(char *limiter, t_data *data);
+void	ft_openfile(char *file, t_data *data, int which);
 void	ft_pipe(t_data *data, char **envp);
 void	ft_execcmd(char **cmd, char **envp);
 void	ft_free_parse(t_parse *parse);

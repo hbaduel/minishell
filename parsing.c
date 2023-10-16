@@ -30,13 +30,14 @@ t_parse *ft_parse(char *terminal)
     t_parse *first;
     t_parse *current;
     char    *token;
-    char    *cmd;
+    char    *terminal2;
 
+    terminal2 = ft_strdup(terminal);
     first = malloc(sizeof(t_parse));
     current = first;
     current->previous = NULL;
-    token = ft_strtok(terminal, ' ');
-    terminal = ft_cut_terminal(terminal, token);
+    token = ft_strtok(terminal2, ' ');
+    terminal2 = ft_cut_terminal(terminal2, token);
     while (token != NULL)
     {
         if (ft_strcmp(token, "<") == 0)
@@ -109,7 +110,7 @@ t_parse *ft_parse(char *terminal)
                 current->previous->args = ft_realloc(current->previous->args, token);
                 current = current->previous;
                 free(current->next);
-                current->type = OUTCOMPlET;
+                current->type = OUTCOMPLET;
             }
             else if (current->previous->type == HEREDOC)
             {
@@ -130,11 +131,12 @@ t_parse *ft_parse(char *terminal)
         current->next->previous = current;
         current = current->next;
         free(token);
-        token = ft_strtok(terminal, ' ');
-        terminal = ft_cut_terminal(terminal, token);
+        token = ft_strtok(terminal2, ' ');
+        terminal2 = ft_cut_terminal(terminal2, token);
     }
     current->previous->next = NULL;
     free(current);
+    free(terminal2);
     return (first);
 }
 

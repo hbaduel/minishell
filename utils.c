@@ -32,7 +32,7 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2, int dofree)
 {
 	char	*res;
 	int		i;
@@ -55,7 +55,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		j++;
 	}
 	res[i + j] = '\0';
-	if (s1)
+	if (s1 && dofree == 1)
 		free(s1);
 	return (res);
 }

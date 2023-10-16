@@ -25,7 +25,7 @@ int		ft_checklimiter(char *limiter)
 	return (0);
 }
 
-void	ft_heredoc(char *limiter)
+void	ft_heredoc(char *limiter, t_data *data)
 {
 	char	*heredoc;
 	char	*res;
@@ -42,7 +42,8 @@ void	ft_heredoc(char *limiter)
 		if (ft_strcmp(heredoc, limiter) == 0)
 		{
 			free(heredoc);
-			ft_putstr_fd(res, 1);
+			//if (data->ncmd == 0)
+			ft_putstr_fd(res, data->outfilefd);
 			free(res);
 			return ;
 		}
