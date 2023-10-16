@@ -26,7 +26,10 @@
 # define OUTFILE    4
 # define HEREDOC    5
 # define APPEND     6
-# define FILENAME   7
+# define INCOMPLET  7
+# define OUTCOMPlET 8
+# define HDCOMPLET  9
+# define APPENDCOMP 10
 
 
 typedef struct s_parse {
