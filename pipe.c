@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	ft_execcmd(char **cmd, char **envp)
+void	ft_execcmd(t_data *data, char **cmd, char **envp)
 {
 	char	*path;
 
@@ -8,9 +8,13 @@ void	ft_execcmd(char **cmd, char **envp)
 	if (!path[0])
 	{
 		free(path);
-		path = ft_strjoin("minishell: command not found: ", cmd[0]);
-		ft_putstr_fd(path, 1);
-		ft_putstr_fd("\n", 1);
+		if (data->outfilefd == 1)
+		{
+			path = ft_strjoin("minishell: command not found: ", cmd[0], 0);
+			ft_putstr_fd(path, 1);
+			ft_putstr_fd("\n", 1);
+			free(path);
+		}
 		exit(0);
 	}
 	if (execve(path, cmd, envp) == -1)
@@ -21,7 +25,7 @@ void	ft_execcmd(char **cmd, char **envp)
 	}
 }
 
-void	ft_nextcmd(char **cmd, char **envp)
+void	ft_nextcmd(t_data *data, char **cmd, char **envp)
 {
 	pid_t	pid;
 	int		tubefd[2];
@@ -35,7 +39,7 @@ void	ft_nextcmd(char **cmd, char **envp)
 	{
 		close(tubefd[0]);
 		dup2(tubefd[1], 1);
-		ft_execcmd(cmd, envp);
+		ft_execcmd(data, cmd, envp);
 	}
 	waitpid(pid, NULL, 0);
 	close(tubefd[1]);
@@ -51,7 +55,7 @@ void	ft_pipe(t_data *data, char **envp)
 	i = 0;
 	while (i < data->ncmd)
 	{
-		ft_nextcmd(cmd, envp);
+		ft_nextcmd(data, cmd, envp);
 		i++;
 	}
 	pid = fork();
@@ -60,7 +64,7 @@ void	ft_pipe(t_data *data, char **envp)
 	if (pid == 0)
 	{
 		dup2(data->outfilefd, 1);
-		ft_execcmd(cmd, envp);
+		ft_execcmd(data, cmd, envp);
 	}
 	waitpid(pid, NULL, 0);
 }

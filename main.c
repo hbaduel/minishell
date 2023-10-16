@@ -1,12 +1,11 @@
 #include "minishell.h"
 
 char	*terminal;
-t_data	*data;
 
-void	ft_kill()
-{
-	kill(data->cpid, SIGKILL);
-}
+// void	ft_kill()
+// {
+// 	kill(data->cpid, SIGKILL);
+// }
 
 char	*ft_cmdpath(char *cmd, char **envp)
 {
@@ -65,7 +64,7 @@ void	ft_chooseaction(t_data *data, char **envp)
 		while (current)
 		{
 			if (current->type == CMD)
-				ft_execcmd(current->args, envp);
+				ft_execcmd(data, current->args, envp);
 			current = current->next;
 		}
 		//else if (data->ncmd > 1)
@@ -109,11 +108,11 @@ void	ft_readterminal(t_data *data, char **envp)
 
 int		main(int argc, char **argv, char **envp)
 {
-	//t_data	*data;
+	t_data	*data;
 
 	(void) argc;
 	(void) argv;
-	signal(SIGINT, ft_kill);
+	//signal(SIGINT, ft_kill);
 	signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
 	data->infilefd = 0;

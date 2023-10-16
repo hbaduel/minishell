@@ -73,7 +73,7 @@ char	*ft_readfd(int fd)
 		buff = malloc(sizeof(char) * 51);
 		size = read(fd, buff, 50);
 		buff[size] = '\0';
-		res = ft_strjoin(res, buff);
+		res = ft_strjoin(res, buff, 1);
 		free(buff);
 	}
 	return (res);
