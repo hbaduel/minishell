@@ -85,7 +85,7 @@ t_parse *ft_parse(char *terminal)
                 current->args[0] = ft_strdup(token);
                 current->args[1] = NULL;
             }
-            else if (current->previous->type == FILENAME || current->previous->type == PIPE)
+            else if ((current->previous->type >= 7 && current->previous->type <= 10) || current->previous->type == PIPE)
             {
                 current->type = CMD;
                 current->args = malloc(sizeof(char *) * 2);
@@ -104,28 +104,28 @@ t_parse *ft_parse(char *terminal)
                 current->previous->args = ft_realloc(current->previous->args, token);
                 current = current->previous;
                 free(current->next);
-                current->type = FILENAME;
+                current->type = INCOMPLET;
             }
             else if (current->previous->type == OUTFILE)
             {
                 current->previous->args = ft_realloc(current->previous->args, token);
                 current = current->previous;
                 free(current->next);
-                current->type = FILENAME;
+                current->type = OUTCOMPlET;
             }
             else if (current->previous->type == HEREDOC)
             {
                 current->previous->args = ft_realloc(current->previous->args, token);
                 current = current->previous;
                 free(current->next);
-                current->type = FILENAME;
+                current->type = HDCOMPLET;
             }
             else if (current->previous->type == APPEND)
             {
                 current->previous->args = ft_realloc(current->previous->args, token);
                 current = current->previous;
                 free(current->next);
-                current->type = FILENAME;
+                current->type = APPENDCOMP;
             }
         }
         current->next = malloc(sizeof(t_parse));

@@ -38,8 +38,12 @@ char	*ft_cmdpath(char *cmd, char **envp)
 
 void	ft_chooseaction(t_data *data, char **envp)
 {
-	t_parse *current = NULL;
-	while (current != NULL)
+	t_parse *current;
+	t_parse	*redir;
+
+	current = ft_parse(terminal);
+	redir = current;
+	while (redir)
 	{
 		if (current->type == APPEND)
 			redir_output("res", data, 1);
