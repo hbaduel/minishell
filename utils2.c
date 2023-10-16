@@ -32,6 +32,7 @@ char	*ft_strdup(char *s)
 char    *ft_strtok(char **terminal, char delim)
 {
     char    *next_token;
+    char    *str;
     int     start;
     int     end;
     int     i;
@@ -46,6 +47,7 @@ char    *ft_strtok(char **terminal, char delim)
       //  ft_check_quote(str);
     if (str[start] == '\0')
         return (NULL);
+    str = ft_check_filename(str);
     end = start;
     while (str[end] != delim && str[end])
         end++;
