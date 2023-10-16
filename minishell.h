@@ -60,7 +60,7 @@ void	ft_free_parse(t_parse *parse);
 void    ft_print_tokens(t_parse *parse);
 void	ft_pwd(char **cmd);
 void	ft_echo(char **cmd);
-t_parse	*ft_parse(char *terminal);
+t_parse	*ft_parse(char *, t_data *data);
 char	*ft_strjoin(char *s1, char *s2, int dofree);
 char	*ft_readfd(int fd);
 char	*ft_cmdpath(char *cmd, char **envp);

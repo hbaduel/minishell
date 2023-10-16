@@ -1,30 +1,5 @@
 #include "minishell.h"
 
-// void ft_print_tokens(t_parse *parse)
-// {
-//     t_parse *current = parse;
-//     while (current != NULL)
-//     {
-//         if (current->type == CMD && current->args != NULL)
-//         {
-//             char **args = current->args;
-//             printf("Command Type: CMD\n");
-//             int i = 0;
-//             while (current->args[i] != NULL)
-//             {
-//                 printf("Argument %d: %s\n", i, current->args[i]);
-//                 i++;
-//             }
-//         }
-//         else
-//         {
-//             printf("Type: %d\n", current->type);
-//             printf("Argument: %s\n", current->args[0]);
-//         }
-//         current = current->next;
-//     }
-// }
-
 char    *ft_add_space(char *str)
 {
     char    *new_str;
@@ -66,15 +41,24 @@ char    *ft_check_filename(char *str)
     return (str);
 }
 
-t_parse *ft_parse(char *terminal)
+t_parse *ft_searchlastcmd(t_parse *current)
+{
+    while (current && current->type != CMD)
+        current = current->previous;
+    return (current);
+}
+
+t_parse *ft_parse(char *terminal, t_data *data)
 {
     t_parse *first;
     t_parse *current;
+    t_parse *temp;
     char    *token;
     char    *terminal2;
 
     terminal2 = ft_strdup(terminal);
     first = malloc(sizeof(t_parse));
+    data->pipe_detector = 1;
     current = first;
     current->previous = NULL;
     token = ft_strtok(&terminal2, ' ');
@@ -111,14 +95,11 @@ t_parse *ft_parse(char *terminal)
         }
         else if (ft_strcmp(token, "|") == 0)
         {
-            if (terminal[0] == '|' && !current->previous)
-                ft_exiterror("Minishell : parse error near '|'\n");
-            else
-                current->data->pipe_detector = 1;
-            current->type = PIPE;
-            current->args = malloc(sizeof(char *) * 2);
-            current->args[0] = ft_strdup("|");
-            current->args[1] = NULL;
+                if (!current->previous || data->pipe_detector == 1)
+                    ft_exiterror("Minishell : parse error near '|'\n");
+                data->pipe_detector = 1;
+                current = current->previous;
+                free(current->next);
         }
         else
         {
@@ -128,20 +109,8 @@ t_parse *ft_parse(char *terminal)
                 current->args = malloc(sizeof(char *) * 2);
                 current->args[0] = ft_strdup(token);
                 current->args[1] = NULL;
-            }
-            else if ((current->previous->type >= 7 && current->previous->type <= 10) || current->previous->type == PIPE)
-            {
-                current->type = CMD;
-                current->args = malloc(sizeof(char *) * 2);
-                current->args[0] = ft_strdup(token);
-                current->args[1] = NULL;
-            }
-            else if (current->previous->type == CMD)
-            {
-                current->type = CMD;
-                current->previous->args = ft_realloc(current->previous->args, token);
-                current = current->previous;
-                free(current->next);
+                data->ncmd++;
+                data->pipe_detector = 0;
             }
             else if (current->previous->type == INFILE)
             {
@@ -171,6 +140,28 @@ t_parse *ft_parse(char *terminal)
                 free(current->next);
                 current->type = APPENDCOMP;
             }
+            else if (data->pipe_detector == 1)
+            {
+                current->type = CMD;
+                current->args = malloc(sizeof(char *) * 2);
+                current->args[0] = ft_strdup(token);
+                current->args[1] = NULL;
+                data->pipe_detector = 0;
+                data->ncmd++;
+            }
+            else if (current->previous->type == CMD)
+            {
+                current->previous->args = ft_realloc(current->previous->args, token);
+                current = current->previous;
+                free(current->next);
+            }
+            else if ((current->previous->type >= 7 && current->previous->type <= 10) && data->pipe_detector == 0)
+            {
+                temp = ft_searchlastcmd(current);
+                temp->args = ft_realloc(temp->args, token);
+                current = current->previous;
+                free(current->next);
+            }
         }
         current->next = malloc(sizeof(t_parse));
         current->next->previous = current;
@@ -185,41 +176,47 @@ t_parse *ft_parse(char *terminal)
     return (first);
 }
 
-// int main(int argc, char **argv)
-// {
-//     t_data  data;
-//     t_parse *test;
-//     t_parse *temp;
-//     int i;
+int main(int argc, char **argv)
+{
+    t_data  *data;
+    t_parse *test;
+    t_parse *temp;
+    int i;
 
-//     if (argc == 1)
-//         return (0);
-//     data.parse = ft_parse(ft_strdup(argv[1]));
-//     test = data.parse;
-//     while(data.parse)
-//     {
-//         printf("Type : %d\n", data.parse->type);
-//         i = 0;
-//         while(data.parse->args[i])
-//         {
-//             printf("%s ", data.parse->args[i]);
-//             i++;
-//         }
-//         printf("\n");
-//         data.parse = data.parse->next;
-//     }
-//     while(test)
-//     {
-//         i = 0;
-//         while (test->args[i])
-//         {
-//             free(test->args[i]);
-//             i++;
-//         }
-//         free(test->args);
-//         temp = test;
-//         test = test->next;
-//         free(temp);
-//     }
-//     return (0);
-// }
+    if (argc == 1)
+        return (0);
+    data = malloc(sizeof(t_data));
+    // data->ncmd = 0;
+    // data->pipe_detector = 0;
+    data->parse = ft_parse(ft_strdup(argv[1]), data);
+    test = data->parse;
+    while(data->parse)
+    {
+        printf("Type : %d\n", data->parse->type);
+        i = 0;
+        while(data->parse->args[i])
+        {
+            printf("%s ", data->parse->args[i]);
+            i++;
+        }
+        printf("\n");
+        printf("\n");
+        data->parse = data->parse->next;
+    }
+    printf("NCMD : %d\n", data->ncmd);
+    printf("PipeDetector : %d\n", data->pipe_detector);
+    while(test)
+    {
+        i = 0;
+        while (test->args[i])
+        {
+            free(test->args[i]);
+            i++;
+        }
+        free(test->args);
+        temp = test;
+        test = test->next;
+        free(temp);
+    }
+    return (0);
+}

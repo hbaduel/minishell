@@ -1,3 +1,4 @@
+
 #include "minishell.h"
 
 int ft_strlcpy(char *dest, char *src, int size)
@@ -48,6 +49,11 @@ char    *ft_strtok(char **terminal, char delim)
     if (str[start] == '\0')
         return (NULL);
     str = ft_check_filename(str);
+    if (str == NULL)
+    {
+        *terminal = NULL;
+        return (NULL);
+    }
     end = start;
     while (str[end] != delim && str[end])
         end++;
@@ -71,6 +77,8 @@ char    *ft_cut_terminal(char *terminal, char *token)
     int tokenlen;
     int i;
 
+    if (!terminal || !token)
+        return (NULL);
     start = 0;
     while (terminal[start] == ' ')
         start++;
