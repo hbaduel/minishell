@@ -25,6 +25,74 @@
 //     }
 // }
 
+char    *ft_add_space(char *str, char c, char *cc)
+{
+    char    *new_str;
+    int i;
+    int j;
+
+    i = 0;
+    j = 0;
+    if (cc == 0)
+    {
+        new_str = malloc(sizeof(char) * (ft_strlen(str) + 2));
+        while (str[j])
+        {
+            if (str[j] == c)
+            {
+                new_str[i] = str[j];
+                i++;
+                new_str[i] = ' ';
+            }
+            else
+                new_str[i] = str[j];
+            i++;
+            j++;
+        }
+    }
+    if (c == 0)
+    {
+        new_str = malloc(sizeof(char) * (ft_strlen(str) + 2));
+        while (str[j])
+        {
+            if (str[j] == cc[1] && str[j - 1] == cc[0])
+            {
+                new_str[i] = str[j];
+                i++;
+                new_str[i] = ' ';
+            }
+            else
+                new_str[i] = str[j];
+            i++;
+            j++;
+        }
+    }
+    free(str);
+    return (new_str);
+}
+
+char    *ft_check_filename(char *str)
+{
+    int i;
+
+    i = 0;
+    while (str[i])
+    {
+    if ((str[i] == '>') && (str[i + 1] == '>' ) && str[i + 2] != ' ')
+        str = ft_add_space(str, 0, ">>");
+    else if ((str[i] == '<') && (str[i + 1] == '<' ) && str[i + 2] != ' ')
+        str = ft_add_space(str, 0, "<<");
+    else if ((str[i] == '>') && (str[i + 1] != ' ' ))
+        str = ft_add_space(str, '>', 0);
+    else if ((str[i] == '<') && (str[i + 1] != ' ' ))
+        str = ft_add_space(str, '<', 0);
+    else if ((str[i] == '|') && (str[i + 1] != ' ' ))
+        str = ft_add_space(str, '|', 0);
+    i++;
+    }
+    return (str);
+}
+
 t_parse *ft_parse(char *terminal)
 {
     t_parse *first;
@@ -69,8 +137,10 @@ t_parse *ft_parse(char *terminal)
         }
         else if (ft_strcmp(token, "|") == 0)
         {
-            if (terminal[0] == "|")
+            if (terminal[0] == '|' && !current->previous)
                 ft_exiterror("Minishell : parse error near '|'\n");
+            else
+                current->data->pipe_detector = 1;
             current->type = PIPE;
             current->args = malloc(sizeof(char *) * 2);
             current->args[0] = ft_strdup("|");
@@ -140,39 +210,39 @@ t_parse *ft_parse(char *terminal)
     return (first);
 }
 
-// int main(int argc, char **argv)
-// {
-//     t_data  data;
-//     t_parse *test;
-//     t_parse *temp;
-//     int i;
+int main(int argc, char **argv)
+{
+    t_data  data;
+    t_parse *test;
+    t_parse *temp;
+    int i;
 
-//     data.parse = ft_parse(ft_strdup(argv[1]));
-//     test = data.parse;
-//     while(data.parse)
-//     {
-//         printf("Type : %d\n", data.parse->type);
-//         i = 0;
-//         while(data.parse->args[i])
-//         {
-//             printf("%s ", data.parse->args[i]);
-//             i++;
-//         }
-//         printf("\n");
-//         data.parse = data.parse->next;
-//     }
-//     while(test)
-//     {
-//         i = 0;
-//         while (test->args[i])
-//         {
-//             free(test->args[i]);
-//             i++;
-//         }
-//         free(test->args);
-//         temp = test;
-//         test = test->next;
-//         free(temp);
-//     }
-//     return (0);
-// }
+    data.parse = ft_parse(ft_strdup(argv[1]));
+    test = data.parse;
+    while(data.parse)
+    {
+        printf("Type : %d\n", data.parse->type);
+        i = 0;
+        while(data.parse->args[i])
+        {
+            printf("%s ", data.parse->args[i]);
+            i++;
+        }
+        printf("\n");
+        data.parse = data.parse->next;
+    }
+    while(test)
+    {
+        i = 0;
+        while (test->args[i])
+        {
+            free(test->args[i]);
+            i++;
+        }
+        free(test->args);
+        temp = test;
+        test = test->next;
+        free(temp);
+    }
+    return (0);
+}

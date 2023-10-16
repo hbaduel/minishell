@@ -69,6 +69,8 @@ char	*ft_cmdpath(char *cmd, char **envp);
 char	*ft_strtok(char *str, char delim);
 char	*ft_strdup(char *s);
 char    *ft_cut_terminal(char *terminal, char *token);
+char    *ft_add_space(char *str, char c, char *cc);
+char    *ft_check_filename(char *str);
 char    **ft_realloc(char **args, char *token);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
