@@ -1,23 +1,23 @@
 #include "../minishell.h"
 
-void	ft_echo(t_parse	*parse, int outfd)
+void	ft_echo(char **cmd)
 {
 	int	donl;
 	int	start;
 
 	donl = 1;
 	start = 1;
-	if (ft_strcmp(parse->args[1], "-n") == 0)
+	if (ft_strcmp(cmd[1], "-n") == 0)
 	{
 		donl = 0;
 		start = 2;
 	}
-	while (parse->args[start])
+	while (cmd[start])
 	{
-		ft_putstr_fd(parse->args[start], outfd);
+		ft_putstr_fd(cmd[start], 1);
 		start++;
 	}
 	if (donl == 1)
-		ft_putstr_fd("\n", outfd);
+		ft_putstr_fd("\n", 1);
 	exit(0);
 }

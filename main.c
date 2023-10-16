@@ -1,12 +1,11 @@
 #include "minishell.h"
 
 char	*terminal;
-t_data	*data;
 
-void	ft_kill()
-{
-	kill(data->cpid, SIGKILL);
-}
+// void	ft_kill()
+// {
+// 	kill(cpid, SIGKILL);
+// }
 
 char	*ft_cmdpath(char *cmd, char **envp)
 {
@@ -18,8 +17,7 @@ char	*ft_cmdpath(char *cmd, char **envp)
 	path[0] = "which";
 	path[1] = cmd;
 	path[2] = NULL;
-	if (pipe(tubefd) == -1)
-		ft_exiterror("pipe");
+	pipe(tubefd);
 	cpid = fork();
 	if (cpid == 0)
 	{
@@ -31,35 +29,59 @@ char	*ft_cmdpath(char *cmd, char **envp)
 	waitpid(cpid, NULL, 0);
 	close(tubefd[1]);
 	res = ft_readfd(tubefd[0]);
-	res[ft_strlen(res) - 1] = '\0';
+	if (res[0])
+		res[ft_strlen(res) - 1] = '\0';
 	close(tubefd[0]);
 	return (res);
 }
 
 void	ft_chooseaction(t_data *data, char **envp)
 {
-	t_parse *current;
+	t_parse	*current;
 	t_parse	*redir;
+	pid_t	cpid;
 
+	if (pipe(data->tubefd) == -1)
+		ft_exiterror("pipe");
 	current = ft_parse(terminal);
 	redir = current;
 	while (redir)
 	{
-		if (current->type == APPEND)
-			redir_output("res", data, 1);
-		if (current->type == OUTFILE)
-			redir_output("res", data, 0);
-		if (current->type == HEREDOC)
-			ft_heredoc("fin");
-		if (current->type == INFILE)
-			redir_input("test", data);
-		current = current->next;
+		if (redir->type == OUTCOMPLET)
+			ft_openfile(redir->args[1], data, 1);
+		if (redir->type == APPENDCOMP)
+			ft_openfile(redir->args[1], data, 2);
+		if (redir->type == HDCOMPLET)
+			ft_heredoc(redir->args[1], data);
+		if (redir->type == INCOMPLET)
+			ft_openfile(redir->args[1], data, 0);
+		redir = redir->next;
 	}
+	cpid = fork();
+	if (cpid == 0)
+	{
+		dup2(data->infilefd, 0);
+		//if (data->ncmd == 1)
+		dup2(data->outfilefd, 1); // a mettre dans le if
+		//close(data->pipefd[0]);
+		//close(data->pipefd[1]);
+		while (current)
+		{
+			if (current->type == CMD)
+				ft_execcmd(data, current->args, envp);
+			current = current->next;
+		}
+		//else if (data->ncmd > 1)
+	}
+	waitpid(cpid, NULL, 0);
 	if (data->infilefd != 0)
 		close(data->infilefd);
 	if (data->outfilefd != 1)
 		close(data->outfilefd);
-	exit(0);
+	data->infilefd = 0;
+	data->outfilefd = 1;
+	close(data->tubefd[0]);
+	close(data->tubefd[1]);
 }
 
 void	ft_readterminal(t_data *data, char **envp)
@@ -69,23 +91,15 @@ void	ft_readterminal(t_data *data, char **envp)
 	temp = NULL;
 	while (1)
 	{
-		data->cpid = 1;
 		terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
 		if (!terminal)
 		{
 			free(data);
 			exit(0);
 		}
-		if (ft_strcmp(terminal, "exit") == 0)
-		{
-			free(terminal);
-			return ;
-		}
-		data->cpid = fork();
-		if (data->cpid == 0)
+		if (terminal[0])
 			ft_chooseaction(data, envp);
-		waitpid(data->cpid, NULL, 0);
-		if (ft_strcmp(terminal, temp) != 0)
+		if (ft_strcmp(terminal, temp) != 0 && terminal[0])
 		{
 			add_history(terminal);
 			free(temp);
@@ -99,11 +113,11 @@ void	ft_readterminal(t_data *data, char **envp)
 
 int		main(int argc, char **argv, char **envp)
 {
-	//t_data	*data;
+	t_data	*data;
 
 	(void) argc;
 	(void) argv;
-	signal(SIGINT, ft_kill);
+	//signal(SIGINT, ft_kill);
 	signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
 	data->infilefd = 0;

@@ -32,13 +32,11 @@ char	*ft_strdup(char *s)
 char    *ft_strtok(char **terminal, char delim)
 {
     char    *next_token;
-    char    *str;
     int     start;
     int     end;
     int     i;
 
     str = *terminal;
-    str = ft_check_filename(str);
     if (!str)
         return (NULL);
     start = 0;
@@ -63,7 +61,6 @@ char    *ft_strtok(char **terminal, char delim)
     *terminal = str;
     return (next_token);
 }
-
 
 char    *ft_cut_terminal(char *terminal, char *token)
 {

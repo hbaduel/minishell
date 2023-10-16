@@ -27,7 +27,7 @@
 # define HEREDOC    5
 # define APPEND     6
 # define INCOMPLET  7
-# define OUTCOMPlET 8
+# define OUTCOMPLET 8
 # define HDCOMPLET  9
 # define APPENDCOMP 10
 
@@ -45,31 +45,29 @@ typedef struct	s_data
 	int	infilefd;
 	int	outfilefd;
 	int	ncmd;
-    int exit;
     int pipe_detector;
-    pid_t   cpid;
+    int tubefd[2];
     t_parse *parse;
 }				t_data;
 
 void	ft_exiterror(char *str);
 void	ft_putstr_fd(char *str, int fd);
-void	ft_heredoc(char *limiter);
-void	redir_input(char *file, t_data *data);
-void	redir_output(char *file, t_data *data, int which);
+void	ft_heredoc(char *limiter, t_data *data);
+void	ft_openfile(char *file, t_data *data, int which);
 void	ft_pipe(t_data *data, char **envp);
-void	ft_execcmd(char **cmd, char **envp);
+void	ft_execcmd(t_data *data, char **cmd, char **envp);
 void	ft_free_parse(t_parse *parse);
 void    ft_print_tokens(t_parse *parse);
-void	ft_pwd(int outfd);
-void	ft_echo(t_parse	*parse, int outfd);
+void	ft_pwd(char **cmd);
+void	ft_echo(char **cmd);
 t_parse	*ft_parse(char *terminal);
-char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strjoin(char *s1, char *s2, int dofree);
 char	*ft_readfd(int fd);
 char	*ft_cmdpath(char *cmd, char **envp);
 char	*ft_strtok(char **terminal, char delim);
 char	*ft_strdup(char *s);
 char    *ft_cut_terminal(char *terminal, char *token);
-char    *ft_add_space(char *str, char c, char *cc);
+char    *ft_add_space(char *str);
 char    *ft_check_filename(char *str);
 char    **ft_realloc(char **args, char *token);
 int		ft_strcmp(char *s1, char *s2);

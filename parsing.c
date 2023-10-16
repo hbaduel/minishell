@@ -25,20 +25,60 @@
 //     }
 // }
 
+char    *ft_add_space(char *str)
+{
+    char    *new_str;
+    int i;
 
+    new_str = malloc(sizeof(char) * (ft_strlen(str) + 2));
+    i = 0;
+    while ((str[i] == '<' || str[i] == '>' || str[i] == '|' || str[i] == ' ') && str[i])
+    {
+        new_str[i] = str[i];
+        i++;
+    }
+    new_str[i] = ' ';
+    while (str[i])
+    {
+        new_str[i + 1] = str[i];
+        i++;
+    }
+    new_str[i + 1] = '\0';
+    free(str);
+    return (new_str);
+}
+
+char    *ft_check_filename(char *str)
+{
+    int i;
+
+    i = 0;
+    while (str[i] == ' ')
+        i++;
+    if (str[i] != '>' && str[i] != '<' && str[i] != '|')
+        return (str);
+    if (str[i] == '|' && str[i + 1] == '|')
+        return (NULL);
+    while (str[i] == '<' || str[i] == '>' || str[i] == '|')
+        i++;
+    if (str[i] != ' ')
+        str = ft_add_space(str);
+    return (str);
+}
 
 t_parse *ft_parse(char *terminal)
 {
     t_parse *first;
     t_parse *current;
     char    *token;
-    char    *cmd;
+    char    *terminal2;
 
+    terminal2 = ft_strdup(terminal);
     first = malloc(sizeof(t_parse));
     current = first;
     current->previous = NULL;
-    token = ft_strtok(&terminal, ' ');
-    terminal = ft_cut_terminal(terminal, token);
+    token = ft_strtok(&terminal2, ' ');
+    terminal2 = ft_cut_terminal(terminal2, token);
     while (token != NULL)
     {
         if (ft_strcmp(token, "<") == 0)
@@ -115,7 +155,7 @@ t_parse *ft_parse(char *terminal)
                 current->previous->args = ft_realloc(current->previous->args, token);
                 current = current->previous;
                 free(current->next);
-                current->type = OUTCOMPlET;
+                current->type = OUTCOMPLET;
             }
             else if (current->previous->type == HEREDOC)
             {
@@ -136,47 +176,50 @@ t_parse *ft_parse(char *terminal)
         current->next->previous = current;
         current = current->next;
         free(token);
-        token = ft_strtok(&terminal, ' ');
-        terminal = ft_cut_terminal(terminal, token);
+        token = ft_strtok(&terminal2, ' ');
+        terminal2 = ft_cut_terminal(terminal2, token);
     }
     current->previous->next = NULL;
     free(current);
+    free(terminal2);
     return (first);
 }
 
-int main(int argc, char **argv)
-{
-    t_data  data;
-    t_parse *test;
-    t_parse *temp;
-    int i;
+// int main(int argc, char **argv)
+// {
+//     t_data  data;
+//     t_parse *test;
+//     t_parse *temp;
+//     int i;
 
-    data.parse = ft_parse(ft_strdup(argv[1]));
-    test = data.parse;
-    while(data.parse)
-    {
-        printf("Type : %d\n", data.parse->type);
-        i = 0;
-        while(data.parse->args[i])
-        {
-            printf("%s ", data.parse->args[i]);
-            i++;
-        }
-        printf("\n");
-        data.parse = data.parse->next;
-    }
-    while(test)
-    {
-        i = 0;
-        while (test->args[i])
-        {
-            free(test->args[i]);
-            i++;
-        }
-        free(test->args);
-        temp = test;
-        test = test->next;
-        free(temp);
-    }
-    return (0);
-}
+//     if (argc == 1)
+//         return (0);
+//     data.parse = ft_parse(ft_strdup(argv[1]));
+//     test = data.parse;
+//     while(data.parse)
+//     {
+//         printf("Type : %d\n", data.parse->type);
+//         i = 0;
+//         while(data.parse->args[i])
+//         {
+//             printf("%s ", data.parse->args[i]);
+//             i++;
+//         }
+//         printf("\n");
+//         data.parse = data.parse->next;
+//     }
+//     while(test)
+//     {
+//         i = 0;
+//         while (test->args[i])
+//         {
+//             free(test->args[i]);
+//             i++;
+//         }
+//         free(test->args);
+//         temp = test;
+//         test = test->next;
+//         free(temp);
+//     }
+//     return (0);
+// }
