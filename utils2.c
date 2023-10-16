@@ -29,13 +29,15 @@ char	*ft_strdup(char *s)
 	return (str);
 }
 
-char    *ft_strtok(char *str, char delim)
+char    *ft_strtok(char **terminal, char delim)
 {
     char    *next_token;  // Pointeur pour stocker l'état entre les appels.
+    char    *str;
     int     start;
     int     end;
     int     i;
 
+    str = *terminal;
     if (!str)
         return (NULL);
     start = 0;
@@ -58,9 +60,9 @@ char    *ft_strtok(char *str, char delim)
         i++;
     }
     next_token[i] = '\0';
+    *terminal = str;
     return (next_token);
 }
-
 
 char    *ft_cut_terminal(char *terminal, char *token)
 {
