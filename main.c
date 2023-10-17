@@ -43,7 +43,7 @@ void	ft_chooseaction(t_data *data, char **envp)
 
 	if (pipe(data->tubefd) == -1)
 		ft_exiterror("pipe");
-	current = ft_parse(terminal);
+	current = ft_parse(terminal, data);
 	redir = current;
 	while (redir)
 	{
@@ -124,7 +124,6 @@ int		main(int argc, char **argv, char **envp)
 	data->outfilefd = 1;
 	data->ncmd = 0;
 	ft_readterminal(data, envp);
-	ft_parse(terminal);
 	rl_clear_history();
 	return (0);
 }
