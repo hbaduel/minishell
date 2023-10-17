@@ -42,10 +42,10 @@ void	ft_heredoc(char *limiter, t_data *data)
 		if (ft_strcmp(heredoc, limiter) == 0)
 		{
 			free(heredoc);
-			//if (data->ncmd == 0)
-			ft_putstr_fd(res, data->outfilefd);
+			if (data->ncmd == 0)
+				ft_putstr_fd(res, data->outfilefd);
 			// else
-			// 	ft_putstr_fd(res, pipefd[1]);
+			// 	ft_putstr_fd(res, data->tubefd[1]);
 			free(res);
 			return ;
 		}

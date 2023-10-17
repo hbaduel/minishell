@@ -41,8 +41,6 @@ void	ft_chooseaction(t_data *data, char **envp)
 	t_parse	*redir;
 	pid_t	cpid;
 
-	if (pipe(data->tubefd) == -1)
-		ft_exiterror("pipe");
 	current = ft_parse(terminal, data);
 	redir = current;
 	while (redir)
@@ -58,20 +56,27 @@ void	ft_chooseaction(t_data *data, char **envp)
 		redir = redir->next;
 	}
 	cpid = fork();
+	if (cpid == -1)
+		ft_exiterror("fork");
 	if (cpid == 0)
 	{
-		dup2(data->infilefd, 0);
-		//if (data->ncmd == 1)
-		dup2(data->outfilefd, 1); // a mettre dans le if
-		//close(data->pipefd[0]);
-		//close(data->pipefd[1]);
-		while (current)
+		if (data->infilefd != 0)
+			dup2(data->infilefd, 0);
+		if (data->ncmd == 1)
 		{
-			if (current->type == CMD)
-				ft_execcmd(data, current->args, envp);
-			current = current->next;
+			if (data->outfilefd != 1)
+				dup2(data->outfilefd, 1);
+			while (current)
+			{
+				if (current->type == CMD)
+					ft_execcmd(data, current->args, envp, data->outfilefd);
+				current = current->next;
+			}
 		}
-		//else if (data->ncmd > 1)
+		else if (data->ncmd > 1)
+			ft_pipe(data, current, envp);
+		else
+			exit(0);
 	}
 	waitpid(cpid, NULL, 0);
 	if (data->infilefd != 0)
@@ -80,8 +85,7 @@ void	ft_chooseaction(t_data *data, char **envp)
 		close(data->outfilefd);
 	data->infilefd = 0;
 	data->outfilefd = 1;
-	close(data->tubefd[0]);
-	close(data->tubefd[1]);
+	data->ncmd = 0;
 }
 
 void	ft_readterminal(t_data *data, char **envp)
