@@ -78,7 +78,7 @@ void	ft_chooseaction(t_data *data, char **envp)
 		else
 			exit(0);
 	}
-	waitpid(-1, NULL, 0);
+	waitpid(cpid, NULL, 0);
 	if (data->infilefd != 0)
 		close(data->infilefd);
 	if (data->outfilefd != 1)
@@ -86,6 +86,7 @@ void	ft_chooseaction(t_data *data, char **envp)
 	data->infilefd = 0;
 	data->outfilefd = 1;
 	data->ncmd = 0;
+	data->tubefd = NULL;
 }
 
 void	ft_readterminal(t_data *data, char **envp)
@@ -127,6 +128,7 @@ int		main(int argc, char **argv, char **envp)
 	data->infilefd = 0;
 	data->outfilefd = 1;
 	data->ncmd = 0;
+	data->tubefd = NULL;
 	ft_readterminal(data, envp);
 	rl_clear_history();
 	return (0);

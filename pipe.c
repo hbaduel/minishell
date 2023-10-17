@@ -55,7 +55,7 @@ void	ft_nextcmd(t_data *data, char **cmd, char **envp)
 		dup2(tubefd[1], 1);
 		ft_execcmd(data, cmd, envp, tubefd[1]);
 	}
-	waitpid(0, NULL, 0);
+	waitpid(pid, NULL, 0);
 	dup2(tubefd[0], 0);
 	close(tubefd[1]);
 }
@@ -85,5 +85,5 @@ void	ft_pipe(t_data *data, t_parse *parsing, char **envp)
 			parsing = parsing->next;
 		ft_execcmd(data, parsing->args, envp, data->outfilefd);
 	}
-	waitpid(0, NULL, 0);
+	waitpid(pid, NULL, 0);
 }
