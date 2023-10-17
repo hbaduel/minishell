@@ -23,15 +23,12 @@ void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd)
 	if (!path[0])
 	{
 		free(path);
-		if (data->outfilefd == 1)
-		{
-			if (outfd != 1)
-				dup2(1, outfd);
-			path = ft_strjoin("minishell: command not found: ", cmd[0], 0);
-			ft_putstr_fd(path, 1);
-			ft_putstr_fd("\n", 1);
-			free(path);
-		}
+		if (outfd != 1)
+			dup2(1, outfd);
+		path = ft_strjoin("minishell: command not found: ", cmd[0], 0);
+		ft_putstr_fd(path, 1);
+		ft_putstr_fd("\n", 1);
+		free(path);
 		exit(0);
 	}
 	if (execve(path, cmd, envp) == -1)
@@ -58,7 +55,7 @@ void	ft_nextcmd(t_data *data, char **cmd, char **envp)
 		dup2(tubefd[1], 1);
 		ft_execcmd(data, cmd, envp, tubefd[1]);
 	}
-	waitpid(pid, NULL, 0);
+	waitpid(0, NULL, 0);
 	dup2(tubefd[0], 0);
 	close(tubefd[1]);
 }
@@ -88,5 +85,5 @@ void	ft_pipe(t_data *data, t_parse *parsing, char **envp)
 			parsing = parsing->next;
 		ft_execcmd(data, parsing->args, envp, data->outfilefd);
 	}
-	waitpid(pid, NULL, 0);
+	waitpid(0, NULL, 0);
 }

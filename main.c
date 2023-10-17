@@ -78,7 +78,7 @@ void	ft_chooseaction(t_data *data, char **envp)
 		else
 			exit(0);
 	}
-	waitpid(cpid, NULL, 0);
+	waitpid(-1, NULL, 0);
 	if (data->infilefd != 0)
 		close(data->infilefd);
 	if (data->outfilefd != 1)
