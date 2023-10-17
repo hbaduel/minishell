@@ -56,6 +56,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
     char    *token;
     char    *terminal2;
 
+    terminal = ft_add_space_before_pipe(terminal);
     terminal2 = ft_strdup(terminal);
     first = malloc(sizeof(t_parse));
     data->pipe_detector = 1;
@@ -186,8 +187,6 @@ int main(int argc, char **argv)
     if (argc == 1)
         return (0);
     data = malloc(sizeof(t_data));
-    // data->ncmd = 0;
-    // data->pipe_detector = 0;
     data->parse = ft_parse(ft_strdup(argv[1]), data);
     test = data->parse;
     while(data->parse)

@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 int ft_strlcpy(char *dest, char *src, int size)
@@ -44,8 +43,10 @@ char    *ft_strtok(char **terminal, char delim)
     start = 0;
     while (str[start] == delim && str[start])
         start++;
-    //if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{')
-      //  ft_check_quote(str);
+    if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{')
+        ft_check_quote(str);
+    if (str[start] == '\\' || str[start] == ';')
+        ft_exiterror("Error : '\' and ';' are not interpreted/n");
     if (str[start] == '\0')
         return (NULL);
     str = ft_check_filename(str);
