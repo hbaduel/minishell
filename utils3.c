@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void ft_strncpy(char *dest, char *src, size_t n)
+void    ft_strncpy(char *dest, char *src, int n)
 {
     if (n <= 0 || *src == '\0')
         *dest = '\0';
@@ -24,33 +24,30 @@ char	*ft_strcpy(char *s1, char *s2)
 	return (s1);
 }
 
-char *ft_add_space_before_pipe(char *str)
+char    *ft_add_space_before(char *str, int idx)
 {
-        int pipe_index;
-        int i;
-        char *modified_str;
+    int     i;
+    char    *modified_str;
+    char    *new_str;
 
-        i = 0;
-        pipe_index = 0;
-        while (str[i])
+    i = idx;
+    modified_str = ft_strdup(str);
+    while (str[i])
+    {
+        if ((str[i] == '|'))
         {
-                if (str[i] == '|')
-                {
-                    pipe_index = i;
-                    break;
-                }
-                i++;
+            new_str = malloc(strlen(modified_str) + 2);
+            ft_strncpy(new_str, modified_str, i);
+            new_str[i] = ' ';
+            printf("NEWSTR : %s\n", new_str);
+            strcpy(new_str + i, str + i);
+            free(modified_str);
+            modified_str = new_str;
+            printf("MODIFIED STR 2 : %s\n", modified_str);
+            // ft_add_space_before(modified_str, i);
         }
-        if (pipe_index > 0)
-        {
-                modified_str = malloc(strlen(str) + 2);
-                if (modified_str == NULL)
-                    return NULL;
-                ft_strncpy(modified_str, str, pipe_index);
-                modified_str[pipe_index] = ' ';
-                ft_strcpy(modified_str + pipe_index + 1, str + pipe_index);
-                return modified_str;
-        }
-        else
-                return (ft_strdup(str));   
+        i++;
+    }
+    printf("NEWSTR : %s\n", modified_str);
+    return modified_str;
 }

@@ -68,7 +68,7 @@ char	*ft_strdup(char *s);
 char    *ft_cut_terminal(char *terminal, char *token);
 char    *ft_add_space(char *str);
 char    *ft_check_filename(char *str);
-char    *ft_add_space_before_pipe(char *str);
+char    *ft_add_space_before(char *str, int idx);
 char    **ft_realloc(char **args, char *token);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);

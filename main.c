@@ -145,7 +145,6 @@ int		main(int argc, char **argv, char **envp)
 	data->infilefd = 0;
 	data->outfilefd = 1;
 	data->ncmd = 0;
-	data->tubefd = NULL;
 	ft_readterminal(data, envp);
 	rl_clear_history();
 	return (0);
