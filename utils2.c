@@ -77,8 +77,11 @@ char    *ft_cut_terminal(char *terminal, char *token)
     int tokenlen;
     int i;
 
-    if (!terminal || !token)
+    if (!token)
+    {
+        free(terminal);
         return (NULL);
+    }
     start = 0;
     while (terminal[start] == ' ')
         start++;

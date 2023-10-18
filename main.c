@@ -7,6 +7,32 @@ char	*terminal;
 // 	kill(cpid, SIGKILL);
 // }
 
+void	ft_freeline(t_data *data)
+{
+	t_parse	*temp;
+	int		i;
+	if (data->infilefd != 0)
+		close(data->infilefd);
+	if (data->outfilefd != 1)
+		close(data->outfilefd);
+	data->ncmd = 0;
+	data->infilefd = 0;
+	data->outfilefd = 1;
+	while (data->parse)
+	{
+		i = 0;
+		while (data->parse->args[i])
+		{
+			free(data->parse->args[i]);
+			i++;
+		}
+		free(data->parse->args);
+		temp = data->parse;
+		data->parse = data->parse->next;
+		free(temp);
+	}
+}
+
 char	*ft_cmdpath(char *cmd, char **envp)
 {
 	pid_t	cpid;
@@ -37,60 +63,30 @@ char	*ft_cmdpath(char *cmd, char **envp)
 
 void	ft_chooseaction(t_data *data, char **envp)
 {
-	t_parse	*current;
-	t_parse	*redir;
-	pid_t	cpid;
-
-	current = ft_parse(terminal, data);
-	redir = current;
-	while (redir)
-	{
-		if (redir->type == OUTCOMPLET)
-			ft_openfile(redir->args[1], data, 1);
-		if (redir->type == APPENDCOMP)
-			ft_openfile(redir->args[1], data, 2);
-		if (redir->type == HDCOMPLET)
-			ft_heredoc(redir->args[1], data);
-		if (redir->type == INCOMPLET)
-			ft_openfile(redir->args[1], data, 0);
-		redir = redir->next;
-	}
-	cpid = fork();
-	if (cpid == -1)
-		ft_exiterror("fork");
-	if (cpid == 0)
-	{
-		if (data->infilefd != 0)
-			dup2(data->infilefd, 0);
-		if (data->ncmd == 1)
-		{
-			if (data->outfilefd != 1)
-				dup2(data->outfilefd, 1);
-			while (current)
-			{
-				if (current->type == CMD)
-					ft_execcmd(data, current->args, envp, data->outfilefd);
-				current = current->next;
-			}
-		}
-		else if (data->ncmd > 1)
-			ft_pipe(data, current, envp);
-		else
-			exit(0);
-	}
-	waitpid(cpid, NULL, 0);
 	if (data->infilefd != 0)
-		close(data->infilefd);
-	if (data->outfilefd != 1)
-		close(data->outfilefd);
-	data->infilefd = 0;
-	data->outfilefd = 1;
-	data->ncmd = 0;
+		dup2(data->infilefd, 0);
+	if (data->ncmd == 1)
+	{
+		if (data->outfilefd != 1)
+			dup2(data->outfilefd, 1);
+		while (data->parse)
+		{
+			if (data->parse->type == CMD)
+				ft_execcmd(data, data->parse->args, envp, data->outfilefd);
+			data->parse = data->parse->next;
+		}
+	}
+	else if (data->ncmd > 1)
+		ft_pipe(data, data->parse, envp);
+	ft_freeline(data);
+	exit(0);
 }
 
 void	ft_readterminal(t_data *data, char **envp)
 {
-	char *temp;
+	char	*temp;
+	pid_t	cpid;
+	t_parse	*redir;
 
 	temp = NULL;
 	while (1)
@@ -101,8 +97,30 @@ void	ft_readterminal(t_data *data, char **envp)
 			free(data);
 			exit(0);
 		}
-		if (terminal[0])
-			ft_chooseaction(data, envp);
+		data->parse = ft_parse(terminal, data);
+		redir = data->parse;
+		while (redir)
+		{
+			if (redir->type == OUTCOMPLET)
+				ft_openfile(redir->args[1], data, 1);
+			if (redir->type == APPENDCOMP)
+				ft_openfile(redir->args[1], data, 2);
+			if (redir->type == HDCOMPLET)
+				ft_heredoc(redir->args[1], data);
+			if (redir->type == INCOMPLET)
+				ft_openfile(redir->args[1], data, 0);
+			redir = redir->next;
+		}
+		cpid = fork();
+		if (cpid == 0)
+		{
+			if (terminal[0])
+				ft_chooseaction(data, envp);
+			else
+				exit(0);
+		}
+		waitpid(cpid, NULL, 0);
+		ft_freeline(data);
 		if (ft_strcmp(terminal, temp) != 0 && terminal[0])
 		{
 			add_history(terminal);
@@ -131,3 +149,4 @@ int		main(int argc, char **argv, char **envp)
 	rl_clear_history();
 	return (0);
 }
+// segfault quand on prend l'historique d'un heredoc puis qu'on efface puis entrée

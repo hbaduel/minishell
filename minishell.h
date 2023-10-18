@@ -55,7 +55,6 @@ void	ft_heredoc(char *limiter, t_data *data);
 void	ft_openfile(char *file, t_data *data, int which);
 void	ft_pipe(t_data *data, t_parse *parsing, char **envp);
 void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd);
-void	ft_free_parse(t_parse *parse);
 void    ft_print_tokens(t_parse *parse);
 void	ft_pwd(char **cmd);
 void	ft_echo(char **cmd);
