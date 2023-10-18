@@ -14,7 +14,7 @@ void    ft_strncpy(char *dest, char *src, int n)
 char	*ft_strcpy(char *s1, char *s2)
 {
 	int i = 0;
-	
+
 	while (s2[i] != '\0')
 	{
 		s1[i] = s2[i];
@@ -24,30 +24,41 @@ char	*ft_strcpy(char *s1, char *s2)
 	return (s1);
 }
 
-char    *ft_add_space_before(char *str, int idx)
+char    *ft_add_space_before(char *str)
 {
     int     i;
     char    *modified_str;
     char    *new_str;
 
-    i = idx;
+    i = 0;
     modified_str = ft_strdup(str);
-    while (str[i])
+    while (modified_str[i]) //before
     {
-        if ((str[i] == '|'))
+        if ((modified_str[i] == '|') && modified_str[i - 1] != ' ')
         {
             new_str = malloc(strlen(modified_str) + 2);
             ft_strncpy(new_str, modified_str, i);
             new_str[i] = ' ';
-            printf("NEWSTR : %s\n", new_str);
-            strcpy(new_str + i, str + i);
+            strcpy(new_str + i + 1, modified_str + i);
             free(modified_str);
             modified_str = new_str;
-            printf("MODIFIED STR 2 : %s\n", modified_str);
-            // ft_add_space_before(modified_str, i);
+            i++;
         }
         i++;
     }
-    printf("NEWSTR : %s\n", modified_str);
-    return modified_str;
+    i = 0;
+    while (modified_str[i]) //after
+    {
+        if ((modified_str[i] == '|') && modified_str[i + 1] != ' ')
+        {
+            new_str = malloc(strlen(modified_str) + 2);
+            ft_strncpy(new_str, modified_str, i + 1);
+            new_str[i + 1] = ' ';
+            strcpy(new_str + i + 2, modified_str + i + 1);
+            free(modified_str);
+            modified_str = new_str;
+        }
+        i++;
+    }
+    return (modified_str);
 }

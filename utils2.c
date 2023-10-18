@@ -29,15 +29,13 @@ char	*ft_strdup(char *s)
 	return (str);
 }
 
-char    *ft_strtok(char **terminal, char delim)
+char    *ft_strtok(char *str, char delim)
 {
     char    *next_token;
-    char    *str;
     int     start;
     int     end;
     int     i;
 
-    str = *terminal;
     if (!str)
         return (NULL);
     start = 0;
@@ -46,15 +44,9 @@ char    *ft_strtok(char **terminal, char delim)
     if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{')
         ft_check_quote(str);
     if (str[start] == '\\' || str[start] == ';')
-        ft_exiterror("Error : '\' and ';' are not interpreted/n");
+        ft_exiterror("Error : '\' and ';' are not interpreted\n");
     if (str[start] == '\0')
         return (NULL);
-    str = ft_check_filename(str);
-    if (str == NULL)
-    {
-        *terminal = NULL;
-        return (NULL);
-    }
     end = start;
     while (str[end] != delim && str[end])
         end++;
@@ -67,7 +59,6 @@ char    *ft_strtok(char **terminal, char delim)
         i++;
     }
     next_token[i] = '\0';
-    *terminal = str;
     return (next_token);
 }
 
