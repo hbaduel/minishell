@@ -15,6 +15,8 @@ void	ft_echo(char **cmd)
 	while (cmd[start])
 	{
 		ft_putstr_fd(cmd[start], 1);
+		if (cmd[start + 1])
+			ft_putstr_fd(" ", 1);
 		start++;
 	}
 	if (donl == 1)

@@ -1,5 +1,41 @@
 #include "minishell.h"
 
+void	ft_interpret_dollar(char *str, int idx)
+{
+	while (str[idx])
+	{
+		// gerer les differents ccas du $ entre double quote. jai vraiment la flemme la...
+	}
+}
+
+char	ft_strchr(char *s, char c, char bol)
+{
+	while (*s)
+	{
+		if (*s == c)
+			return (c);
+		s++;
+	}
+	return (c);
+}
+
+void	ft_check_dollar(char *str, int idx)
+{
+	char	dollar;
+	char	doll_in_quotes;
+	int	i;
+
+	dollar = '$';
+	doll_in_quotes = 0;
+	i = idx;
+	while (str[i])
+	{
+		if (!ft_strchr(str, dollar, doll_in_quotes))
+			ft_interpret_dollar(str, idx);
+		i++;
+	}
+}
+
 char	*ft_quote(char *str, int idx, char quote)
 {
 	int	inside_quote;
@@ -14,26 +50,11 @@ char	*ft_quote(char *str, int idx, char quote)
 			inside_quote += 1;
 		i++;
 	}
-	if (inside_quote % 2 == 0)
-	{
-		while(idx != i)
-		{
-			// du coup faudra gerer les metacaracteres ici
-		}
-	}
-	else
+	if (inside_quote % 2 != 0)
 		ft_exiterror("Error : quotes cannot be used alone");
+	if (inside_quote % 2 == 0 && (quote == '\"' || quote == '\''))
+		ft_check_dollar(str, idx);
 	return (str);
-}
-
-void	ft_parenthesis(char *str, int idx)
-{
-
-}
-
-void	ft_brace(char *str, int idx)
-{
-
 }
 
 void	ft_check_quote(char *str)
@@ -48,15 +69,9 @@ void	ft_check_quote(char *str)
 		else if (str[i] == '\"')
 			ft_quote(str, i, '\"');
 		else if (str[i] == '(')
-			ft_parenthesis(str, i);
+			ft_quote(str, i, '(');
 		if (str[i] == '{')
-			ft_brace(str, i);
+			ft_quote(str, i, '{');
 		i++;
 	}
-}
-
-int	main()
-{
-	ft_check_quote("Je suis ' un test ' est ce que ca marche");
-	return (0);
 }

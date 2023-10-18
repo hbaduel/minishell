@@ -23,15 +23,12 @@ void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd)
 	if (!path[0])
 	{
 		free(path);
-		if (data->outfilefd == 1)
-		{
-			if (outfd != 1)
-				dup2(1, outfd);
-			path = ft_strjoin("minishell: command not found: ", cmd[0], 0);
-			ft_putstr_fd(path, 1);
-			ft_putstr_fd("\n", 1);
-			free(path);
-		}
+		if (outfd != 1)
+			dup2(1, outfd);
+		path = ft_strjoin("minishell: command not found: ", cmd[0], 0);
+		ft_putstr_fd(path, 1);
+		ft_putstr_fd("\n", 1);
+		free(path);
 		exit(0);
 	}
 	if (execve(path, cmd, envp) == -1)
