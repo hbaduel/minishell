@@ -61,8 +61,19 @@ char	*ft_cmdpath(char *cmd, char **envp)
 	return (res);
 }
 
+char	***ft_dupcmd(t_data *data, t_parse *parsing)
+{
+	char	***cmds;
+
+	cmds = malloc(sizeof(char **) * data->ncmd);
+
+}
+
 void	ft_chooseaction(t_data *data, char **envp)
 {
+	char	***cmds;
+
+	cmds = ft_dupcmd(data, data->parse);
 	if (data->infilefd != 0)
 		dup2(data->infilefd, 0);
 	if (data->ncmd == 1)
@@ -78,7 +89,6 @@ void	ft_chooseaction(t_data *data, char **envp)
 	}
 	else if (data->ncmd > 1)
 		ft_pipe(data, data->parse, envp);
-	ft_freeline(data);
 	exit(0);
 }
 

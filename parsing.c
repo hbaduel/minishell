@@ -43,7 +43,6 @@ t_parse *ft_parse(char *terminal, t_data *data)
     data->pipe_detector = 1;
     current = first;
     current->previous = NULL;
-    printf("minishell: %s\n", terminal2);
     token = ft_strtok(terminal2, ' ');
     terminal2 = ft_cut_terminal(terminal2, token);
     while (token != NULL)
