@@ -74,16 +74,10 @@ void	ft_pipe(t_data *data, t_parse *parsing, char **envp)
 		parsing = parsing->next;
 		i++;
 	}
-	pid = fork();
-	if (pid == -1)
-		ft_exiterror("fork");
-	if (pid == 0)
-	{
-		if (data->outfilefd != 1)
-			dup2(data->outfilefd, 1);
-		while(parsing->type != CMD)
-			parsing = parsing->next;
-		ft_execcmd(data, parsing->args, envp, data->outfilefd);
-	}
-	waitpid(pid, NULL, 0);
+	close(data->infilefd);
+	if (data->outfilefd != 1)
+		dup2(data->outfilefd, 1);
+	while(parsing->type != CMD)
+		parsing = parsing->next;
+	ft_execcmd(data, parsing->args, envp, data->outfilefd);
 }

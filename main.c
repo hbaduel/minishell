@@ -7,17 +7,11 @@ char	*terminal;
 // 	kill(cpid, SIGKILL);
 // }
 
-void	ft_freeline(t_data *data)
+void	ft_freeline(t_data *data, int which)
 {
 	t_parse	*temp;
 	int		i;
-	if (data->infilefd != 0)
-		close(data->infilefd);
-	if (data->outfilefd != 1)
-		close(data->outfilefd);
-	data->ncmd = 0;
-	data->infilefd = 0;
-	data->outfilefd = 1;
+
 	while (data->parse)
 	{
 		i = 0;
@@ -31,6 +25,12 @@ void	ft_freeline(t_data *data)
 		data->parse = data->parse->next;
 		free(temp);
 	}
+	if (data->infilefd != 0)
+		close(data->infilefd);
+	if (data->outfilefd != 1)
+		close(data->outfilefd);
+	if (which == 1)
+		free(data);
 }
 
 char	*ft_cmdpath(char *cmd, char **envp)
@@ -61,19 +61,8 @@ char	*ft_cmdpath(char *cmd, char **envp)
 	return (res);
 }
 
-char	***ft_dupcmd(t_data *data, t_parse *parsing)
-{
-	char	***cmds;
-
-	cmds = malloc(sizeof(char **) * data->ncmd);
-
-}
-
 void	ft_chooseaction(t_data *data, char **envp)
 {
-	char	***cmds;
-
-	cmds = ft_dupcmd(data, data->parse);
 	if (data->infilefd != 0)
 		dup2(data->infilefd, 0);
 	if (data->ncmd == 1)
@@ -89,6 +78,8 @@ void	ft_chooseaction(t_data *data, char **envp)
 	}
 	else if (data->ncmd > 1)
 		ft_pipe(data, data->parse, envp);
+	ft_freeline(data, 1);
+	// check s'il faut clear history dans un processus fils
 	exit(0);
 }
 
@@ -107,30 +98,36 @@ void	ft_readterminal(t_data *data, char **envp)
 			free(data);
 			exit(0);
 		}
-		data->parse = ft_parse(terminal, data);
-		redir = data->parse;
-		while (redir)
+		if (terminal[0])
 		{
-			if (redir->type == OUTCOMPLET)
-				ft_openfile(redir->args[1], data, 1);
-			if (redir->type == APPENDCOMP)
-				ft_openfile(redir->args[1], data, 2);
-			if (redir->type == HDCOMPLET)
-				ft_heredoc(redir->args[1], data);
-			if (redir->type == INCOMPLET)
-				ft_openfile(redir->args[1], data, 0);
-			redir = redir->next;
+			data->parse = ft_parse(terminal, data);
+			redir = data->parse;
+			while (redir)
+			{
+				if (redir->type == OUTCOMPLET)
+					ft_openfile(redir->args[1], data, 1);
+				if (redir->type == APPENDCOMP)
+					ft_openfile(redir->args[1], data, 2);
+				if (redir->type == HDCOMPLET)
+					ft_heredoc(redir->args[1], data);
+				if (redir->type == INCOMPLET)
+					ft_openfile(redir->args[1], data, 0);
+				redir = redir->next;
+			}
+			cpid = fork();
+			if (cpid == 0)
+			{
+				if (terminal[0])
+					ft_chooseaction(data, envp);
+				else
+					exit(0);
+			}
+			waitpid(cpid, NULL, 0);
+			ft_freeline(data, 0);
+			data->infilefd = 0;
+			data->outfilefd = 1;
+			data->ncmd = 0;
 		}
-		cpid = fork();
-		if (cpid == 0)
-		{
-			if (terminal[0])
-				ft_chooseaction(data, envp);
-			else
-				exit(0);
-		}
-		waitpid(cpid, NULL, 0);
-		ft_freeline(data);
 		if (ft_strcmp(terminal, temp) != 0 && terminal[0])
 		{
 			add_history(terminal);
