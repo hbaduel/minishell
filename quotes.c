@@ -43,42 +43,45 @@ char	*ft_quote(char *str, int idx, char quote)
 
 	inside_quote = 1;
 	i = idx + 1;
-	idx++;
-	if (quote == '\'' || quote == '\"')
+	// idx++;
+	while (str[i])
 	{
-		while ((str[i] != quote || str[i]))
+		if (quote == 39 || quote == 34) //simple or double quote
 		{
-			if (str[i] == quote)
-				inside_quote += 1;
-			i++;
-		}
-	}
-	else
-	{
-		if (quote == '(')
-		{
-			while (str[i])
+			while ((str[i] != quote || str[i]))
 			{
-				if (str[i] == ')')
+				if (str[i] == quote)
 					inside_quote += 1;
 				i++;
 			}
 		}
-		if (quote == '{')
+		else
 		{
-			while (str[i])
+			if (quote == '(')
 			{
-				if (str[i] == '}')
-					inside_quote += 1;
-				i++;
+				while (str[i])
+				{
+					if (str[i] == ')')
+						inside_quote += 1;
+					i++;
+				}
+			}
+			if (quote == '{')
+			{
+				while (str[i])
+				{
+					if (str[i] == '}')
+						inside_quote += 1;
+					i++;
+				}
 			}
 		}
 	}
 	if (inside_quote % 2 != 0)
 		ft_exiterror("Error : quotes have to be closed");
-	if (inside_quote % 2 == 0 && (quote == '\"'))
+	if (inside_quote % 2 == 0 && (quote == 34))
 		ft_check_dollar(str, idx);
-	return (str);
+	return (&str[i + 1]);
 }
 
 void	ft_check_quote(char *str)
@@ -88,14 +91,12 @@ void	ft_check_quote(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'')			//simple quote
-			ft_quote(str, i, '\'');
-		else if (str[i] == '\"')		//double quote
-			ft_quote(str, i, '\"');
-		else if (str[i] == '(')
-			ft_quote(str, i, '(');		// parenthese
-		if (str[i] == '{')
-			ft_quote(str, i, '{');		//accolade
+		if (str[i] == 39)			//simple quote
+			ft_quote(str, i, 39);
+		else if (str[i] == 34)		//double quote
+			ft_quote(str, i, 34);
+		else if (str[i] == '(' || str[i] == '{')
+					ft_exiterror("Error : '()' and '{}' are not interpreted\n");		// parenthese et vaccolade
 		i++;
 	}
 }
