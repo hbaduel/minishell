@@ -41,8 +41,8 @@ char    *ft_strtok(char *str, char delim)
     start = 0;
     while (str[start] == delim && str[start])
         start++;
-    if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{')
-        ft_check_quote(str);
+    // if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{')
+    //     ft_check_quote(str);
     if (str[start] == '\\' || str[start] == ';')
         ft_exiterror("Error : '\' and ';' are not interpreted\n");
     if (str[start] == '\0')

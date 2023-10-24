@@ -39,6 +39,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
     char    *terminal2;
 
     terminal2 = ft_add_space_before(terminal);
+    terminal2 = ft_check_quote(terminal2);
     first = malloc(sizeof(t_parse));
     data->pipe_detector = 1;
     current = first;
