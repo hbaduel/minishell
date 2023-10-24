@@ -11,7 +11,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
-#include <errno.h>
 
 # define BLACK  "\e[1;30m"
 # define RED  "\e[1;31m"
@@ -53,10 +52,8 @@ typedef struct	s_data
 void	ft_exiterror(char *str);
 void	ft_putstr_fd(char *str, int fd);
 void	ft_heredoc(char *limiter, t_data *data);
-void	ft_openfile(char *file, t_data *data, int which);
 void	ft_pipe(t_data *data, t_parse *parsing, char **envp);
 void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd);
-void    ft_print_tokens(t_parse *parse);
 void	ft_pwd(char **cmd);
 void	ft_echo(char **cmd);
 void	ft_check_quote(char *str);
@@ -74,5 +71,6 @@ char    **ft_realloc(char **args, char *token);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 int		ft_strlcpy(char *dest, char *src, int size);
+int 	ft_openfile(char *file, t_data *data, int which);
 
 #endif

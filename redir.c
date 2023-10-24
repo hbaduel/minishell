@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	ft_openfile(char *file, t_data *data, int which)
+int	ft_openfile(char *file, t_data *data, int which)
 {
 	int	fd;
 
@@ -11,7 +11,10 @@ void	ft_openfile(char *file, t_data *data, int which)
 	else if (which == 2)
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fd < 0)
-		ft_exiterror("open");
+	{
+		perror("open");
+		return (1);
+	}
 	if (data->infilefd != 0 && which == 0)
 		close(data->infilefd);
 	if (data->outfilefd != 1 && which > 0)
@@ -20,4 +23,5 @@ void	ft_openfile(char *file, t_data *data, int which)
 		data->infilefd = fd;
 	if (which > 0)
 		data->outfilefd = fd;
+	return (0);
 }

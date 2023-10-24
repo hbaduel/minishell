@@ -88,10 +88,15 @@ void	ft_readterminal(t_data *data, char **envp)
 	char	*temp;
 	pid_t	cpid;
 	t_parse	*redir;
+	int		operror;
 
 	temp = NULL;
 	while (1)
 	{
+		operror = 0;
+		data->ncmd = 0;
+		data->infilefd = 0;
+		data->outfilefd = 1;
 		terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
 		if (!terminal)
 		{
@@ -105,16 +110,18 @@ void	ft_readterminal(t_data *data, char **envp)
 			while (redir)
 			{
 				if (redir->type == OUTCOMPLET)
-					ft_openfile(redir->args[1], data, 1);
+					operror = ft_openfile(redir->args[1], data, 1);
 				if (redir->type == APPENDCOMP)
-					ft_openfile(redir->args[1], data, 2);
+					operror = ft_openfile(redir->args[1], data, 2);
 				if (redir->type == HDCOMPLET)
 					ft_heredoc(redir->args[1], data);
 				if (redir->type == INCOMPLET)
-					ft_openfile(redir->args[1], data, 0);
+					operror = ft_openfile(redir->args[1], data, 0);
 				redir = redir->next;
+				if (operror == 1)
+					break ;
 			}
-			if (data->ncmd > 0)
+			if (data->ncmd > 0 && operror == 0)
 			{
 				cpid = fork();
 				if (cpid == 0)
@@ -122,9 +129,6 @@ void	ft_readterminal(t_data *data, char **envp)
 				waitpid(cpid, NULL, 0);
 			}
 			ft_freeline(data, 0);
-			data->ncmd = 0;
-			data->infilefd = 0;
-			data->outfilefd = 1;
 		}
 		if (ft_strcmp(terminal, temp) != 0 && terminal[0])
 		{
@@ -147,9 +151,6 @@ int		main(int argc, char **argv, char **envp)
 	signal(SIGINT, ft_kill);
 	signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
-	data->infilefd = 0;
-	data->outfilefd = 1;
-	data->ncmd = 0;
 	ft_readterminal(data, envp);
 	rl_clear_history();
 	return (0);
