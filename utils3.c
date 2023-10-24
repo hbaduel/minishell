@@ -34,7 +34,10 @@ char    *ft_add_space_before(char *str)
     modified_str = ft_strdup(str);
     while (modified_str[i]) //before
     {
-        if ((modified_str[i] == '|') && modified_str[i - 1] != ' ')
+        if (((modified_str[i] == '|') && modified_str[i - 1] != ' ')\
+        || ((modified_str[i] == '<') && (modified_str[i - 1] != '<'))\
+        || ((modified_str[i] == '>') && (modified_str[i - 1] != '>')))
+
         {
             new_str = malloc(strlen(modified_str) + 2);
             ft_strncpy(new_str, modified_str, i);
@@ -49,7 +52,9 @@ char    *ft_add_space_before(char *str)
     i = 0;
     while (modified_str[i]) //after
     {
-        if ((modified_str[i] == '|') && modified_str[i + 1] != ' ')
+        if (((modified_str[i] == '|') && modified_str[i + 1] != ' ')\
+        || ((modified_str[i] == '<') && (modified_str[i + 1] != '<'))\
+        || ((modified_str[i] == '>') && (modified_str[i + 1] != '>')))
         {
             new_str = malloc(strlen(modified_str) + 2);
             ft_strncpy(new_str, modified_str, i + 1);
