@@ -79,7 +79,6 @@ void	ft_chooseaction(t_data *data, char **envp)
 	}
 	else if (data->ncmd > 1)
 		ft_pipe(data, data->parse, envp);
-	ft_freeline(data, 1);
 	// check s'il faut clear history dans un processus fils
 	exit(0);
 }
@@ -123,9 +122,9 @@ void	ft_readterminal(t_data *data, char **envp)
 				waitpid(cpid, NULL, 0);
 			}
 			ft_freeline(data, 0);
+			data->ncmd = 0;
 			data->infilefd = 0;
 			data->outfilefd = 1;
-			data->ncmd = 0;
 		}
 		if (ft_strcmp(terminal, temp) != 0 && terminal[0])
 		{
