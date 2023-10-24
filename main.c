@@ -2,10 +2,11 @@
 
 char	*terminal;
 
-// void	ft_kill()
-// {
-// 	kill(cpid, SIGKILL);
-// }
+void	ft_kill()
+{
+	kill(0, 0);
+	ft_putstr_fd("\n", 1);
+}
 
 void	ft_freeline(t_data *data, int which)
 {
@@ -114,15 +115,13 @@ void	ft_readterminal(t_data *data, char **envp)
 					ft_openfile(redir->args[1], data, 0);
 				redir = redir->next;
 			}
-			cpid = fork();
-			if (cpid == 0)
+			if (data->ncmd > 0)
 			{
-				if (terminal[0])
+				cpid = fork();
+				if (cpid == 0)
 					ft_chooseaction(data, envp);
-				else
-					exit(0);
+				waitpid(cpid, NULL, 0);
 			}
-			waitpid(cpid, NULL, 0);
 			ft_freeline(data, 0);
 			data->infilefd = 0;
 			data->outfilefd = 1;
@@ -146,7 +145,7 @@ int		main(int argc, char **argv, char **envp)
 
 	(void) argc;
 	(void) argv;
-	//signal(SIGINT, ft_kill);
+	signal(SIGINT, ft_kill);
 	signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
 	data->infilefd = 0;

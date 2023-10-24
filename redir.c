@@ -8,6 +8,6 @@ void	ft_openfile(char *file, t_data *data, int which)
 		data->outfilefd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	else if (which == 2)
 		data->outfilefd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0777);
-	if (data->outfilefd < 0)
+	if (data->outfilefd < 0 || data->infilefd < 0)
 		ft_exiterror("open");
 }
