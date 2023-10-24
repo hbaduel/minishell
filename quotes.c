@@ -4,7 +4,7 @@ void	ft_interpret_dollar(char *str, int idx)
 {
 	while (str[idx])
 	{
-		// gerer les differents ccas du $ entre double quote. jai vraiment la flemme la...
+		// gerer les differents cas du $ entre double quote. jai vraiment la flemme la...
 	}
 }
 
@@ -88,7 +88,7 @@ void	ft_check_quote(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'')			//simple quote 
+		if (str[i] == '\'')			//simple quote
 			ft_quote(str, i, '\'');
 		else if (str[i] == '\"')		//double quote
 			ft_quote(str, i, '\"');
