@@ -1,26 +1,22 @@
 #include "minishell.h"
 
-void	ft_cmdbuiltin(char **cmd)
+void	ft_cmdbuiltin(t_data *data, int outfd, char **cmd, char **envp)
 {
 	if (ft_strcmp(cmd[0], "echo") == 0)
-	{
 		ft_echo(cmd);
-		exit(0);
-	}
 	if (ft_strcmp(cmd[0], "pwd") == 0)
-	{
-		ft_pwd(cmd);
-		exit(0);
-	}
+		ft_pwd(data, outfd, cmd);
+	if (ft_strcmp(cmd[0], "env") == 0)
+		ft_env(data, outfd, cmd, envp);
 }
 
 void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd)
 {
 	char	*path;
 
-	ft_cmdbuiltin(cmd);
+	ft_cmdbuiltin(data, outfd, cmd, envp);
 	path = ft_cmdpath(cmd[0], envp);
-	if (!path[0])
+	if (!path)
 	{
 		free(path);
 		if (outfd != 1)
@@ -34,7 +30,7 @@ void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd)
 	if (execve(path, cmd, envp) == -1)
 	{
 		free(path);
-		ft_exiterror("execve");
+		ft_exitperror("execve");
 		exit (0);
 	}
 }
@@ -45,10 +41,10 @@ void	ft_nextcmd(t_data *data, char **cmd, char **envp)
 	int		tubefd[2];
 
 	if (pipe(tubefd) == -1)
-		ft_exiterror("pipe");
+		ft_exitperror("pipe");
 	pid = fork();
 	if (pid == -1)
-		ft_exiterror("fork");
+		ft_exitperror("fork");
 	if (pid == 0)
 	{
 		close(tubefd[0]);

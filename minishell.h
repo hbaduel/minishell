@@ -50,16 +50,19 @@ typedef struct	s_data
 }				t_data;
 
 void	ft_exiterror(char *str);
+void    ft_exitperror(char *str);
 void	ft_putstr_fd(char *str, int fd);
 void	ft_heredoc(char *limiter, t_data *data);
 void	ft_pipe(t_data *data, t_parse *parsing, char **envp);
 void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd);
-void	ft_pwd(char **cmd);
+void	ft_pwd(t_data *data, int outfd, char **cmd);
 void	ft_echo(char **cmd);
 void	ft_check_quote(char *str);
+void	ft_freedoubletab(char **tab);
+void	ft_env(t_data *data, int outfd, char **cmd, char **envp);
 t_parse	*ft_parse(char *, t_data *data);
 char	*ft_strjoin(char *s1, char *s2, int dofree);
-char	*ft_readfd(int fd);
+// char	*ft_readfd(int fd); surement a supprimer
 char	*ft_cmdpath(char *cmd, char **envp);
 char	*ft_strtok(char *str, char delim);
 char	*ft_strdup(char *s);
@@ -68,6 +71,7 @@ char    *ft_check_filename(char *str);
 char    *ft_add_space_before(char *str);
 char    *ft_getenv(char *terminal);
 char    **ft_realloc(char **args, char *token);
+char	**ft_split(char *s, char c);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 int		ft_strlcpy(char *dest, char *src, int size);

@@ -36,30 +36,31 @@ void	ft_freeline(t_data *data, int which)
 
 char	*ft_cmdpath(char *cmd, char **envp)
 {
-	pid_t	cpid;
+	char	**path;
 	char	*res;
-	char	*path[2];
-	int		tubefd[2];
+	int		i;
 
-	path[0] = "which";
-	path[1] = cmd;
-	path[2] = NULL;
-	pipe(tubefd);
-	cpid = fork();
-	if (cpid == 0)
+	cmd = ft_strjoin("/", cmd, 0);
+	i = 0;
+	while (strncmp(envp[i], "PATH=", 5) != 0)
+		i++;
+	path = ft_split(&envp[i][5], ':');
+	i = 0;
+	while (path[i])
 	{
-		close(tubefd[0]);
-		dup2(tubefd[1], 1);
-		close(tubefd[1]);
-		execve("/usr/bin/which", path, envp);
+		res = ft_strjoin(path[i], cmd, 0);
+		if (access(res, R_OK) == 0)
+		{
+			ft_freedoubletab(path);
+			free(cmd);
+			return (res);
+		}
+		free(res);
+		i++;
 	}
-	waitpid(cpid, NULL, 0);
-	close(tubefd[1]);
-	res = ft_readfd(tubefd[0]);
-	if (res[0])
-		res[ft_strlen(res) - 1] = '\0';
-	close(tubefd[0]);
-	return (res);
+	ft_freedoubletab(path);
+	free(cmd);
+	return (NULL);
 }
 
 void	ft_chooseaction(t_data *data, char **envp)
@@ -85,12 +86,10 @@ void	ft_chooseaction(t_data *data, char **envp)
 
 void	ft_readterminal(t_data *data, char **envp)
 {
-	char	*temp;
 	pid_t	cpid;
 	t_parse	*redir;
 	int		operror;
 
-	temp = NULL;
 	while (1)
 	{
 		operror = 0;
@@ -129,15 +128,9 @@ void	ft_readterminal(t_data *data, char **envp)
 				waitpid(cpid, NULL, 0);
 			}
 			ft_freeline(data, 0);
-		}
-		if (ft_strcmp(terminal, temp) != 0 && terminal[0])
-		{
 			add_history(terminal);
-			free(temp);
-			temp = terminal;
 		}
-		else
-			free(terminal);
+		free(terminal);
 	}
 }
 
