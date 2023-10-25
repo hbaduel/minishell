@@ -67,3 +67,19 @@ char    *ft_add_space_before(char *str)
     }
     return (modified_str);
 }
+
+char    *ft_getenv(char *terminal)
+{
+    char    *res;
+    char    *envname;
+    int     i;
+
+    i = 0;
+    while (terminal[i] && terminal[i] != ' ')
+        i++;
+    envname = malloc(sizeof(char) * (i + 1));
+    ft_strncpy(envname, terminal, i);
+    res = getenv(envname);
+    free(envname);
+    return (res);
+}

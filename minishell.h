@@ -52,10 +52,8 @@ typedef struct	s_data
 void	ft_exiterror(char *str);
 void	ft_putstr_fd(char *str, int fd);
 void	ft_heredoc(char *limiter, t_data *data);
-void	ft_openfile(char *file, t_data *data, int which);
 void	ft_pipe(t_data *data, t_parse *parsing, char **envp);
 void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd);
-void    ft_print_tokens(t_parse *parse);
 void	ft_pwd(char **cmd);
 void	ft_echo(char **cmd);
 t_parse	*ft_parse(char *, t_data *data);
@@ -68,9 +66,11 @@ char    *ft_cut_terminal(char *terminal, char *token);
 char    *ft_check_filename(char *str);
 char    *ft_add_space_before(char *str);
 char	*ft_check_quote(char *str);
+char    *ft_getenv(char *terminal);
 char    **ft_realloc(char **args, char *token);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 int		ft_strlcpy(char *dest, char *src, int size);
+int 	ft_openfile(char *file, t_data *data, int which);
 
 #endif
