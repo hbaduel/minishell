@@ -13,7 +13,7 @@ int	ft_checkenvname(char *env)
 	return (0);
 }
 
-void	ft_unset(t_data *data, int outfd, char **cmd, char **envp)
+void	ft_unset(int outfd, char **cmd, char **envp)
 {
 	int	i;
 	int	j;
@@ -23,8 +23,6 @@ void	ft_unset(t_data *data, int outfd, char **cmd, char **envp)
 	{
 		if (ft_checkenvname(cmd[i]) == 0)
 		{
-			if (outfd != 1)
-				dup2(1, outfd);
 			ft_putstr_fd("unset: ", 1);
 			ft_putstr_fd(cmd[i], 1);
 			ft_exiterror(": invalid parameter name.\n");

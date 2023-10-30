@@ -65,23 +65,31 @@ char	*ft_cmdpath(char *cmd, char **envp)
 
 void	ft_chooseaction(t_data *data, char **envp)
 {
-	if (data->infilefd != 0)
-		dup2(data->infilefd, 0);
+	pid_t	cpid;
+	int		didbuiltin;
+
 	if (data->ncmd == 1)
 	{
-		if (data->outfilefd != 1)
-			dup2(data->outfilefd, 1);
-		while (data->parse)
-		{
-			if (data->parse->type == CMD)
-				ft_execcmd(data, data->parse->args, envp, data->outfilefd);
+		while (data->parse->type != CMD)
 			data->parse = data->parse->next;
+		didbuiltin = ft_cmdbuiltin(data->outfilefd, data->parse->args, envp);
+		if (didbuiltin == 0)
+		{
+			cpid = fork();
+			if (cpid == 0)
+			{
+				if (data->infilefd != 0)
+					dup2(data->infilefd, 0);
+				if (data->outfilefd != 1)
+					dup2(data->outfilefd, 1);
+				ft_execcmd(data->parse->args, envp, data->outfilefd);
+			}
+			waitpid(cpid, NULL, 0);
 		}
 	}
 	else if (data->ncmd > 1)
 		ft_pipe(data, data->parse, envp);
-	// check s'il faut clear history dans un processus fils
-	exit(0);
+	return ;
 }
 
 void	ft_readterminal(t_data *data, char **envp)
@@ -121,12 +129,7 @@ void	ft_readterminal(t_data *data, char **envp)
 					break ;
 			}
 			if (data->ncmd > 0 && operror == 0)
-			{
-				cpid = fork();
-				if (cpid == 0)
-					ft_chooseaction(data, envp);
-				waitpid(cpid, NULL, 0);
-			}
+				ft_chooseaction(data, envp);
 			ft_freeline(data, 0);
 			add_history(terminal);
 		}

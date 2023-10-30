@@ -1,20 +1,29 @@
 #include "minishell.h"
 
-void	ft_cmdbuiltin(t_data *data, int outfd, char **cmd, char **envp)
+int	ft_cmdbuiltin(int outfd, char **cmd, char **envp)
 {
 	if (ft_strcmp(cmd[0], "echo") == 0)
-		ft_echo(cmd);
+	{
+		ft_echo(cmd, outfd);
+		return (1);
+	}
 	if (ft_strcmp(cmd[0], "pwd") == 0)
-		ft_pwd(data, outfd, cmd);
+	{
+		ft_pwd(outfd, cmd);
+		return (1);
+	}
 	if (ft_strcmp(cmd[0], "env") == 0)
-		ft_env(data, outfd, cmd, envp);
+	{
+		ft_env(outfd, cmd, envp);
+		return (1);
+	}
+	return (0);
 }
 
-void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd)
+void	ft_execcmd(char **cmd, char **envp, int outfd)
 {
 	char	*path;
 
-	ft_cmdbuiltin(data, outfd, cmd, envp);
 	path = ft_cmdpath(cmd[0], envp);
 	if (!path)
 	{
@@ -35,44 +44,59 @@ void	ft_execcmd(t_data *data, char **cmd, char **envp, int outfd)
 	}
 }
 
-void	ft_nextcmd(t_data *data, char **cmd, char **envp)
+int	ft_nextcmd(int infd, char **cmd, char **envp)
 {
 	pid_t	pid;
 	int		tubefd[2];
+	int		didbuiltin;
 
-	if (pipe(tubefd) == -1)
-		ft_exitperror("pipe");
+	pipe(tubefd);
+	didbuiltin = ft_cmdbuiltin(tubefd[1], cmd, envp);
+	if (didbuiltin == 1)
+	{
+		close(tubefd[1]);
+		return (tubefd[0]);
+	}
 	pid = fork();
-	if (pid == -1)
-		ft_exitperror("fork");
 	if (pid == 0)
 	{
 		close(tubefd[0]);
+		dup2(infd, 0);
 		dup2(tubefd[1], 1);
-		ft_execcmd(data, cmd, envp, tubefd[1]);
+		ft_execcmd(cmd, envp, tubefd[1]);
 	}
-	waitpid(pid, NULL, 0);
-	dup2(tubefd[0], 0);
+	waitpid(pid, 0, 0);
 	close(tubefd[1]);
+	return (tubefd[0]);
 }
 
 void	ft_pipe(t_data *data, t_parse *parsing, char **envp)
 {
-	pid_t	pid;
+	pid_t	cpid;
 	int		i;
+	int		infd;
+	int		didbuiltin;
 
 	i = 1;
+	infd = data->infilefd;
 	while (i < data->ncmd)
 	{
 		while(parsing->type != CMD)
 			parsing = parsing->next;
-		ft_nextcmd(data, parsing->args, envp);
+		infd = ft_nextcmd(infd, parsing->args, envp);
 		parsing = parsing->next;
 		i++;
 	}
-	if (data->outfilefd != 1)
-		dup2(data->outfilefd, 1);
 	while(parsing->type != CMD)
 		parsing = parsing->next;
-	ft_execcmd(data, parsing->args, envp, data->outfilefd);
+	didbuiltin = ft_cmdbuiltin(data->outfilefd, parsing->args, envp);
+	cpid = fork();
+	if (cpid == 0)
+	{
+		dup2(infd, 0);
+		if (data->outfilefd != 1)
+			dup2(data->outfilefd, 1);
+		ft_execcmd(parsing->args, envp, data->outfilefd);
+	}
+	waitpid(cpid, 0, 0);
 }
