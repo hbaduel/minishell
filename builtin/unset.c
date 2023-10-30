@@ -1,9 +1,24 @@
 #include "../minishell.h"
 
+int	ft_checkexist(char *unset, char *env)
+{
+	int	i;
+
+	i = 0;
+	while (unset[i] == env[i] && unset[i] && env[i])
+		i++;
+	if (!unset[i] && !env[i])
+		return (1);
+	if (!unset[i] && env[i] == '=')
+		return (1);
+	return (0);
+}
+
 int	ft_checkenvname(char *env)
 {
 	int	i;
 
+	i = 0;
 	while (env[i])
 	{
 		if (env[i] == '=')
@@ -13,29 +28,56 @@ int	ft_checkenvname(char *env)
 	return (0);
 }
 
-void	ft_unset(int outfd, char **cmd, char **envp)
+char	**ft_reallocenvp(char **envp, int donot)
 {
-	int	i;
-	int	j;
+	char **temp;
+	int		i;
+	int		j;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	temp = malloc(sizeof(char *) * i);
+	i = 0;
+	j = 0;
+	while (envp[i])
+	{
+		if (i != donot)
+		{
+			temp[j] = envp[i];
+			j++;
+		}
+		else
+			free(envp[i]);
+		i++;
+	}
+	temp[j] = NULL;
+	free(envp);
+	return (temp);
+}
+
+void	ft_unset(t_data *data, char **cmd)
+{
+	char	*temp;
+	int		i;
+	int		j;
+	int		size;
 
 	i = 0;
 	while (cmd[i])
 	{
-		if (ft_checkenvname(cmd[i]) == 0)
-		{
-			ft_putstr_fd("unset: ", 1);
-			ft_putstr_fd(cmd[i], 1);
-			ft_exiterror(": invalid parameter name.\n");
-		}
 		j = 0;
-		while (envp[j])
+		while (data->envp[j])
 		{
-			if (ft_checkexist(cmd[i], envp[j]) ==)
+			if (ft_checkenvname(cmd[i]) == 1)
+				break ;
+			if (ft_checkexist(cmd[i], data->envp[j]) == 1)
 			{
-
+				data->envp = ft_reallocenvp(data->envp, j);
+				break ;
 			}
 			j++;
 		}
-
+		i++;
 	}
 }

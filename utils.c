@@ -81,25 +81,6 @@ void	ft_freedoubletab(char **tab)
 	free(tab);
 }
 
-// char	*ft_readfd(int fd) fonction surement a supprimer
-// {
-// 	char	*res;
-// 	char	*buff;
-// 	int		size;
-
-// 	res = NULL;
-// 	size = 1;
-// 	while (size != 0)
-// 	{
-// 		buff = malloc(sizeof(char) * 51);
-// 		size = read(fd, buff, 50);
-// 		buff[size] = '\0';
-// 		res = ft_strjoin(res, buff, 1);
-// 		free(buff);
-// 	}
-// 	return (res);
-// }
-
 int	ft_strcmp(char *s1, char *s2)
 {
 	int	i;

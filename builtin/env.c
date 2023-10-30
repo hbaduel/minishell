@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	ft_env(t_data *data, int outfd, char **cmd, char **envp)
+void	ft_env(t_data *data, int outfd, char **cmd)
 {
 	int	i;
 
@@ -11,9 +11,9 @@ void	ft_env(t_data *data, int outfd, char **cmd, char **envp)
 		return ;
 	}
 	i = 0;
-	while (envp[i])
+	while (data->envp[i])
 	{
-		ft_putstr_fd(envp[i], outfd);
+		ft_putstr_fd(data->envp[i], outfd);
 		ft_putstr_fd("\n", outfd);
 		i++;
 	}
