@@ -1,11 +1,15 @@
 #include "../minishell.h"
 
-void	ft_env(int outfd, char **cmd, char **envp)
+void	ft_env(t_data *data, int outfd, char **cmd, char **envp)
 {
 	int	i;
 
 	if (cmd[1])
-		ft_exiterror("minishell: env does not take any argument.\n");
+	{
+		data->status = 1;
+		ft_putstr_fd("minishell: env does not take any argument.\n", 1);
+		return ;
+	}
 	i = 0;
 	while (envp[i])
 	{

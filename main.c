@@ -72,20 +72,18 @@ void	ft_chooseaction(t_data *data, char **envp)
 	{
 		while (data->parse->type != CMD)
 			data->parse = data->parse->next;
-		didbuiltin = ft_cmdbuiltin(data->outfilefd, data->parse->args, envp);
-		if (didbuiltin == 0)
+		if (ft_cmdbuiltin(data, data->outfilefd, data->parse->args, envp) == 1)
+			return ;
+		cpid = fork();
+		if (cpid == 0)
 		{
-			cpid = fork();
-			if (cpid == 0)
-			{
-				if (data->infilefd != 0)
-					dup2(data->infilefd, 0);
-				if (data->outfilefd != 1)
-					dup2(data->outfilefd, 1);
-				ft_execcmd(data->parse->args, envp, data->outfilefd);
-			}
-			waitpid(cpid, NULL, 0);
+			if (data->infilefd != 0)
+				dup2(data->infilefd, 0);
+			if (data->outfilefd != 1)
+				dup2(data->outfilefd, 1);
+			ft_execcmd(data->parse->args, envp, data->outfilefd);
 		}
+		data->status = waitpid(cpid, NULL, 0);
 	}
 	else if (data->ncmd > 1)
 		ft_pipe(data, data->parse, envp);
@@ -147,6 +145,7 @@ int		main(int argc, char **argv, char **envp)
 	signal(SIGINT, ft_kill);
 	signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
+	data->status = 0;
 	ft_readterminal(data, envp);
 	rl_clear_history();
 	return (0);
