@@ -34,7 +34,10 @@ char    *ft_add_space_before(char *str)
     modified_str = ft_strdup(str);
     while (modified_str[i]) //before
     {
-        if ((modified_str[i] == '|') && modified_str[i - 1] != ' ')
+        if (((modified_str[i] == '|') && modified_str[i - 1] != ' ')\
+        || ((modified_str[i] == '<') && (modified_str[i - 1] != '<'))\
+        || ((modified_str[i] == '>') && (modified_str[i - 1] != '>')))
+
         {
             new_str = malloc(strlen(modified_str) + 2);
             ft_strncpy(new_str, modified_str, i);
@@ -49,7 +52,9 @@ char    *ft_add_space_before(char *str)
     i = 0;
     while (modified_str[i]) //after
     {
-        if ((modified_str[i] == '|') && modified_str[i + 1] != ' ')
+        if (((modified_str[i] == '|') && modified_str[i + 1] != ' ')\
+        || ((modified_str[i] == '<') && (modified_str[i + 1] != '<'))\
+        || ((modified_str[i] == '>') && (modified_str[i + 1] != '>')))
         {
             new_str = malloc(strlen(modified_str) + 2);
             ft_strncpy(new_str, modified_str, i + 1);
@@ -63,4 +68,34 @@ char    *ft_add_space_before(char *str)
     return (modified_str);
 }
 
-545
+char    *ft_getenv(char *terminal)
+{
+    char    *res;
+    char    *envname;
+    int     i;
+
+    i = 0;
+    while (terminal[i] && terminal[i] != ' ')
+        i++;
+    envname = malloc(sizeof(char) * (i + 1));
+    ft_strncpy(envname, terminal, i);
+    res = getenv(envname);
+    free(envname);
+    return (res);
+}
+
+char    *ft_getenv(char *terminal)
+{
+    char    *res;
+    char    *envname;
+    int     i;
+
+    i = 0;
+    while (terminal[i] && terminal[i] != ' ')
+        i++;
+    envname = malloc(sizeof(char) * (i + 1));
+    ft_strncpy(envname, terminal, i);
+    res = getenv(envname);
+    free(envname);
+    return (res);
+}

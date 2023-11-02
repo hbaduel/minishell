@@ -1,8 +1,16 @@
 #include "minishell.h"
 
+void	ft_exitperror(char *str)
+{
+	if (str)
+		perror(str);
+	exit(1);
+}
+
 void	ft_exiterror(char *str)
 {
-	perror(str);
+	if (str)
+		ft_putstr_fd(str, 1);
 	exit(1);
 }
 
@@ -60,23 +68,17 @@ char	*ft_strjoin(char *s1, char *s2, int dofree)
 	return (res);
 }
 
-char	*ft_readfd(int fd)
+void	ft_freedoubletab(char **tab)
 {
-	char	*res;
-	char	*buff;
-	int		size;
+	int	i;
 
-	res = NULL;
-	size = 1;
-	while (size != 0)
+	i = 0;
+	while (tab[i])
 	{
-		buff = malloc(sizeof(char) * 51);
-		size = read(fd, buff, 50);
-		buff[size] = '\0';
-		res = ft_strjoin(res, buff, 1);
-		free(buff);
+		free(tab[i]);
+		i++;
 	}
-	return (res);
+	free(tab);
 }
 
 int	ft_strcmp(char *s1, char *s2)

@@ -1,10 +1,15 @@
 #include "../minishell.h"
 
-void	ft_pwd(char **cmd)
+void	ft_pwd(t_data *data, int outfd, char **cmd)
 {
 	char	buff[1000];
+
+	if (cmd[1])
+	{
+		data->status = 1;
+		ft_putstr_fd("minishell: pwd does not take any argument.\n", 1);
+	}
 	getcwd(buff, 1000);
-	ft_putstr_fd(buff, 1);
-	ft_putstr_fd("\n", 1);
-	exit(0);
+	ft_putstr_fd(buff, outfd);
+	ft_putstr_fd("\n", outfd);
 }
