@@ -62,3 +62,5 @@ char    *ft_add_space_before(char *str)
     }
     return (modified_str);
 }
+
+545
