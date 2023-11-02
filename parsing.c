@@ -158,49 +158,49 @@ t_parse *ft_parse(char *terminal, t_data *data)
     return (first);
 }
 
-int main(int argc, char **argv)
-{
-    t_data  *data;
-    t_parse *test;
-    t_parse *temp;
-    int i;
+// int main(int argc, char **argv)
+// {
+//     t_data  *data;
+//     t_parse *test;
+//     t_parse *temp;
+//     int i;
 
-    // if (argc == 1)
-    //     return (0);
-    data = malloc(sizeof(t_data));
-    data->ncmd = 0;
-    data->parse = ft_parse(" < \"je suis |un test\" > merci", data);
-    test = data->parse;
-    while(data->parse)
-    {
-        printf("Type : %d\n", data->parse->type);
-        i = 0;
-        while(data->parse->args[i])
-        {
-            printf("%s", data->parse->args[i]);
-            if (data->parse->args[i + 1])
-                printf(" ");
-            i++;
-        }
-        printf("\n");
-        printf("\n");
-        data->parse = data->parse->next;
-    }
-    printf("NCMD : %d\n", data->ncmd);
-    printf("< \"je suis |un test\" > merci\n");
-    while (test)
-	{
-		i = 0;
-		while (test->args[i])
-		{
-			free(test->args[i]);
-			i++;
-		}
-		free(test->args);
-		temp = test;
-		test = test->next;
-		free(temp);
-	}
-    free(data);
-    return (0);
-}
+//     // if (argc == 1)
+//     //     return (0);
+//     data = malloc(sizeof(t_data));
+//     data->ncmd = 0;
+//     data->parse = ft_parse(" < \"je suis |un test\" > merci", data);
+//     test = data->parse;
+//     while(data->parse)
+//     {
+//         printf("Type : %d\n", data->parse->type);
+//         i = 0;
+//         while(data->parse->args[i])
+//         {
+//             printf("%s", data->parse->args[i]);
+//             if (data->parse->args[i + 1])
+//                 printf(" ");
+//             i++;
+//         }
+//         printf("\n");
+//         printf("\n");
+//         data->parse = data->parse->next;
+//     }
+//     printf("NCMD : %d\n", data->ncmd);
+//     printf("< \"je suis |un test\" > merci\n");
+//     while (test)
+// 	{
+// 		i = 0;
+// 		while (test->args[i])
+// 		{
+// 			free(test->args[i]);
+// 			i++;
+// 		}
+// 		free(test->args);
+// 		temp = test;
+// 		test = test->next;
+// 		free(temp);
+// 	}
+//     free(data);
+//     return (0);
+// }

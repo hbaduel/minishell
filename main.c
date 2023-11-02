@@ -36,61 +36,66 @@ void	ft_freeline(t_data *data, int which)
 
 char	*ft_cmdpath(char *cmd, char **envp)
 {
-	pid_t	cpid;
+	char	**path;
 	char	*res;
-	char	*path[2];
-	int		tubefd[2];
+	int		i;
 
-	path[0] = "which";
-	path[1] = cmd;
-	path[2] = NULL;
-	pipe(tubefd);
-	cpid = fork();
-	if (cpid == 0)
+	cmd = ft_strjoin("/", cmd, 0);
+	i = 0;
+	while (strncmp(envp[i], "PATH=", 5) != 0)
+		i++;
+	path = ft_split(&envp[i][5], ':');
+	i = 0;
+	while (path[i])
 	{
-		close(tubefd[0]);
-		dup2(tubefd[1], 1);
-		close(tubefd[1]);
-		execve("/usr/bin/which", path, envp);
+		res = ft_strjoin(path[i], cmd, 0);
+		if (access(res, R_OK) == 0)
+		{
+			ft_freedoubletab(path);
+			free(cmd);
+			return (res);
+		}
+		free(res);
+		i++;
 	}
-	waitpid(cpid, NULL, 0);
-	close(tubefd[1]);
-	res = ft_readfd(tubefd[0]);
-	if (res[0])
-		res[ft_strlen(res) - 1] = '\0';
-	close(tubefd[0]);
-	return (res);
+	ft_freedoubletab(path);
+	free(cmd);
+	return (NULL);
 }
 
-void	ft_chooseaction(t_data *data, char **envp)
+void	ft_chooseaction(t_data *data)
 {
-	if (data->infilefd != 0)
-		dup2(data->infilefd, 0);
+	pid_t	cpid;
+	int		didbuiltin;
+
 	if (data->ncmd == 1)
 	{
-		if (data->outfilefd != 1)
-			dup2(data->outfilefd, 1);
-		while (data->parse)
-		{
-			if (data->parse->type == CMD)
-				ft_execcmd(data, data->parse->args, envp, data->outfilefd);
+		while (data->parse->type != CMD)
 			data->parse = data->parse->next;
+		if (ft_cmdbuiltin(data, data->outfilefd, data->parse->args) == 1)
+			return ;
+		cpid = fork();
+		if (cpid == 0)
+		{
+			if (data->infilefd != 0)
+				dup2(data->infilefd, 0);
+			if (data->outfilefd != 1)
+				dup2(data->outfilefd, 1);
+			ft_execcmd(data->parse->args, data->envp, data->outfilefd);
 		}
+		data->status = waitpid(cpid, NULL, 0);
 	}
 	else if (data->ncmd > 1)
-		ft_pipe(data, data->parse, envp);
-	// check s'il faut clear history dans un processus fils
-	exit(0);
+		ft_pipe(data, data->parse);
+	return ;
 }
 
-void	ft_readterminal(t_data *data, char **envp)
+void	ft_readterminal(t_data *data)
 {
-	char	*temp;
 	pid_t	cpid;
 	t_parse	*redir;
 	int		operror;
 
-	temp = NULL;
 	while (1)
 	{
 		operror = 0;
@@ -122,36 +127,37 @@ void	ft_readterminal(t_data *data, char **envp)
 					break ;
 			}
 			if (data->ncmd > 0 && operror == 0)
-			{
-				cpid = fork();
-				if (cpid == 0)
-					ft_chooseaction(data, envp);
-				waitpid(cpid, NULL, 0);
-			}
+				ft_chooseaction(data);
 			ft_freeline(data, 0);
-		}
-		if (ft_strcmp(terminal, temp) != 0 && terminal[0])
-		{
 			add_history(terminal);
-			free(temp);
-			temp = terminal;
 		}
-		else
-			free(terminal);
+		free(terminal);
 	}
 }
-
 
 int		main(int argc, char **argv, char **envp)
 {
 	t_data	*data;
+	int		i;
 
 	(void) argc;
 	(void) argv;
 	signal(SIGINT, ft_kill);
 	signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
-	ft_readterminal(data, envp);
+	data->status = 0;
+	i = 0;
+	while (envp[i])
+		i++;
+	data->envp = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (envp[i])
+	{
+		data->envp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	data->envp[i] = NULL;
+	ft_readterminal(data);
 	rl_clear_history();
 	return (0);
 }
