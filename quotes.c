@@ -54,8 +54,8 @@ char	*ft_remove_quote(char *str, char quote)
 
 char	*ft_quote(char *str, int idx, char quote)
 {
-	int	inside_quote;
 	int	i;
+	int	inside_quote;
 
 	inside_quote = 0;
 	i = idx;
@@ -65,17 +65,25 @@ char	*ft_quote(char *str, int idx, char quote)
 
 		if (str[i] == quote)
 			inside_quote += 1;
-		printf("%c ->> ", str[i]);
-		printf("%d\n", inside_quote);
+		// printf("%c ->> ", str[i]);
+		// printf("%d\n",inside_quote);
 		i++;
 	}
-	if (inside_quote % 2 != 0)
-		ft_exiterror("Error : quotes have to be closed");
-	else if (inside_quote % 2 == 0 && (quote == 39) && inside_quote != 0)		//simple quotes
+
+	if (inside_quote % 2 == 0 && (quote == 39) && inside_quote != 0)		//simple quotes
+	{
 		str = ft_remove_quote(str, quote);
+		printf("simple quote\n");
+	}
 	else if (inside_quote % 2 == 0 && (quote == 34) && inside_quote != 0)		//double quotes
-		str = ft_check_dollar(str, idx);
-	printf("%s\n", str);
+	{
+		printf("double quote\n");
+		str = ft_remove_quote(str, quote);
+		// str = ft_check_dollar(str, idx);
+	}
+	else if (inside_quote % 2 != 0)
+		ft_exiterror("Error : quotes have to be closed");
+	// printf("%s\n", str);
 	return (str);
 }
 
@@ -88,18 +96,20 @@ char	*ft_check_quote(char *str)
 	{
 		if (str[i] == 39)			//simple quote
 		{
-			str = ft_quote(str, i, 39);
-			// return (str);
+			ft_quote(str, i, 39);
+			i++;
+			break;
 		}
 		else if (str[i] == 34)		//double quote
 		{
-			str = ft_quote(str, i, 34);
-			// return (str);
+			ft_quote(str, i, 34);
+			i++;
+			break;
 		}
-		else if (str[i] == '(' || str[i] == '{')
+		else if (str[i] == '(' || str[i] == '{' || str[i] == ')' || str[i] == '}')
 					ft_exiterror("Error : '()' and '{}' are not interpreted\n");		// parenthese et vaccolade
 		i++;
 	}
-	printf("str2 --> %s\n", str);
+	// printf("str2 --> %s\n", str);
 	return (str);
 }

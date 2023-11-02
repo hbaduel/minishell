@@ -41,15 +41,26 @@ char    *ft_strtok(char *str, char delim)
     start = 0;
     while (str[start] == delim && str[start])
         start++;
-    // if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{')
-    //     ft_check_quote(str);
-    if (str[start] == '\\' || str[start] == ';')
-        ft_exiterror("Error : '\' and ';' are not interpreted\n");
+    if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{' || str[start] == ')' || str[start] == '}')
+        ft_check_quote(str);
+    else if (str[start] == '\\' || str[start] == ';')
+        ft_exiterror("Error : '\\' and ';' are not interpreted\n");
     if (str[start] == '\0')
         return (NULL);
     end = start;
-    while (str[end] != delim && str[end])
-        end++;
+    if (str[start] == '\'')
+    {
+        while (str[end] != '\'' && str[end])
+            end++;
+    }
+    else if (str[start] == '"')
+    {
+        while (str[end] != '"' && str[end])
+            end++;
+    }
+    else
+        while (str[end] != delim && str[end])
+            end++;
     next_token = malloc(sizeof(char) * (end - start + 1));
     i = 0;
     while (start < end)
