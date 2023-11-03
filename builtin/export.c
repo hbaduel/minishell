@@ -27,23 +27,44 @@ void	ft_printexport(char **envp, int outfd)
 	}
 }
 
-void	ft_export(t_data *data, char **cmd, int outfd)
+int	ft_checkisoption(t_data *data, char **cmd)
 {
 	int	i;
 
 	i = 1;
-	if (!cmd[i])
-	{
-		ft_printexport(data->envp, outfd);
-		return ;
-	}
 	while (cmd[i])
 	{
 		if (cmd[i][0] == '-')
 		{
 			ft_putstr_fd("minishell: export does not take any options.\n", 1);
-			return ;
+			data->status = 1;
+			return (1);
 		}
+		i++;
+	}
+	return (0);
+}
 
+void	ft_export(t_data *data, char **cmd, int outfd)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	if (!cmd[i])
+	{
+		ft_printexport(data->envp, outfd);
+		data->status = 0;
+		return ;
+	}
+	if (ft_checkisoption(data, cmd) == 1)
+		return ;
+	while (cmd[i])
+	{
+		j = 0;
+		while (data->envp[j])
+		{
+			if ()
+		}
 	}
 }
