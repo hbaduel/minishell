@@ -80,4 +80,5 @@ void	ft_unset(t_data *data, char **cmd)
 		}
 		i++;
 	}
+	data->status = 0;
 }

@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	ft_echo(char **cmd, int outfd)
+void	ft_echo(t_data *data, char **cmd, int outfd)
 {
 	int	donl;
 	int	start;
@@ -21,4 +21,5 @@ void	ft_echo(char **cmd, int outfd)
 	}
 	if (donl == 1)
 		ft_putstr_fd("\n", outfd);
+	data->status = 0;
 }
