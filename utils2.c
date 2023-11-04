@@ -32,29 +32,51 @@ char	*ft_strdup(char *s)
 char    *ft_strtok(char *str, char delim)
 {
     char    *next_token;
+    char    *temp;
+    char    *result;
     int     start;
     int     end;
     int     i;
 
+    next_token = NULL;
+    temp = NULL;
+    result = NULL;
+    start = 0;
+    end = 0;
+    i = 0;
     if (!str)
         return (NULL);
-    start = 0;
-    while (str[start] == delim && str[start])
+    while (str[start] == ' ' && str[start])
         start++;
-    if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{')
+    if (str[start] == '\'' || str[start] == '"')
     {
-        ft_check_quote(str);
+        char quote = str[start];
+        start++;
+        end = start;
+        while (str[end] != quote && str[end])
+            end++;
+        if (str[end] == quote)
+        {
+            temp = malloc(end - start + 3);
+            temp[0] = quote;
+            i = 1;
+            while (start < end)
+            {
+                temp[i] = str[start];
+                start++;
+                i++;
+            }
+            temp[i] = quote;
+            temp[i + 1] = '\0';
+            start = end + 1;
+        }
     }
-    if (str[start] == '\\' || str[start] == ';')
-        ft_exiterror("Error : '\\' and ';' are not interpreted.\n");
-    if (str[start] == '\0')
-        return (NULL);
     end = start;
-    if (str[start] != '\'' || str[start] != '"')
+    while (str[end] != delim && str[end])
+        end++;
+    if (start != end)
     {
-        while (str[end] != delim && str[end])
-            end++;
-        next_token = malloc(sizeof(char) * (end - start + 1));
+        next_token = malloc(end - start + 1);
         i = 0;
         while (start < end)
         {
@@ -62,26 +84,22 @@ char    *ft_strtok(char *str, char delim)
             start++;
             i++;
         }
+        next_token[i] = '\0';
     }
+    if (temp && next_token)
+    {
+        result = malloc(ft_strlen(temp) + ft_strlen(next_token) + 2);
+        free(temp);
+        free(next_token);
+        return (result);
+    }
+    else if (temp)
+        return (temp);
+    else if (next_token)
+        return (next_token);
     else
-    {
-        while ((str[end] != '\'' || str[end] != '"') && str[end])
-            end++;
-        next_token = malloc(sizeof(char) * (end - start + 1));
-        i = 0;
-        while (start < end)
-        {
-            next_token[i] = str[start];
-            start++;
-            i++;
-        }
-    }
-    next_token[i] = '\0';
-    // printf("str : %s\n", str);
-    // printf("next_token : %s\n\n", next_token);
-    return (next_token);
+        return (NULL);
 }
-
 
 char    *ft_cut_terminal(char *terminal, char *token)
 {

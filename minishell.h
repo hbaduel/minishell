@@ -74,6 +74,8 @@ char    *ft_add_space_before(char *str);
 char    *ft_remove_space(char *token);
 char    *ft_getenv(char **envp, char *terminal);
 char	*ft_check_quote(char *str);
+char    *ft_strstr(char *haystack, char *needle);
+char	*ft_strcpy(char *s1, char *s2);
 char    **ft_realloc(char **args, char *token);
 char	**ft_split(char *s, char c);
 char	**ft_reallocenvp(char **envp, int donot);

@@ -1,28 +1,5 @@
 #include "minishell.h"
 
-// char    *ft_add_space(char *str)
-// {
-//     char    *new_str;
-//     int i;
-
-//     new_str = malloc(sizeof(char) * (ft_strlen(str) + 2));
-//     i = 0;
-//     while ((str[i] == '<' || str[i] == '>' || str[i] == '|' || str[i] == ' ') && str[i])
-//     {
-//         new_str[i] = str[i];
-//         i++;
-//     }
-//     new_str[i] = ' ';
-//     while (str[i])
-//     {
-//         new_str[i + 1] = str[i];
-//         i++;
-//     }
-//     new_str[i + 1] = '\0';
-//     free(str);
-//     return (new_str);
-// }
-
 t_parse *ft_searchlastcmd(t_parse *current)
 {
     while (current && current->type != CMD)
@@ -37,7 +14,9 @@ t_parse *ft_parse(char *terminal, t_data *data)
     t_parse *temp;
     char    *token;
     char    *terminal2;
+    int     i;
 
+    i = 0;
     terminal2 = ft_add_space_before(terminal);
     first = malloc(sizeof(t_parse));
     data->pipe_detector = 1;
@@ -82,6 +61,37 @@ t_parse *ft_parse(char *terminal, t_data *data)
                 data->pipe_detector = 1;
                 current = current->previous;
                 free(current->next);
+        }
+        else if (ft_strstr(token, "$") != NULL)
+        {
+            while (token[i])
+            {
+                if (token[i] == '$')
+                {
+                    i++;
+                    int var_start = i;
+                    while (token[i] != ' ' && token[i] != '\0')
+                        i++;
+                    char *var_name = &token[var_start];
+                    char *var_value = ft_getenv(data->envp, var_name);
+                    if (var_value != NULL)
+                    {
+                        char *before = strndup(token, var_start - 1);
+                        char *after = strdup(&token[i]);
+                        char *replacement = malloc(strlen(before) + strlen(var_value) + strlen(after) + 1);
+                        strcpy(replacement, before);
+                        strcat(replacement, var_value);
+                        strcat(replacement, after);
+                        free(var_value);
+                        free(before);
+                        free(after);
+                        free(token);
+                        token = replacement;
+                        i = var_start + strlen(var_value);
+                    }
+                }
+                i++;
+            }
         }
         else
         {
@@ -159,48 +169,48 @@ t_parse *ft_parse(char *terminal, t_data *data)
     return (first);
 }
 
-int main(int argc, char **argv)
-{
-    t_data  *data;
-    t_parse *test;
-    t_parse *temp;
-    int i;
+// int main(int argc, char **argv)
+// {
+//     t_data  *data;
+//     t_parse *test;
+//     t_parse *temp;
+//     int i;
 
-    if (argc == 1)
-        return (0);
-    data = malloc(sizeof(t_data));
-    data->ncmd = 0;
-    data->parse = ft_parse(argv[1], data);
-    test = data->parse;
-    while(data->parse)
-    {
-        printf("Type : %d\n", data->parse->type);
-        i = 0;
-        while(data->parse->args[i])
-        {
-            printf("%s", data->parse->args[i]);
-            if (data->parse->args[i + 1])
-                printf(" ");
-            i++;
-        }
-        printf("\n");
-        printf("\n");
-        data->parse = data->parse->next;
-    }
-    printf("NCMD : %d\n", data->ncmd);
-    while (test)
-	{
-		i = 0;
-		while (test->args[i])
-		{
-			free(test->args[i]);
-			i++;
-		}
-		free(test->args);
-		temp = test;
-		test = test->next;
-		free(temp);
-	}
-    free(data);
-    return (0);
-}
+//     if (argc == 1)
+//         return (0);
+//     data = malloc(sizeof(t_data));
+//     data->ncmd = 0;
+//     data->parse = ft_parse(argv[1], data);
+//     test = data->parse;
+//     while(data->parse)
+//     {
+//         printf("Type : %d\n", data->parse->type);
+//         i = 0;
+//         while(data->parse->args[i])
+//         {
+//             printf("%s", data->parse->args[i]);
+//             if (data->parse->args[i + 1])
+//                 printf("\n");
+//             i++;
+//         }
+//         printf("\n");
+//         printf("\n");
+//         data->parse = data->parse->next;
+//     }
+//     printf("NCMD : %d\n", data->ncmd);
+//     while (test)
+// 	{
+// 		i = 0;
+// 		while (test->args[i])
+// 		{
+// 			free(test->args[i]);
+// 			i++;
+// 		}
+// 		free(test->args);
+// 		temp = test;
+// 		test = test->next;
+// 		free(temp);
+// 	}
+//     free(data);
+//     return (0);
+// }
