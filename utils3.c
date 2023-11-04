@@ -83,21 +83,45 @@ char    *ft_add_space_before(char *str)
     return (modified_str);
 }
 
-char    *ft_getenv(char *terminal)
+char    *ft_envvalue(char *env, int start)
 {
     char    *res;
-    char    *envname;
+    int     end;
     int     i;
 
+    end = start;
+    while (env[end])
+        end++;
+    res = malloc(sizeof(char) * (end - start + 1));
     i = 0;
-    while (terminal[i] && terminal[i] != ' ')
+    while (env[start])
+    {
+        res[i] = env[start];
         i++;
-    envname = malloc(sizeof(char) * (i + 1));
-    ft_strncpy(envname, terminal, i);
-    res = getenv(envname);
-    free(envname);
+        start++;
+    }
+    res[i] = '\0';
     return (res);
 }
+
+char    *ft_getenv(char **envp, char *name)
+{
+    int     i;
+    int     j;
+
+    i = 0;
+    while (envp[i])
+    {
+        j = 0;
+        while (envp[i][j] == name[j] && name[j] != ' ' && name[j] && envp[i][j])
+            j++;
+        if (envp[i][j] == '=')
+            return (ft_envvalue(envp[i], j + 1));
+        i++;
+    }
+    return (NULL);
+}
+
 
 char    *ft_remove_space(char *token)
 {
@@ -126,20 +150,3 @@ char    *ft_remove_space(char *token)
     }   
     return (token);
 }
-
-
-// char    *ft_getenv(char *terminal)
-// {
-//     char    *res;
-//     char    *envname;
-//     int     i;
-
-//     i = 0;
-//     while (terminal[i] && terminal[i] != ' ')
-//         i++;
-//     envname = malloc(sizeof(char) * (i + 1));
-//     ft_strncpy(envname, terminal, i);
-//     res = getenv(envname);
-//     free(envname);
-//     return (res);
-// }

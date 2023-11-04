@@ -13,8 +13,12 @@ void	ft_env(t_data *data, int outfd, char **cmd)
 	i = 0;
 	while (data->envp[i])
 	{
-		ft_putstr_fd(data->envp[i], outfd);
-		ft_putstr_fd("\n", outfd);
+		if (ft_checkenvname(data->envp[i]) == 1)
+		{
+			ft_putstr_fd(data->envp[i], outfd);
+			ft_putstr_fd("\n", outfd);
+		}
 		i++;
 	}
+	data->status = 0;
 }
