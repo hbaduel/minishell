@@ -58,13 +58,7 @@ void	ft_heredoc(char *limiter, t_data *data);
 void	ft_pipe(t_data *data, t_parse *parsing);
 void	ft_execcmd(char **cmd, char **envp, int outfd);
 void	ft_pwd(t_data *data, int outfd, char **cmd);
-<<<<<<< HEAD
 void	ft_echo(t_data *data, char **cmd, int outfd);
-void	ft_check_quote(char *str);
-=======
-void	ft_echo(char **cmd, int outfd);
-// void	ft_check_quote(char *str);
->>>>>>> 8690c9241e4e1dc90f4738d33b4af52e3f3c665b
 void	ft_freedoubletab(char **tab);
 void	ft_env(t_data *data, int outfd, char **cmd);
 void	ft_unset(t_data *data, char **cmd);
@@ -77,12 +71,9 @@ char	*ft_strdup(char *s);
 char    *ft_cut_terminal(char *terminal, char *token);
 char    *ft_check_filename(char *str);
 char    *ft_add_space_before(char *str);
-<<<<<<< HEAD
 char    *ft_remove_space(char *token);
-=======
+char    *ft_getenv(char **envp, char *terminal);
 char	*ft_check_quote(char *str);
->>>>>>> 8690c9241e4e1dc90f4738d33b4af52e3f3c665b
-char    *ft_getenv(char *terminal);
 char    **ft_realloc(char **args, char *token);
 char	**ft_split(char *s, char c);
 char	**ft_reallocenvp(char **envp, int donot);
