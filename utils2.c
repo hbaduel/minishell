@@ -42,25 +42,46 @@ char    *ft_strtok(char *str, char delim)
     while (str[start] == delim && str[start])
         start++;
     if (str[start] == '\'' || str[start] == '"' || str[start] == '(' || str[start] == '{')
+    {
         ft_check_quote(str);
+    }
     if (str[start] == '\\' || str[start] == ';')
         ft_exiterror("Error : '\\' and ';' are not interpreted.\n");
     if (str[start] == '\0')
         return (NULL);
     end = start;
-    while (str[end] != delim && str[end])
-        end++;
-    next_token = malloc(sizeof(char) * (end - start + 1));
-    i = 0;
-    while (start < end)
+    if (str[start] != '\'' || str[start] != '"')
     {
-        next_token[i] = str[start];
-        start++;
-        i++;
+        while (str[end] != delim && str[end])
+            end++;
+        next_token = malloc(sizeof(char) * (end - start + 1));
+        i = 0;
+        while (start < end)
+        {
+            next_token[i] = str[start];
+            start++;
+            i++;
+        }
+    }
+    else
+    {
+        while ((str[end] != '\'' || str[end] != '"') && str[end])
+            end++;
+        next_token = malloc(sizeof(char) * (end - start + 1));
+        i = 0;
+        while (start < end)
+        {
+            next_token[i] = str[start];
+            start++;
+            i++;
+        }
     }
     next_token[i] = '\0';
+    // printf("str : %s\n", str);
+    // printf("next_token : %s\n\n", next_token);
     return (next_token);
 }
+
 
 char    *ft_cut_terminal(char *terminal, char *token)
 {

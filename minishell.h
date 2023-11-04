@@ -71,6 +71,7 @@ char	*ft_strdup(char *s);
 char    *ft_cut_terminal(char *terminal, char *token);
 char    *ft_check_filename(char *str);
 char    *ft_add_space_before(char *str);
+char    *ft_remove_space(char *token);
 char    *ft_getenv(char *terminal);
 char    **ft_realloc(char **args, char *token);
 char	**ft_split(char *s, char c);
