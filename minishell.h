@@ -76,6 +76,7 @@ char    *ft_getenv(char **envp, char *terminal);
 char	*ft_check_quote(char *str);
 char    *ft_strstr(char *haystack, char *needle);
 char	*ft_strcpy(char *s1, char *s2);
+char	*ft_change_env(char *token, char *modif, int idx);
 char    **ft_realloc(char **args, char *token);
 char	**ft_split(char *s, char c);
 char	**ft_reallocenvp(char **envp, int donot);
@@ -85,5 +86,6 @@ int		ft_strlcpy(char *dest, char *src, int size);
 int 	ft_openfile(char *file, t_data *data, int which);
 int 	ft_cmdbuiltin(t_data *data, int outfd, char **cmd);
 int	    ft_checkenvname(char *env);
+int     ft_dolls_is_ok(char *str);
 
 #endif

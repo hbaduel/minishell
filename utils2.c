@@ -50,15 +50,15 @@ char    *ft_strtok(char *str, char delim)
         start++;
     if (str[start] == '\'' || str[start] == '"')
     {
-        char quote = str[start];
+        delim = str[start];
         start++;
         end = start;
-        while (str[end] != quote && str[end])
+        while (str[end] != delim && str[end])
             end++;
-        if (str[end] == quote)
+        if (str[end] == delim)
         {
-            temp = malloc(end - start + 3);
-            temp[0] = quote;
+            temp = malloc(end - start);
+            // temp[0] = quote;
             i = 1;
             while (start < end)
             {
@@ -66,8 +66,9 @@ char    *ft_strtok(char *str, char delim)
                 start++;
                 i++;
             }
-            temp[i] = quote;
-            temp[i + 1] = '\0';
+            temp[i] = '\0';
+            // temp[i] = quote;
+            // temp[i + 1] = '\0';
             start = end + 1;
         }
     }

@@ -18,6 +18,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
 
     i = 0;
     terminal2 = ft_add_space_before(terminal);
+    ft_check_quote(terminal2);
     first = malloc(sizeof(t_parse));
     data->pipe_detector = 1;
     current = first;
@@ -64,31 +65,14 @@ t_parse *ft_parse(char *terminal, t_data *data)
         }
         else if (ft_strstr(token, "$") != NULL)
         {
+            i = 0;
             while (token[i])
             {
                 if (token[i] == '$')
                 {
-                    i++;
-                    int var_start = i;
-                    while (token[i] != ' ' && token[i] != '\0')
-                        i++;
-                    char *var_name = &token[var_start];
-                    char *var_value = ft_getenv(data->envp, var_name);
-                    if (var_value != NULL)
-                    {
-                        char *before = strndup(token, var_start - 1);
-                        char *after = strdup(&token[i]);
-                        char *replacement = malloc(strlen(before) + strlen(var_value) + strlen(after) + 1);
-                        strcpy(replacement, before);
-                        strcat(replacement, var_value);
-                        strcat(replacement, after);
-                        free(var_value);
-                        free(before);
-                        free(after);
-                        free(token);
-                        token = replacement;
-                        i = var_start + strlen(var_value);
-                    }
+                    if ((token[i + 1] != ' ' && token[i + 1] != '?' && token[i + 1] != '\0'\
+                    && token[i + 1] != '$') && ft_dolls_is_ok(token) == 1)
+                        token = ft_change_env(token, ft_getenv(data->envp, &token[i + 1]), i);
                 }
                 i++;
             }
