@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void	ft_printexport(char **envp, int outfd)
 {
@@ -59,12 +59,12 @@ void	ft_export(t_data *data, char **cmd, int outfd)
 	}
 	if (ft_checkisoption(data, cmd) == 1)
 		return ;
-	while (cmd[i])
-	{
-		j = 0;
-		while (data->envp[j])
-		{
-			if ()
-		}
-	}
+	// while (cmd[i])
+	// {
+	// 	j = 0;
+	// 	while (data->envp[j])
+	// 	{
+	// 		if ()
+	// 	}
+	// }
 }
