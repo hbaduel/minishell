@@ -1,43 +1,28 @@
 #include "minishell.h"
 
-void	ft_interpret_dollar(char *str, int idx)
+char	*ft_strstr(char *haystack, char *needle)
 {
-	printf("gestion du dolls");
-	while (str[idx])
+	char	*h;
+        char	*n;
+	if (*needle == '\0')
+        	return ((char *)haystack);
+
+	while (*haystack != '\0')
 	{
-		// gerer les differents cas du $ entre double quote. jai vraiment la flemme la...
-		printf("on est bien dans la gestion du DOLLS magueule\n");
+		h = haystack;
+		n = needle;	
+		while (*h != '\0' && *n != '\0' && *h == *n)
+		{
+		    h++;
+		    n++;
+		}
+		if (*n == '\0')
+		    return ((char *)haystack);
+		haystack++;
 	}
+	return (NULL);
 }
 
-char	ft_strchr(char *s, char c, char bol)
-{
-	while (*s)
-	{
-		if (*s == c)
-			return (c);
-		s++;
-	}
-	return (c);
-}
-
-char	*ft_check_dollar(char *str, int idx)
-{
-	char	dollar;
-	char	doll_in_quotes;
-	int	i;
-
-	dollar = '$';
-	doll_in_quotes = 0;
-	i = idx;
-	while (str[i])
-	{
-		if (!ft_strchr(str, dollar, doll_in_quotes))
-			ft_interpret_dollar(str, idx);
-		i++;
-	}
-	return (str);
-}
 
 char	*ft_remove_quote(char *str, char quote)
 {
@@ -53,30 +38,44 @@ char	*ft_remove_quote(char *str, char quote)
 	return (str);
 }
 
-char	*ft_quote(char *str, int idx, char quote)
+void	ft_quote(char *str, int idx, char quote)
 {
 	int	i;
 	int	inside_quote;
 
 	inside_quote = 1;
 	i = idx + 1;
-	// printf("%d --- %c\n", inside_quote, quote);
-
 	while (str[i])
 	{
 		if (str[i] == quote)
 			inside_quote += 1;
 		i++;
 	}
-	// printf("%d --- %c\n", inside_quote, quote);
 	if (inside_quote % 2 != 0)
 		ft_exiterror("Error : quotes have to be closed");
-	else if (inside_quote % 2 == 0 && (quote == 34))
-		ft_check_dollar(str, idx);
-	return (&str[i + 1]);
 }
 
+int	ft_dolls_is_ok(char *str)
+{
+	int	i;
+	int	dq;
+	int	sq;
 
+	i = 0;
+	dq = -1;
+	sq = -1;
+	while (str[i] != '$')
+	{
+		if (str[i] == 34)
+			dq = i;
+		if (str[i] == 39)
+			sq = i;
+		i++;
+	}
+	if (sq > dq)
+		return (0);
+	return (1);
+}
 
 char	*ft_check_quote(char *str)
 {
@@ -95,10 +94,9 @@ char	*ft_check_quote(char *str)
 			ft_quote(str, i, 34);
 			break;
 		}
-		else if (str[i] == '(' || str[i] == '{')
+		else if (str[i] == '(' || str[i] == '{' || str[i] == ')' || str[i] == '}')
 			ft_exiterror("Error : '()' and '{}' are not interpreted\n");		// parenthese et vaccolade
 		i++;
 	}
-	// printf("str2 --> %s\n", str);
 	return (str);
 }

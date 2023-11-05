@@ -1,28 +1,5 @@
 #include "minishell.h"
 
-// char    *ft_add_space(char *str)
-// {
-//     char    *new_str;
-//     int i;
-
-//     new_str = malloc(sizeof(char) * (ft_strlen(str) + 2));
-//     i = 0;
-//     while ((str[i] == '<' || str[i] == '>' || str[i] == '|' || str[i] == ' ') && str[i])
-//     {
-//         new_str[i] = str[i];
-//         i++;
-//     }
-//     new_str[i] = ' ';
-//     while (str[i])
-//     {
-//         new_str[i + 1] = str[i];
-//         i++;
-//     }
-//     new_str[i + 1] = '\0';
-//     free(str);
-//     return (new_str);
-// }
-
 t_parse *ft_searchlastcmd(t_parse *current)
 {
     while (current && current->type != CMD)
@@ -37,8 +14,11 @@ t_parse *ft_parse(char *terminal, t_data *data)
     t_parse *temp;
     char    *token;
     char    *terminal2;
+    int     i;
 
+    i = 0;
     terminal2 = ft_add_space_before(terminal);
+    ft_check_quote(terminal2);
     first = malloc(sizeof(t_parse));
     data->pipe_detector = 1;
     current = first;
@@ -82,6 +62,20 @@ t_parse *ft_parse(char *terminal, t_data *data)
                 data->pipe_detector = 1;
                 current = current->previous;
                 free(current->next);
+        }
+        else if (ft_strstr(token, "$") != NULL)
+        {
+            i = 0;
+            while (token[i])
+            {
+                if (token[i] == '$')
+                {
+                    if ((token[i + 1] != ' ' && token[i + 1] != '?' && token[i + 1] != '\0'\
+                    && token[i + 1] != '$') && ft_dolls_is_ok(token) == 1)
+                        token = ft_change_env(token, ft_getenv(data->envp, &token[i + 1]), i);
+                }
+                i++;
+            }
         }
         else
         {
