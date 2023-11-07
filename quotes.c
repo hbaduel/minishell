@@ -24,19 +24,19 @@ char	*ft_strstr(char *haystack, char *needle)
 }
 
 
-char	*ft_remove_quote(char *str, char quote)
-{
-	int	i;
+// char	*ft_remove_quote(char *str, char quote)
+// {
+// 	int	i;
 
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == quote)
-			str[i] = ' ';
-		i++;
-	}
-	return (str);
-}
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] == quote)
+// 			str[i] = ' ';
+// 		i++;
+// 	}
+// 	return (str);
+// }
 
 void	ft_quote(char *str, int idx, char quote)
 {
@@ -55,27 +55,27 @@ void	ft_quote(char *str, int idx, char quote)
 		ft_exiterror("Error : quotes have to be closed");
 }
 
-int	ft_dolls_is_ok(char *str)
-{
-	int	i;
-	int	dq;
-	int	sq;
+// int	ft_dolls_is_ok(char *str)
+// {
+// 	int	i;
+// 	int	dq;
+// 	int	sq;
 
-	i = 0;
-	dq = -1;
-	sq = -1;
-	while (str[i] != '$')
-	{
-		if (str[i] == 34)
-			dq = i;
-		if (str[i] == 39)
-			sq = i;
-		i++;
-	}
-	if (sq > dq)
-		return (0);
-	return (1);
-}
+// 	i = 0;
+// 	dq = -1;
+// 	sq = -1;
+// 	while (str[i] != '$')
+// 	{
+// 		if (str[i] == 34)
+// 			dq = i;
+// 		if (str[i] == 39)
+// 			sq = i;
+// 		i++;
+// 	}
+// 	if (sq > dq)
+// 		return (0);
+// 	return (1);
+// }
 
 char	*ft_check_quote(char *str)
 {

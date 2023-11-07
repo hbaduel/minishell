@@ -23,7 +23,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
     data->pipe_detector = 1;
     current = first;
     current->previous = NULL;
-    token = ft_strtok(terminal2, ' ');
+    token = ft_strtok(data, terminal2);
     terminal2 = ft_cut_terminal(terminal2, token);
     while (token != NULL)
     {
@@ -62,20 +62,6 @@ t_parse *ft_parse(char *terminal, t_data *data)
                 data->pipe_detector = 1;
                 current = current->previous;
                 free(current->next);
-        }
-        else if (ft_strstr(token, "$") != NULL)
-        {
-            i = 0;
-            while (token[i])
-            {
-                if (token[i] == '$')
-                {
-                    if ((token[i + 1] != ' ' && token[i + 1] != '?' && token[i + 1] != '\0'\
-                    && token[i + 1] != '$') && ft_dolls_is_ok(token) == 1)
-                        token = ft_change_env(token, ft_getenv(data->envp, &token[i + 1]), i);
-                }
-                i++;
-            }
         }
         else
         {
@@ -144,7 +130,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
         current->next->previous = current;
         current = current->next;
         free(token);
-        token = ft_strtok(terminal2, ' ');
+        token = ft_strtok(data, terminal2);
         terminal2 = ft_cut_terminal(terminal2, token);
     }
     current->previous->next = NULL;
@@ -153,7 +139,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
     return (first);
 }
 
-// int main(int argc, char **argv)
+// int main(int argc, char **argv, char **envp)
 // {
 //     t_data  *data;
 //     t_parse *test;
@@ -162,7 +148,18 @@ t_parse *ft_parse(char *terminal, t_data *data)
 
 //     data = malloc(sizeof(t_data));
 //     data->ncmd = 0;
-//     data->parse = ft_parse("< \'infile test\' grep \'feur de merde\' > outfile", data);
+//     i = 0;
+// 	while (envp[i])
+// 		i++;
+// 	data->envp = malloc(sizeof(char *) * (i + 1));
+// 	i = 0;
+// 	while (envp[i])
+// 	{
+// 		data->envp[i] = ft_strdup(envp[i]);
+// 		i++;
+// 	}
+// 	data->envp[i] = NULL;
+//     data->parse = ft_parse("<infile echo \"Nouvel env : \" \'PROUT=$ZSH\' | export \"PROUT=$ZSH\">outfile", data);
 //     test = data->parse;
 //     while(data->parse)
 //     {
@@ -193,6 +190,13 @@ t_parse *ft_parse(char *terminal, t_data *data)
 // 		test = test->next;
 // 		free(temp);
 // 	}
+//     i = 0;
+//     while (data->envp[i])
+//     {
+//         free(data->envp[i]);
+//         i++;
+//     }
+//     free(data->envp);
 //     free(data);
 //     return (0);
 // }

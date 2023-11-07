@@ -104,24 +104,47 @@ char    *ft_envvalue(char *env, int start)
     return (res);
 }
 
-char    *ft_getenv(char **envp, char *name)
+char    *ft_getenvname(char *str)
+{
+    char    *res;
+    int     i;
+
+    i = 0;
+    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=')
+        i++;
+    res = malloc(sizeof(char) * (i + 1));
+    i = 0;
+    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=')
+    {
+        res[i] = str[i];
+        i++;
+    }
+    res[i] = '\0';
+    return (res);
+}
+
+char    *ft_getenv(char **envp, char *name, int *k)
 {
     int     i;
     int     j;
 
     i = 0;
+    *k += ft_strlen(name) + 1;
     while (envp[i])
     {
         j = 0;
-        while (envp[i][j] == name[j] && name[j] != ' ' && name[j] && envp[i][j])
+        while (envp[i][j] == name[j] && name[j] && envp[i][j])
             j++;
-        if (envp[i][j] == '=')
+        if (envp[i][j] == '=' && envp[i][j + 1] && name[j] == '\0')
+        {
+            free(name);
             return (ft_envvalue(envp[i], j + 1));
+        }
         i++;
     }
+    free(name);
     return (NULL);
 }
-
 
 char    *ft_remove_space(char *token)
 {
@@ -151,36 +174,3 @@ char    *ft_remove_space(char *token)
     return (token);
 }
 
-char	*ft_change_env(char *token, char *modif, int idx)
-{
-	char	*res;
-	int	i;
-	int	j;
-	int	len;
-
-	i = 0;
-	len = ft_strlen(modif) + idx + 1;
-	res = malloc(sizeof(char) * (len));
-	printf("TOKEN: %s\n", token);
-	printf("MODIF: %s\n", modif);
-	printf("INDEX: %d\n", idx);
-	while (i + 1 < idx)
-	{
-		res[i] = token[i + 1];
-		i++;
-	}
-	j = i;
-	i = 0;
-	while (modif[i])
-	{
-		res[j] = modif[i];
-		j++;
-		i++;
-        if (modif[i] == '\"')
-	        res[j] = '\0';
-	}
-	free(token);
-	free(modif);
-	printf("RES: %s\n", res);
-	return(res);
-}

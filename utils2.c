@@ -29,85 +29,221 @@ char	*ft_strdup(char *s)
 	return (str);
 }
 
-char    *ft_strtok(char *str, char delim)
+// debut fichier token
+
+int ft_tokensize(t_data *data, char *str, char delim)
 {
-    char    *next_token;
+    char    *env;
+    int size;
+    int i;
+
+    size = 0;
+    i = 0;
+    while (str[i] != delim && str[i])
+    {
+        if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '?' && str[i + 1] != '\0'\
+        && str[i + 1] != '$') && delim != '\'')
+        {
+            env = ft_getenv(data->envp, ft_getenvname(&str[i + 1]), &i);
+            size += ft_strlen(env);
+            free(env);
+        }
+        else
+        {
+            i++;
+            size++;
+        }
+    }
+    return (size + 1);
+}
+
+void    ft_putenv(char *nexttoken, char *env, int *j)
+{
+    int     k;
+
+    k = 0;
+    if (!env)
+        return ;
+    while (env[k])
+    {
+        nexttoken[*j] = env[k];
+        k++;
+        *j += 1;
+    }
+    free(env);
+}
+
+char    *ft_tokenquote(t_data *data, char *str, char delim)
+{
+    char    *nexttoken;
+    int     i;
+    int     j;
+
+    nexttoken = malloc(sizeof(char) * (ft_tokensize(data, str, delim)));
+    i = 0;
+    j = 0;
+    while (str[i] != delim && str[i])
+    {
+        if (delim != '\'' && str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '?' && str[i + 1] != '\0'\
+        && str[i + 1] != '$'))
+            ft_putenv(nexttoken, ft_getenv(data->envp, ft_getenvname(&str[i + 1]), &i), &j);
+        else
+        {
+            nexttoken[j] = str[i];
+            j++;
+            i++;
+        }
+    }
+    nexttoken[j] = '\0';
+    return (nexttoken);
+}
+
+char    *ft_quotemidtoken(t_data *data, char *nexttoken, char *str, int j)
+{
     char    *temp;
-    char    *result;
+    char    delim;
+    int     i;
+
+    i = 1;
+    delim = str[0];
+    nexttoken[j] = '\0';
+    temp = ft_tokenquote(data, &str[i], str[0]);
+    nexttoken = ft_strjoin(nexttoken, temp, 1);
+    free(temp);
+    while (str[i] != delim)
+        i++;
+    if (str[i + 1] != ' ' && str[i + 1])
+    {
+        temp = ft_tokennoquote(data, &str[i + 1]);
+        nexttoken = ft_strjoin(nexttoken, temp, 1);
+        free(temp);
+    }
+    return (nexttoken);
+}
+
+char    *ft_tokennoquote(t_data *data, char *str)
+{
+    char    *nexttoken;
+    int     i;
+    int     j;
+
+    nexttoken = malloc(sizeof(char) * (ft_tokensize(data, str, ' ')));
+    i = 0;
+    j = 0;
+    while (str[i] != ' ' && str[i])
+    {
+        if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '?' && str[i + 1] != '\0'\
+        && str[i + 1] != '$'))
+            ft_putenv(nexttoken, ft_getenv(data->envp, ft_getenvname(&str[i + 1]), &i), &j);
+        else if (str[i] == '\'' || str[i] == '\"')
+            return (ft_quotemidtoken(data, nexttoken, &str[i], j));
+        else
+        {
+            nexttoken[j] = str[i];
+            j++;
+            i++;
+        }
+    }
+    nexttoken[j] = '\0';
+    return (nexttoken);
+}
+
+char    *ft_strtok(t_data *data, char *str)
+{
     int     start;
     int     end;
     int     i;
 
-    next_token = NULL;
-    temp = NULL;
-    result = NULL;
     start = 0;
     end = 0;
     i = 0;
-    if (!str)
-        return (NULL);
     while (str[start] == ' ' && str[start])
         start++;
-    if (str[start] == '\'' || str[start] == '"')
-    {
-        delim = str[start];
-        start++;
-        end = start;
-        while (str[end] != delim && str[end])
-            end++;
-        if (str[end] == delim)
-        {
-            temp = malloc(end - start);
-            // temp[0] = quote;
-            i = 1;
-            while (start < end)
-            {
-                temp[i] = str[start];
-                start++;
-                i++;
-            }
-            temp[i] = '\0';
-            // temp[i] = quote;
-            // temp[i + 1] = '\0';
-            start = end + 1;
-        }
-    }
-    end = start;
-    while (str[end] != delim && str[end])
-        end++;
-    if (start != end)
-    {
-        next_token = malloc(end - start + 1);
-        i = 0;
-        while (start < end)
-        {
-            next_token[i] = str[start];
-            start++;
-            i++;
-        }
-        next_token[i] = '\0';
-    }
-    if (temp && next_token)
-    {
-        result = malloc(ft_strlen(temp) + ft_strlen(next_token) + 2);
-        free(temp);
-        free(next_token);
-        return (result);
-    }
-    else if (temp)
-        return (temp);
-    else if (next_token)
-        return (next_token);
-    else
+    if (!str[start])
         return (NULL);
+    if (str[start] == '\'' || str[start] == '"')
+        return (ft_tokenquote(data, &str[start + 1], str[start]));
+    else
+        return (ft_tokennoquote(data, &str[start]));
+}
+
+// fin fichier quote
+
+// new fichier quote
+
+char    *ft_cutquote(char *terminal, char delim)
+{
+    char    *new;
+    int     start;
+    int     end;
+    int     i;
+    
+    start = 0;
+    while (terminal[start] != delim && terminal[start])
+        start++;
+    end = start;
+    while (terminal[end])
+        end++;
+    new = malloc(sizeof(char) * (end - start + 1));
+    start++;
+    i = 0;
+    while (start < end)
+    {
+        new[i] = terminal[start];
+        start++;
+        i++;
+    }
+    new[i] = '\0';
+    return (new);
+}
+
+int     ft_cutsize(char *terminal, int *start, int *end)
+{
+    char    delim;
+
+    *start = 0;
+    *end = 0;
+    while (terminal[*start] != ' ' && terminal[*start])
+    {
+        if (terminal[*start] == '\'' || terminal[*start] == '\"')
+        {
+            delim = terminal[*start];
+            *start += 1;
+            while (terminal[*start] != delim && terminal[*start])
+                *start += 1;
+        }
+        *start += 1;
+    }
+    *end = *start;
+    while (terminal[*end])
+        *end += 1;
+}
+
+char    *ft_cutnoquote(char *terminal)
+{
+    char    *newterminal;
+    int     start;
+    int     end;
+    int     i;
+
+    ft_cutsize(terminal, &start, &end);
+    newterminal = malloc(sizeof(char) * (end - start + 1));
+    i = 0;
+    while (start < end)
+    {
+        newterminal[i] = terminal[start];
+        start++;
+        i++;
+    }
+    newterminal[i] = '\0';
+    return (newterminal);
 }
 
 char    *ft_cut_terminal(char *terminal, char *token)
 {
     char    *newterminal;
-    int start;
-    int tokenlen;
-    int i;
+    int     start;
+    int     i;
 
     if (!token)
     {
@@ -122,18 +258,15 @@ char    *ft_cut_terminal(char *terminal, char *token)
         free(terminal);
         return (NULL);
     }
-    tokenlen = ft_strlen(token);
-    newterminal = malloc(sizeof(char) * (ft_strlen(terminal) - start - tokenlen + 1));
-    i = 0;
-    while (terminal[start + tokenlen + i])
-    {
-        newterminal[i] = terminal[start + tokenlen + i];
-        i++;
-    }
-    newterminal[i] = '\0';
+    if (terminal[start] == '\'' || terminal[start] == '\"')
+        newterminal = ft_cutquote(&terminal[start + 1], terminal[start]);
+    else
+        newterminal = ft_cutnoquote(&terminal[start]);
     free(terminal);
     return (newterminal);
 }
+
+// fin fichier quote
 
 char   **ft_realloc(char **args, char *token)
 {
