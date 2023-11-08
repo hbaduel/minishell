@@ -79,11 +79,10 @@ void	ft_chooseaction(t_data *data)
 		{
 			if (data->infilefd != 0)
 				dup2(data->infilefd, 0);
-			if (data->outfilefd != 1)
-				dup2(data->outfilefd, 1);
 			ft_execcmd(data->parse->args, data->envp, data->outfilefd);
 		}
-		data->status = waitpid(cpid, NULL, 0);
+		waitpid(cpid, &data->status, 0);
+		data->status /= 256;
 	}
 	else if (data->ncmd > 1)
 		ft_pipe(data, data->parse);

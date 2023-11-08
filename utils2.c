@@ -1,31 +1,20 @@
 #include "minishell.h"
 
-int ft_strlcpy(char *dest, char *src, int size)
-{
-	int    len;
-
-	len = 0;
-	if (size == 0)
-		return (ft_strlen(src));
-	while (src[len] && len + 1 < size)
-	{
-		dest[len] = src[len];
-		len++;
-	}
-	dest[len] = '\0';
-	return (ft_strlen(src));
-}
-
 char	*ft_strdup(char *s)
 {
 	char	*str;
-	size_t	len;
+	int     i;
 
-	len = ft_strlen(s);
-	str = malloc (sizeof(char) * (len + 1));
-	if (!str)
-		return (0);
-	ft_strlcpy(str, s, len + 1);
+    if (!s)
+        return (NULL);
+	i = 0;
+	str = malloc (sizeof(char) * (ft_strlen(s) + 1));
+	while (s[i])
+    {
+        str[i] = s[i];
+        i++;
+    }
+    str[i] = '\0';
 	return (str);
 }
 
@@ -41,10 +30,10 @@ int ft_tokensize(t_data *data, char *str, char delim)
     i = 0;
     while (str[i] != delim && str[i])
     {
-        if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '?' && str[i + 1] != '\0'\
+        if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
         && str[i + 1] != '$') && delim != '\'')
         {
-            env = ft_getenv(data->envp, ft_getenvname(&str[i + 1]), &i);
+            env = ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i);
             size += ft_strlen(env);
             free(env);
         }
@@ -84,9 +73,9 @@ char    *ft_tokenquote(t_data *data, char *str, char delim)
     j = 0;
     while (str[i] != delim && str[i])
     {
-        if (delim != '\'' && str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '?' && str[i + 1] != '\0'\
+        if (delim != '\'' && str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
         && str[i + 1] != '$'))
-            ft_putenv(nexttoken, ft_getenv(data->envp, ft_getenvname(&str[i + 1]), &i), &j);
+            ft_putenv(nexttoken, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
         else
         {
             nexttoken[j] = str[i];
@@ -132,9 +121,9 @@ char    *ft_tokennoquote(t_data *data, char *str)
     j = 0;
     while (str[i] != ' ' && str[i])
     {
-        if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '?' && str[i + 1] != '\0'\
+        if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
         && str[i + 1] != '$'))
-            ft_putenv(nexttoken, ft_getenv(data->envp, ft_getenvname(&str[i + 1]), &i), &j);
+            ft_putenv(nexttoken, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
         else if (str[i] == '\'' || str[i] == '\"')
             return (ft_quotemidtoken(data, nexttoken, &str[i], j));
         else
@@ -177,7 +166,7 @@ char    *ft_cutquote(char *terminal, char delim)
     int     start;
     int     end;
     int     i;
-    
+
     start = 0;
     while (terminal[start] != delim && terminal[start])
         start++;

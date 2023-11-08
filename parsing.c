@@ -159,7 +159,8 @@ t_parse *ft_parse(char *terminal, t_data *data)
 // 		i++;
 // 	}
 // 	data->envp[i] = NULL;
-//     data->parse = ft_parse("<infile echo \"Nouvel env : \" \'PROUT=$ZSH\' | export \"PROUT=$ZSH\">outfile", data);
+//     data->status = 0;
+//     data->parse = ft_parse("echo \"$?\"", data);
 //     test = data->parse;
 //     while(data->parse)
 //     {
