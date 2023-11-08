@@ -120,7 +120,7 @@ void	ft_readterminal(t_data *data)
 					if (redir->type == APPENDCOMP)
 						operror = ft_openfile(redir->args[1], data, 2);
 					if (redir->type == HDCOMPLET)
-						ft_heredoc(redir->args[1], data);
+						ft_heredoc(redir->args[1], redir->args[2], data);
 					if (redir->type == INCOMPLET)
 						operror = ft_openfile(redir->args[1], data, 0);
 					redir = redir->next;

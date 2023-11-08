@@ -53,7 +53,7 @@ typedef struct	s_data
 
 void	ft_exiterror(char *str);
 void	ft_putstr_fd(char *str, int fd);
-void	ft_heredoc(char *limiter, t_data *data);
+void	ft_heredoc(char *limiter, char *next, t_data *data);
 void	ft_pipe(t_data *data, t_parse *parsing);
 void	ft_execcmd(char **cmd, char **envp, int outfd);
 void	ft_pwd(t_data *data, int outfd, char **cmd);
@@ -69,7 +69,6 @@ char	*ft_strtok(t_data *data, char *str);
 char	*ft_strdup(char *s);
 char    *ft_cut_terminal(char *terminal, char *token);
 char    *ft_add_space_before(char *str);
-char    *ft_remove_space(char *token);
 char    *ft_getenv(char **envp, int status, char *name, int *k);
 char	*ft_check_quote(char *str);
 char    *ft_strstr(char *haystack, char *needle);
@@ -77,6 +76,7 @@ char	*ft_strcpy(char *dest, char *src);
 char    *ft_tokennoquote(t_data *data, char *str);
 char    *ft_getenvname(char *str);
 char	*ft_itoa(int n);
+char    *ft_tokennoquote(t_data *data, char *str);
 char    **ft_realloc(char **args, char *token);
 char	**ft_split(char *s, char c);
 char	**ft_reallocenvp(char **envp, int donot);

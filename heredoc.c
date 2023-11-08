@@ -2,39 +2,77 @@
 
 extern char	*terminal;
 
-int		ft_checklimiter(char *limiter)
+void	ft_putheredoc(char *res, char *line, char *limiter, t_data *data)
 {
-	int	i;
-	int	j;
+	pid_t	cpid;
+	int		pipefd[2];
 
-	i = 0;
-	while (terminal[i] != '\n' && terminal[i])
-		i++;
-	while (terminal[i])
+	free(line);
+	if (data->ncmd > 0)
 	{
-		j = 0;
-		while (terminal[i] == limiter[j])
+		pipe(pipefd);
+		cpid = fork();
+		if (cpid == 0)
 		{
-			if (limiter[j + 1] == '\0' && terminal[i + 1] == '\0')
-				return (1);
-			i++;
-			j++;
+			close(pipefd[0]);
+			ft_putstr_fd(res, pipefd[1]);
+			free(res);
+			exit(0);
 		}
+		waitpid(cpid, 0, 0);
+		close(pipefd[1]);
+		if (data->infilefd != 0)
+			close(data->infilefd);
+		data->infilefd = pipefd[0];
+	}
+	free(res);
+}
+
+int		ft_checklimiter(char *limiter, char *next, char **res, t_data *data)
+{
+	char	*temp;
+	int		i;
+	int		j;
+
+	*res = NULL;
+	if (!next)
+		return (0);
+	i = 0;
+	while (next[i])
+	{
+		j = i;
+		while (next[j] != '\n' && next[j])
+			j++;
+		temp = malloc(sizeof(char) * (j - i + 1));
+		j = 0;
+		while (next[i] != '\n' && next[i])
+		{
+			temp[j] = next[i];
+			j++;
+			i++;
+		}
+		temp[j] = '\0';
 		i++;
+		if (ft_strcmp(limiter, temp) == 0)
+		{
+			ft_putheredoc(*res, temp, limiter, data);
+			return (1);
+		}
+		*res = ft_strjoin(*res, temp, 1);
+		*res = ft_strjoin(*res, temp, 1);
+		free(temp);
 	}
 	return (0);
 }
 
-void	ft_heredoc(char *limiter, t_data *data)
+void	ft_heredoc(char *limiter, char *next, t_data *data)
 {
 	char	*heredoc;
 	char	*res;
-	pid_t	cpid;
-	int		pipefd[2];
 
-	res = NULL;
-	if (ft_checklimiter(limiter) == 1)
-		return ; // a corriger dans le parse : si utilisation de l'historique que des \n donc considere que le limiter est tout ce qu'il y a apres
+	printf("POUR VOIR LE PB A GERER DE HIER GO ft_heredoc (heredoc.c)\n"); // pb de parsing quand une seule ligne avec le \n
+	if (ft_checklimiter(limiter, next, &res, data) == 1)
+		return ;
 	while (1)
 	{
 		heredoc = readline("heredoc> ");
@@ -42,25 +80,7 @@ void	ft_heredoc(char *limiter, t_data *data)
 		terminal = ft_strjoin(terminal, heredoc, 1);
 		if (ft_strcmp(heredoc, limiter) == 0)
 		{
-			free(heredoc);
-			if (data->ncmd > 0)
-			{
-				pipe(pipefd);
-				cpid = fork();
-				if (cpid == 0)
-				{
-					close(pipefd[0]);
-					ft_putstr_fd(res, pipefd[1]);
-					free(res);
-					exit(0);
-				}
-				waitpid(cpid, 0, 0);
-				close(pipefd[1]);
-				if (data->infilefd != 0)
-					close(data->infilefd);
-				data->infilefd = pipefd[0];
-			}
-			free(res);
+			ft_putheredoc(res, heredoc, limiter, data);
 			return ;
 		}
 		res = ft_strjoin(res, heredoc, 1);
