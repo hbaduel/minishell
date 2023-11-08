@@ -110,24 +110,27 @@ void	ft_readterminal(t_data *data)
 		if (terminal[0])
 		{
 			data->parse = ft_parse(terminal, data);
-			redir = data->parse;
-			while (redir)
+			if (data->parse)
 			{
-				if (redir->type == OUTCOMPLET)
-					operror = ft_openfile(redir->args[1], data, 1);
-				if (redir->type == APPENDCOMP)
-					operror = ft_openfile(redir->args[1], data, 2);
-				if (redir->type == HDCOMPLET)
-					ft_heredoc(redir->args[1], data);
-				if (redir->type == INCOMPLET)
-					operror = ft_openfile(redir->args[1], data, 0);
-				redir = redir->next;
-				if (operror == 1)
-					break ;
+				redir = data->parse;
+				while (redir)
+				{
+					if (redir->type == OUTCOMPLET)
+						operror = ft_openfile(redir->args[1], data, 1);
+					if (redir->type == APPENDCOMP)
+						operror = ft_openfile(redir->args[1], data, 2);
+					if (redir->type == HDCOMPLET)
+						ft_heredoc(redir->args[1], data);
+					if (redir->type == INCOMPLET)
+						operror = ft_openfile(redir->args[1], data, 0);
+					redir = redir->next;
+					if (operror == 1)
+						break ;
+				}
+				if (data->ncmd > 0 && operror == 0)
+					ft_chooseaction(data);
+				ft_freeline(data, 0);
 			}
-			if (data->ncmd > 0 && operror == 0)
-				ft_chooseaction(data);
-			ft_freeline(data, 0);
 			add_history(terminal);
 		}
 		free(terminal);
