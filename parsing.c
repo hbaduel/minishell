@@ -31,7 +31,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
     int     i;
 
     i = 0;
-    terminal2 = ft_strdup(terminal);//ft_add_space_before(terminal);
+    terminal2 = ft_add_space_before(terminal);
     ft_check_quote(terminal2);
     first = malloc(sizeof(t_parse));
     data->pipe_detector = 1;
@@ -72,7 +72,10 @@ t_parse *ft_parse(char *terminal, t_data *data)
         else if (ft_strcmp(token, "|") == 0)
         {
                 if (!current->previous || data->pipe_detector == 1)
+                {
                     ft_exiterror("Minishell : parse error near '|'\n");
+                    return (NULL);
+                }
                 data->pipe_detector = 1;
                 current = current->previous;
                 free(current->next);
@@ -185,7 +188,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	data->envp[i] = NULL;
     data->status = 0;
-    data->parse = ft_parse("<< fin grep feur\nfeur\nfin", data);
+    data->parse = ft_parse("ls||wc", data);
     test = data->parse;
     while(data->parse)
     {

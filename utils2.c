@@ -67,6 +67,7 @@ void    ft_putenv(char *nexttoken, char *env, int *j)
 char    *ft_tokenquote(t_data *data, char *str, char delim)
 {
     char    *nexttoken;
+    char    *env_value;
     int     i;
     int     j;
 
@@ -77,7 +78,11 @@ char    *ft_tokenquote(t_data *data, char *str, char delim)
     {
         if (delim != '\'' && str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
         && str[i + 1] != '$'))
-            ft_putenv(nexttoken, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
+        {
+            env_value = ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i);
+            ft_putenv(nexttoken, env_value, &j);
+            free(env_value);
+        }
         else
         {
             nexttoken[j] = str[i];
@@ -115,6 +120,7 @@ char    *ft_quotemidtoken(t_data *data, char *nexttoken, char *str, int j)
 char    *ft_tokennoquote(t_data *data, char *str)
 {
     char    *nexttoken;
+    char    *env_value;
     int     i;
     int     j;
 
@@ -125,7 +131,11 @@ char    *ft_tokennoquote(t_data *data, char *str)
     {
         if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
         && str[i + 1] != '$'))
-            ft_putenv(nexttoken, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
+        {
+            env_value = ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i);
+            ft_putenv(nexttoken, env_value, &j);
+            free(env_value);
+        }
         else if (str[i] == '\'' || str[i] == '\"')
             return (ft_quotemidtoken(data, nexttoken, &str[i], j));
         else
@@ -206,6 +216,7 @@ char    *ft_cutquote(char *terminal, char delim)
         i++;
     }
     new[i] = '\0';
+    free(terminal);
     return (new);
 }
 
@@ -248,6 +259,7 @@ char    *ft_cutnoquote(char *terminal)
         i++;
     }
     newterminal[i] = '\0';
+    // free(terminal);
     return (newterminal);
 }
 
@@ -276,7 +288,7 @@ char    *ft_cut_terminal(char *terminal, char *token)
         newterminal = ft_strdup("");
     else
         newterminal = ft_cutnoquote(&terminal[start]);
-    free(terminal);
+    // free(terminal);
     return (newterminal);
 }
 

@@ -51,7 +51,6 @@ typedef struct	s_data
     t_parse *parse;
 }				t_data;
 
-void	ft_exiterror(char *str);
 void	ft_putstr_fd(char *str, int fd);
 void	ft_heredoc(char *limiter, t_data *data);
 void	ft_pipe(t_data *data, t_parse *parsing);
@@ -85,5 +84,6 @@ int		ft_strlen(char *str);
 int 	ft_openfile(char *file, t_data *data, int which);
 int 	ft_cmdbuiltin(t_data *data, int outfd, char **cmd);
 int	    ft_checkenvname(char *env);
+int     ft_exiterror(char *str);
 
 #endif

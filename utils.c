@@ -1,14 +1,22 @@
 #include "minishell.h"
-
-void	ft_exiterror(char *str)
+int	ft_exiterror(char *str)
 {
 	if (str)
 		ft_putstr_fd(str, 1);
-	return(NULL);
+	return(0);
 }
 
 void	ft_free_all(t_data *data)
 {
+	while (data->parse)
+	{
+		free(data->parse->args);
+		free(data->parse);
+		data->parse->args = data->parse->next->args;
+	}
+	if (data->envp)
+			free(data->envp);
+	free(data);
 	
 }
 
