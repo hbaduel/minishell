@@ -59,12 +59,12 @@ void	ft_export(t_data *data, char **cmd, int outfd)
 	}
 	if (ft_checkisoption(data, cmd) == 1)
 		return ;
-	while (cmd[i])
-	{
-		j = 0;
-		while (data->envp[j])
-		{
-			printf("A toi de jouer Hugo");
-		}
-	}
+	// while (cmd[i])
+	// {
+	// 	j = 0;
+	// 	while (data->envp[j])
+	// 	{
+	// 		if ()
+	// 	}
+	// }
 }

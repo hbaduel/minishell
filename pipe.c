@@ -37,20 +37,18 @@ void	ft_execcmd(char **cmd, char **envp, int outfd)
 	path = ft_cmdpath(cmd[0], envp);
 	if (!path)
 	{
-		free(path);
-		if (outfd != 1)
-			dup2(1, outfd);
-		path = ft_strjoin("minishell: command not found: ", cmd[0], 0);
-		ft_putstr_fd(path, 1);
+		ft_putstr_fd("minishell: command not found: ", 1);
+		ft_putstr_fd(cmd[0], 1);
 		ft_putstr_fd("\n", 1);
-		free(path);
-		exit(0);
+		exit(127);
 	}
+	if (outfd != 1)
+		dup2(outfd, 1);
 	if (execve(path, cmd, envp) == -1)
 	{
 		free(path);
-		ft_exitperror("execve");
-		exit (0);
+		perror("execve");
+		exit (1);
 	}
 }
 
@@ -70,10 +68,10 @@ int	ft_nextcmd(t_data *data, int infd, char **cmd)
 	{
 		close(tubefd[0]);
 		dup2(infd, 0);
-		dup2(tubefd[1], 1);
 		ft_execcmd(cmd, data->envp, tubefd[1]);
 	}
-	data->status = waitpid(pid, 0, 0);
+	waitpid(pid, &data->status, 0);
+	data->status /= 256;
 	close(tubefd[1]);
 	return (tubefd[0]);
 }
@@ -84,15 +82,14 @@ void	ft_pipe(t_data *data, t_parse *parsing)
 	int		i;
 	int		infd;
 
-	i = 1;
+	i = 0;
 	infd = data->infilefd;
-	while (i < data->ncmd)
+	while (++i < data->ncmd)
 	{
 		while(parsing->type != CMD)
 			parsing = parsing->next;
 		infd = ft_nextcmd(data, infd, parsing->args);
 		parsing = parsing->next;
-		i++;
 	}
 	while(parsing->type != CMD)
 		parsing = parsing->next;
@@ -102,9 +99,8 @@ void	ft_pipe(t_data *data, t_parse *parsing)
 	if (cpid == 0)
 	{
 		dup2(infd, 0);
-		if (data->outfilefd != 1)
-			dup2(data->outfilefd, 1);
 		ft_execcmd(parsing->args, data->envp, data->outfilefd);
 	}
-	data->status = waitpid(cpid, 0, 0);
+	waitpid(cpid, &data->status, 0);
+	data->status /= 256;
 }

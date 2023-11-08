@@ -7,6 +7,20 @@ t_parse *ft_searchlastcmd(t_parse *current)
     return (current);
 }
 
+int ft_isnl(char *token)
+{
+    int i;
+
+    i = 0;
+    while (token[i])
+    {
+        if (token[i] == '\n')
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
 t_parse *ft_parse(char *terminal, t_data *data)
 {
     t_parse *first;
@@ -17,7 +31,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
     int     i;
 
     i = 0;
-    terminal2 = ft_add_space_before(terminal);
+    terminal2 = ft_strdup(terminal);//ft_add_space_before(terminal);
     ft_check_quote(terminal2);
     first = malloc(sizeof(t_parse));
     data->pipe_detector = 1;
@@ -70,6 +84,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
                 current->type = CMD;
                 current->args = malloc(sizeof(char *) * 2);
                 current->args[0] = ft_strdup(token);
+
                 current->args[1] = NULL;
                 data->ncmd++;
                 data->pipe_detector = 0;
@@ -101,6 +116,17 @@ t_parse *ft_parse(char *terminal, t_data *data)
                 current = current->previous;
                 free(current->next);
                 current->type = APPENDCOMP;
+            }
+            else if (ft_isnl(token) == 1)
+            {
+                current = current->previous;
+                free(current->next);
+                current->next = NULL;
+                while (current->type != HDCOMPLET)
+                    current = current->previous;
+                current->args = ft_realloc(current->args, token);
+                while (current->next)
+                    current = current->next;
             }
             else if (data->pipe_detector == 1)
             {
@@ -138,64 +164,65 @@ t_parse *ft_parse(char *terminal, t_data *data)
     return (first);
 }
 
-// int main(int argc, char **argv, char **envp)
-// {
-//     t_data  *data;
-//     t_parse *test;
-//     t_parse *temp;
-//     int i;
+int main(int argc, char **argv, char **envp)
+{
+    t_data  *data;
+    t_parse *test;
+    t_parse *temp;
+    int i;
 
-//     data = malloc(sizeof(t_data));
-//     data->ncmd = 0;
-//     i = 0;
-// 	while (envp[i])
-// 		i++;
-// 	data->envp = malloc(sizeof(char *) * (i + 1));
-// 	i = 0;
-// 	while (envp[i])
-// 	{
-// 		data->envp[i] = ft_strdup(envp[i]);
-// 		i++;
-// 	}
-// 	data->envp[i] = NULL;
-//     data->parse = ft_parse("<infile echo \"Nouvel env : \" \'PROUT=$ZSH\' | export \"PROUT=$ZSH\">outfile", data);
-//     test = data->parse;
-//     while(data->parse)
-//     {
-//         printf("Type : %d\n", data->parse->type);
-//         i = 0;
-//         while(data->parse->args[i])
-//         {
-//             printf("%s", data->parse->args[i]);
-//             if (data->parse->args[i + 1])
-//                 printf("\n");
-//             i++;
-//         }
-//         printf("\n");
-//         printf("\n");
-//         data->parse = data->parse->next;
-//     }
-//     printf("NCMD : %d\n", data->ncmd);
-//     while (test)
-// 	{
-// 		i = 0;
-// 		while (test->args[i])
-// 		{
-// 			free(test->args[i]);
-// 			i++;
-// 		}
-// 		free(test->args);
-// 		temp = test;
-// 		test = test->next;
-// 		free(temp);
-// 	}
-//     i = 0;
-//     while (data->envp[i])
-//     {
-//         free(data->envp[i]);
-//         i++;
-//     }
-//     free(data->envp);
-//     free(data);
-//     return (0);
-// }
+    data = malloc(sizeof(t_data));
+    data->ncmd = 0;
+    i = 0;
+	while (envp[i])
+		i++;
+	data->envp = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (envp[i])
+	{
+		data->envp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	data->envp[i] = NULL;
+    data->status = 0;
+    data->parse = ft_parse("<< fin grep feur\nfeur\nfin", data);
+    test = data->parse;
+    while(data->parse)
+    {
+        printf("Type : %d\n", data->parse->type);
+        i = 0;
+        while(data->parse->args[i])
+        {
+            printf("%s", data->parse->args[i]);
+            if (data->parse->args[i + 1])
+                printf("\n");
+            i++;
+        }
+        printf("\n");
+        printf("\n");
+        data->parse = data->parse->next;
+    }
+    printf("NCMD : %d\n", data->ncmd);
+    while (test)
+	{
+		i = 0;
+		while (test->args[i])
+		{
+			free(test->args[i]);
+			i++;
+		}
+		free(test->args);
+		temp = test;
+		test = test->next;
+		free(temp);
+	}
+    i = 0;
+    while (data->envp[i])
+    {
+        free(data->envp[i]);
+        i++;
+    }
+    free(data->envp);
+    free(data);
+    return (0);
+}

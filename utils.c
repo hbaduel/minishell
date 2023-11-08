@@ -1,12 +1,5 @@
 #include "minishell.h"
 
-void	ft_exitperror(char *str)
-{
-	if (str)
-		perror(str);
-	exit(1);
-}
-
 void	ft_exiterror(char *str)
 {
 	if (str)
