@@ -30,6 +30,8 @@ int ft_tokensize(t_data *data, char *str, char delim)
     i = 0;
     while (str[i] != delim && str[i])
     {
+        if (delim == ' ' && str[i] == '\n')
+            break ;
         if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
         && str[i + 1] != '$') && delim != '\'')
         {
@@ -119,7 +121,7 @@ char    *ft_tokennoquote(t_data *data, char *str)
     nexttoken = malloc(sizeof(char) * (ft_tokensize(data, str, ' ')));
     i = 0;
     j = 0;
-    while (str[i] != ' ' && str[i])
+    while (str[i] != ' ' && str[i] != '\n' && str[i])
     {
         if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
         && str[i + 1] != '$'))
@@ -137,6 +139,25 @@ char    *ft_tokennoquote(t_data *data, char *str)
     return (nexttoken);
 }
 
+char    *ft_tokenheredoc(char *str)
+{
+    char    *res;
+    int     i;
+
+    i = 0;
+    while (str[i])
+        i++;
+    res = malloc(sizeof(char) * (i + 1));
+    i = 0;
+    while (str[i])
+    {
+        res[i] = str[i];
+        i++;
+    }
+    res[i] = '\0';
+    return (res);
+}
+
 char    *ft_strtok(t_data *data, char *str)
 {
     int     start;
@@ -152,6 +173,8 @@ char    *ft_strtok(t_data *data, char *str)
         return (NULL);
     if (str[start] == '\'' || str[start] == '"')
         return (ft_tokenquote(data, &str[start + 1], str[start]));
+    else if (str[start] == '\n')
+        return (ft_tokenheredoc(&str[start + 1]));
     else
         return (ft_tokennoquote(data, &str[start]));
 }
@@ -192,7 +215,7 @@ int     ft_cutsize(char *terminal, int *start, int *end)
 
     *start = 0;
     *end = 0;
-    while (terminal[*start] != ' ' && terminal[*start])
+    while (terminal[*start] != ' ' && terminal[*start] && terminal[*start] != '\n')
     {
         if (terminal[*start] == '\'' || terminal[*start] == '\"')
         {
@@ -249,6 +272,8 @@ char    *ft_cut_terminal(char *terminal, char *token)
     }
     if (terminal[start] == '\'' || terminal[start] == '\"')
         newterminal = ft_cutquote(&terminal[start + 1], terminal[start]);
+    else if (terminal[start] == '\n')
+        newterminal = ft_strdup("");
     else
         newterminal = ft_cutnoquote(&terminal[start]);
     free(terminal);

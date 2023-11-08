@@ -150,31 +150,3 @@ char    *ft_getenv(char **envp, int status, char *name, int *k)
     free(name);
     return (NULL);
 }
-
-char    *ft_remove_space(char *token)
-{
-    char *read_ptr;
-    char *write_ptr;
-    char *new_token;
-
-    read_ptr = token;
-    write_ptr = token;
-    while (*read_ptr)
-    {
-        if (*read_ptr != ' ')
-        {
-            *write_ptr = *read_ptr;
-            write_ptr++;
-        }
-        read_ptr++;
-    }
-    *write_ptr = '\0';
-    if (write_ptr != token)
-    {
-        new_token = (char *)malloc(strlen(token) + 1);
-        ft_strcpy(new_token, token);
-        free(token);
-        token = new_token;
-    }
-    return (token);
-}
