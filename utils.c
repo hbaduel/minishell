@@ -11,7 +11,12 @@ void	ft_exiterror(char *str)
 {
 	if (str)
 		ft_putstr_fd(str, 1);
-	exit(1);
+	return(NULL);
+}
+
+void	ft_free_all(t_data *data)
+{
+	
 }
 
 void	ft_putstr_fd(char *str, int fd)
