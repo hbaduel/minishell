@@ -33,7 +33,7 @@ char    *ft_add_space_before(char *str)
 
     i = 0;
     modified_str = ft_strdup(str);
-    while (modified_str[i]) //before
+    while (modified_str[i])
     {
         if (modified_str[i] == '\'' || modified_str[i] == '"')
         {
@@ -54,11 +54,21 @@ char    *ft_add_space_before(char *str)
             free(modified_str);
             modified_str = new_str;
             i += 2;
+            new_str = (char *)malloc(strlen(modified_str) + 2);
+            if (new_str)
+            {
+                ft_strncpy(new_str, modified_str, i);
+                new_str[i] = ' ';
+                ft_strcpy(new_str + i + 1, modified_str + i);
+                free(modified_str);
+                modified_str = new_str;
+            }
+            i++;
         }
         i++;
     }
     i = 0;
-    while (modified_str[i]) //after
+    while (modified_str[i])
     {
         if (modified_str[i] == '\'' || modified_str[i] == '"')
         {
@@ -71,16 +81,21 @@ char    *ft_add_space_before(char *str)
         || ((modified_str[i] == '<') && (modified_str[i + 1] != '<'))\
         || ((modified_str[i] == '>') && (modified_str[i + 1] != '>')))
         {
-            new_str = malloc(strlen(modified_str) + 2);
-            ft_strncpy(new_str, modified_str, i + 1);
-            new_str[i + 1] = ' ';
-            ft_strcpy(new_str + i + 2, modified_str + i + 1);
-            free(modified_str);
-            modified_str = new_str;
+            new_str = (char *)malloc(strlen(modified_str) + 2);
+            if (new_str)
+            {
+                ft_strncpy(new_str, modified_str, i + 1);
+                new_str[i + 1] = ' ';
+                ft_strcpy(new_str + i + 2, modified_str + i + 1);
+                free(modified_str);
+                modified_str = new_str;
+            }
+            i += 2;
         }
         i++;
     }
-    return (modified_str);
+    free(str);
+    return modified_str;
 }
 
 char    *ft_envvalue(char *env, int start)
@@ -150,3 +165,32 @@ char    *ft_getenv(char **envp, int status, char *name, int *k)
     free(name);
     return (NULL);
 }
+
+char    *ft_remove_space(char *token)
+{
+    char *read_ptr;
+    char *write_ptr;
+    char *new_token;
+
+    read_ptr = token;
+    write_ptr = token;
+    while (*read_ptr)
+    {
+        if (*read_ptr != ' ')
+        {
+            *write_ptr = *read_ptr;
+            write_ptr++;
+        }
+        read_ptr++;
+    }
+    *write_ptr = '\0';
+    if (write_ptr != token)
+    {
+        new_token = (char *)malloc(strlen(token) + 1);
+        ft_strcpy(new_token, token);
+        free(token);
+        token = new_token;
+    }
+    return (token);
+}
+

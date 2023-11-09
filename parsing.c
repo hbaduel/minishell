@@ -72,8 +72,11 @@ t_parse *ft_parse(char *terminal, t_data *data)
         else if (ft_strcmp(token, "|") == 0)
         {
                 if (!current->previous || data->pipe_detector == 1)
+                {
                     // ft_free_all(data);
                     ft_exiterror("Minishell : parse error near '|'\n");
+                    return (NULL);
+                }
                 data->pipe_detector = 1;
                 current = current->previous;
                 free(current->next);
@@ -172,58 +175,58 @@ int main(int argc, char **argv, char **envp)
     t_parse *temp;
     int i;
 
-//     data = malloc(sizeof(t_data));
-//     data->ncmd = 0;
-//     i = 0;
-// 	while (envp[i])
-// 		i++;
-// 	data->envp = malloc(sizeof(char *) * (i + 1));
-// 	i = 0;
-// 	while (envp[i])
-// 	{
-// 		data->envp[i] = ft_strdup(envp[i]);
-// 		i++;
-// 	}
-// 	data->envp[i] = NULL;
-//     data->status = 0;
-//     data->parse = ft_parse(argv[1], data);
-//     test = data->parse;
-//     while(data->parse)
-//     {
-//         printf("Type : %d\n", data->parse->type);
-//         i = 0;
-//         while(data->parse->args[i])
-//         {
-//             printf("%s", data->parse->args[i]);
-//             if (data->parse->args[i + 1])
-//                 printf("\n");
-//             i++;
-//         }
-//         printf("\n");
-//         printf("\n");
-//         data->parse = data->parse->next;
-//     }
-//     printf("NCMD : %d\n", data->ncmd);
-//     while (test)
-// 	{
-// 		i = 0;
-// 		while (test->args[i])
-// 		{
-// 			free(test->args[i]);
-// 			i++;
-// 		}
-// 		free(test->args);
-// 		temp = test;
-// 		test = test->next;
-// 		free(temp);
-// 	}
-//     i = 0;
-//     while (data->envp[i])
-//     {
-//         free(data->envp[i]);
-//         i++;
-//     }
-//     free(data->envp);
-//     free(data);
-//     return (0);
-// }
+    data = malloc(sizeof(t_data));
+    data->ncmd = 0;
+    i = 0;
+	while (envp[i])
+		i++;
+	data->envp = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (envp[i])
+	{
+		data->envp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	data->envp[i] = NULL;
+    data->status = 0;
+    data->parse = ft_parse("ls||wc", data);
+    test = data->parse;
+    while(data->parse)
+    {
+        printf("Type : %d\n", data->parse->type);
+        i = 0;
+        while(data->parse->args[i])
+        {
+            printf("%s", data->parse->args[i]);
+            if (data->parse->args[i + 1])
+                printf("\n");
+            i++;
+        }
+        printf("\n");
+        printf("\n");
+        data->parse = data->parse->next;
+    }
+    printf("NCMD : %d\n", data->ncmd);
+    while (test)
+	{
+		i = 0;
+		while (test->args[i])
+		{
+			free(test->args[i]);
+			i++;
+		}
+		free(test->args);
+		temp = test;
+		test = test->next;
+		free(temp);
+	}
+    i = 0;
+    while (data->envp[i])
+    {
+        free(data->envp[i]);
+        i++;
+    }
+    free(data->envp);
+    free(data);
+    return (0);
+}

@@ -16,12 +16,15 @@ int	ft_exiterror(char *str)
 
 void	ft_free_all(t_data *data)
 {
-	while (data->parse->next)
+	while (data->parse)
 	{
 		free(data->parse->args);
-		// free(data->parse->type);
-		data->parse = data->parse->next;
+		free(data->parse);
+		data->parse->args = data->parse->next->args;
 	}
+	if (data->envp)
+			free(data->envp);
+	free(data);
 
 }
 

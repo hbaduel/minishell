@@ -88,5 +88,6 @@ int		ft_strlen(char *str);
 int 	ft_openfile(char *file, t_data *data, int which);
 int 	ft_cmdbuiltin(t_data *data, int outfd, char **cmd);
 int	    ft_checkenvname(char *env);
+int     ft_exiterror(char *str);
 
 #endif
