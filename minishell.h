@@ -19,37 +19,37 @@
 # define BLUE  "\e[1;34m"
 # define PURPLE  "\e[1;35m"
 # define WHITE  "\e[1;37m"
-# define NOTHING    0
-# define CMD        1
-# define PIPE       2
-# define INFILE     3
-# define OUTFILE    4
-# define HEREDOC    5
-# define APPEND     6
-# define INCOMPLET  7
-# define OUTCOMPLET 8
-# define HDCOMPLET  9
-# define APPENDCOMP 10
+# define NOTHING	0
+# define CMD		1
+# define PIPE		2
+# define INFILE		3
+# define OUTFILE	4
+# define HEREDOC	5
+# define APPEND		6
+# define INCOMPLET	7
+# define OUTCOMPLET	8
+# define HDCOMPLET	9
+# define APPENDCOMP	10
 
 
-typedef struct s_parse {
-    int     type;           /*pour identifier le type de commande*/
-    char    **args;         /*pour stocker les arguments de la commande*/
-    struct s_parse  *next;
-    struct s_parse  *previous;
-    struct s_data   *data;
-}       t_parse;
+typedef struct	s_parse {
+	int		type;
+	char	**args;
+	struct s_parse	*next;
+	struct s_parse	*previous;
+	struct s_data	*data;
+}		t_parse;
 
 typedef struct	s_data
 {
-    char    **envp;
+	char	**envp;
 	int 	infilefd;
 	int 	outfilefd;
 	int 	ncmd;
-    int     status;
-    int     pipe_detector;
-    t_parse *parse;
-}				t_data;
+	int		status;
+	int		pipe_detector;
+	t_parse	*parse;
+}		t_data;
 
 
 void	ft_putstr_fd(char *str, int fd);
@@ -68,25 +68,25 @@ char	*ft_strjoin(char *s1, char *s2, int dofree);
 char	*ft_cmdpath(char *cmd, char **envp);
 char	*ft_strtok(t_data *data, char *str);
 char	*ft_strdup(char *s);
-char    *ft_cut_terminal(char *terminal, char *token);
-char    *ft_add_space_before(char *str);
-char    *ft_getenv(char **envp, int status, char *name, int *k);
-char    *ft_strstr(char *haystack, char *needle);
+char	*ft_cut_terminal(char *terminal, char *token);
+char	*ft_add_space_before(char *str);
+char	*ft_getenv(char **envp, int status, char *name, int *k);
+char	*ft_strstr(char *haystack, char *needle);
 char	*ft_strcpy(char *dest, char *src);
-char    *ft_tokennoquote(t_data *data, char *str);
-char    *ft_getenvname(char *str);
+char	*ft_tokennoquote(t_data *data, char *str);
+char	*ft_getenvname(char *str);
 char	*ft_itoa(int n);
-char    *ft_tokennoquote(t_data *data, char *str);
-char    **ft_realloc(char **args, char *token);
+char	*ft_tokennoquote(t_data *data, char *str);
+char	**ft_realloc(char **args, char *token);
 char	**ft_split(char *s, char c);
 char	**ft_reallocenvp(char **envp, int donot);
-int     ft_exiterror(char *str);
-int     ft_exitperror(char *str);
+int		ft_exiterror(char *str);
+int		ft_exitperror(char *str);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 int 	ft_openfile(char *file, t_data *data, int which);
 int 	ft_cmdbuiltin(t_data *data, int outfd, char **cmd);
-int	    ft_checkenvname(char *env);
-int     ft_check_quote(char *str);
+int		ft_checkenvname(char *env);
+int		ft_check_quote(char *str);
 
 #endif

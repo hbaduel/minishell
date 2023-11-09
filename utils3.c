@@ -41,10 +41,10 @@ char	*ft_add_space_before(char *str)
 			while (modified_str[i] != quote && modified_str[i])
 				i++;
 		}
-		else if ((modified_str[i] == '|') && (i == 0 || modified_str[i - 1] != ' ') ||
-			(modified_str[i] == '<') && (i == 0 || (modified_str[i - 1] != '<')) ||
-			(modified_str[i] == '-') ||
-			((modified_str[i] == '>') && (i == 0 || modified_str[i - 1] != '>')))
+		else if ((modified_str[i] == '|') && (i == 0 || modified_str[i - 1] != ' ')\
+		|| (modified_str[i] == '<') && (i == 0 || (modified_str[i - 1] != '<'))\
+		|| (modified_str[i] == '-')\
+		|| ((modified_str[i] == '>') && (i == 0 || modified_str[i - 1] != '>')))
 		{
 			new_str = (char *)malloc(strlen(modified_str) + 2);
 			ft_strncpy(new_str, modified_str, i);
@@ -66,9 +66,9 @@ char	*ft_add_space_before(char *str)
 			while (modified_str[i] != quote && modified_str[i])
 			    i++;
 		}
-		else if ((modified_str[i] == '|' && modified_str[i + 1] != ' ') ||
-			(modified_str[i] == '<' && modified_str[i + 1] != '<') ||
-			(modified_str[i] == '>' && modified_str[i + 1] != '>'))
+		else if ((modified_str[i] == '|' && modified_str[i + 1] != ' ')\
+		|| (modified_str[i] == '<' && modified_str[i + 1] != '<')\
+		|| (modified_str[i] == '>' && modified_str[i + 1] != '>'))
 		{
 			new_str = (char *)malloc(strlen(modified_str) + 3);
 			ft_strncpy(new_str, modified_str, i + 1);
