@@ -14,18 +14,24 @@ int	ft_exiterror(char *str)
 	return(0);
 }
 
-void	ft_free_all(t_data *data)
+void	ft_free_all(t_parse *parse)
 {
-	while (data->parse)
-	{
-		free(data->parse->args);
-		free(data->parse);
-		data->parse->args = data->parse->next->args;
-	}
-	if (data->envp)
-			free(data->envp);
-	free(data);
+	t_parse	*temp;
+	int		i;
 
+	while (parse)
+	{
+		i = 0;
+		while (parse->args[i])
+		{
+			free(parse->args[i]);
+			i++;
+		}
+		free(parse->args);
+		temp = parse;
+		parse = parse->next;
+		free(temp);
+	}
 }
 
 void	ft_putstr_fd(char *str, int fd)

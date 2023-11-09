@@ -62,7 +62,7 @@ void	ft_freedoubletab(char **tab);
 void	ft_env(t_data *data, int outfd, char **cmd);
 void	ft_unset(t_data *data, char **cmd);
 void	ft_export(t_data *data, char **cmd, int outfd);
-void	ft_free_all(t_data *data);
+void	ft_free_all(t_parse *parse);
 t_parse	*ft_parse(char *, t_data *data);
 char	*ft_strjoin(char *s1, char *s2, int dofree);
 char	*ft_cmdpath(char *cmd, char **envp);
@@ -71,7 +71,6 @@ char	*ft_strdup(char *s);
 char    *ft_cut_terminal(char *terminal, char *token);
 char    *ft_add_space_before(char *str);
 char    *ft_getenv(char **envp, int status, char *name, int *k);
-char	*ft_check_quote(char *str);
 char    *ft_strstr(char *haystack, char *needle);
 char	*ft_strcpy(char *dest, char *src);
 char    *ft_tokennoquote(t_data *data, char *str);
@@ -88,6 +87,6 @@ int		ft_strlen(char *str);
 int 	ft_openfile(char *file, t_data *data, int which);
 int 	ft_cmdbuiltin(t_data *data, int outfd, char **cmd);
 int	    ft_checkenvname(char *env);
-int     ft_exiterror(char *str);
+int     ft_check_quote(char *str);
 
 #endif
