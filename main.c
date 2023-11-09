@@ -79,11 +79,10 @@ void	ft_chooseaction(t_data *data)
 		{
 			if (data->infilefd != 0)
 				dup2(data->infilefd, 0);
-			if (data->outfilefd != 1)
-				dup2(data->outfilefd, 1);
 			ft_execcmd(data->parse->args, data->envp, data->outfilefd);
 		}
-		data->status = waitpid(cpid, NULL, 0);
+		waitpid(cpid, &data->status, 0);
+		data->status /= 256;
 	}
 	else if (data->ncmd > 1)
 		ft_pipe(data, data->parse);
@@ -111,24 +110,27 @@ void	ft_readterminal(t_data *data)
 		if (terminal[0])
 		{
 			data->parse = ft_parse(terminal, data);
-			redir = data->parse;
-			while (redir)
+			if (data->parse)
 			{
-				if (redir->type == OUTCOMPLET)
-					operror = ft_openfile(redir->args[1], data, 1);
-				if (redir->type == APPENDCOMP)
-					operror = ft_openfile(redir->args[1], data, 2);
-				if (redir->type == HDCOMPLET)
-					ft_heredoc(redir->args[1], data);
-				if (redir->type == INCOMPLET)
-					operror = ft_openfile(redir->args[1], data, 0);
-				redir = redir->next;
-				if (operror == 1)
-					break ;
+				redir = data->parse;
+				while (redir)
+				{
+					if (redir->type == OUTCOMPLET)
+						operror = ft_openfile(redir->args[1], data, 1);
+					if (redir->type == APPENDCOMP)
+						operror = ft_openfile(redir->args[1], data, 2);
+					if (redir->type == HDCOMPLET)
+						ft_heredoc(redir->args[1], redir->args[2], data);
+					if (redir->type == INCOMPLET)
+						operror = ft_openfile(redir->args[1], data, 0);
+					redir = redir->next;
+					if (operror == 1)
+						break ;
+				}
+				if (data->ncmd > 0 && operror == 0)
+					ft_chooseaction(data);
+				ft_freeline(data, 0);
 			}
-			if (data->ncmd > 0 && operror == 0)
-				ft_chooseaction(data);
-			ft_freeline(data, 0);
 			add_history(terminal);
 		}
 		free(terminal);

@@ -11,17 +11,17 @@ void    ft_strncpy(char *dest, char *src, int n)
     }
 }
 
-char	*ft_strcpy(char *s1, char *s2)
+char	*ft_strcpy(char *dest, char *src)
 {
 	int i = 0;
 
-	while (s2[i] != '\0')
+	while (src[i] != '\0')
 	{
-		s1[i] = s2[i];
+		dest[i] = src[i];
 		i++;
 	}
-	s1[i] = '\0';
-	return (s1);
+	dest[i] = '\0';
+	return (dest);
 }
 
 char    *ft_add_space_before(char *str)
@@ -123,13 +123,18 @@ char    *ft_getenvname(char *str)
     return (res);
 }
 
-char    *ft_getenv(char **envp, char *name, int *k)
+char    *ft_getenv(char **envp, int status, char *name, int *k)
 {
     int     i;
     int     j;
 
     i = 0;
     *k += ft_strlen(name) + 1;
+    if (ft_strcmp(name, "?") == 0)
+    {
+        free(name);
+        return (ft_itoa(status));
+    }
     while (envp[i])
     {
         j = 0;
@@ -145,32 +150,3 @@ char    *ft_getenv(char **envp, char *name, int *k)
     free(name);
     return (NULL);
 }
-
-char    *ft_remove_space(char *token)
-{
-    char *read_ptr;
-    char *write_ptr;
-    char *new_token;
-
-    read_ptr = token;
-    write_ptr = token;
-    while (*read_ptr)
-    {
-        if (*read_ptr != ' ')
-        {
-            *write_ptr = *read_ptr;
-            write_ptr++;
-        }
-        read_ptr++;
-    }
-    *write_ptr = '\0';
-    if (write_ptr != token)
-    {
-        new_token = (char *)malloc(strlen(token) + 1);
-        ft_strcpy(new_token, token);
-        free(token);
-        token = new_token;
-    }
-    return (token);
-}
-
