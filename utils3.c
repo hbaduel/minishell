@@ -53,7 +53,7 @@ char    *ft_add_space_before(char *str)
             ft_strcpy(new_str + i + 1, modified_str + i);
             free(modified_str);
             modified_str = new_str;
-            i++;
+            i += 2;
         }
         i++;
     }
@@ -162,15 +162,15 @@ char    *ft_remove_space(char *token)
             write_ptr++;
         }
         read_ptr++;
-    }   
-    *write_ptr = '\0';  
+    }
+    *write_ptr = '\0';
     if (write_ptr != token)
     {
         new_token = (char *)malloc(strlen(token) + 1);
         ft_strcpy(new_token, token);
         free(token);
         token = new_token;
-    }   
+    }
     return (token);
 }
 

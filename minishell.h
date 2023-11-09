@@ -51,8 +51,7 @@ typedef struct	s_data
     t_parse *parse;
 }				t_data;
 
-void	ft_exiterror(char *str);
-void    ft_exitperror(char *str);
+
 void	ft_putstr_fd(char *str, int fd);
 void	ft_heredoc(char *limiter, t_data *data);
 void	ft_pipe(t_data *data, t_parse *parsing);
@@ -63,6 +62,7 @@ void	ft_freedoubletab(char **tab);
 void	ft_env(t_data *data, int outfd, char **cmd);
 void	ft_unset(t_data *data, char **cmd);
 void	ft_export(t_data *data, char **cmd, int outfd);
+void	ft_free_all(t_data *data);
 t_parse	*ft_parse(char *, t_data *data);
 char	*ft_strjoin(char *s1, char *s2, int dofree);
 char	*ft_cmdpath(char *cmd, char **envp);
@@ -80,6 +80,8 @@ char    *ft_getenvname(char *str);
 char    **ft_realloc(char **args, char *token);
 char	**ft_split(char *s, char c);
 char	**ft_reallocenvp(char **envp, int donot);
+int     ft_exiterror(char *str);
+int     ft_exitperror(char *str);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 int		ft_strlcpy(char *dest, char *src, int size);

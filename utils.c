@@ -1,17 +1,28 @@
 #include "minishell.h"
 
-void	ft_exitperror(char *str)
+int	ft_exitperror(char *str)
 {
 	if (str)
 		perror(str);
-	exit(1);
+	return(0);
 }
 
-void	ft_exiterror(char *str)
+int	ft_exiterror(char *str)
 {
 	if (str)
 		ft_putstr_fd(str, 1);
-	exit(1);
+	return(0);
+}
+
+void	ft_free_all(t_data *data)
+{
+	while (data->parse->next)
+	{
+		free(data->parse->args);
+		// free(data->parse->type);
+		data->parse = data->parse->next;
+	}
+
 }
 
 void	ft_putstr_fd(char *str, int fd)
@@ -22,6 +33,7 @@ void	ft_putstr_fd(char *str, int fd)
 	if (!str)
 		return ;
 	while (str[i])
+
 	{
 		write(fd, &str[i], 1);
 		i++;
