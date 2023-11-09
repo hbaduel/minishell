@@ -62,6 +62,7 @@ void	ft_freedoubletab(char **tab);
 void	ft_env(t_data *data, int outfd, char **cmd);
 void	ft_unset(t_data *data, char **cmd);
 void	ft_export(t_data *data, char **cmd, int outfd);
+void    ft_putenv(char *nexttoken, char *env, int *j);
 t_parse	*ft_parse(char *, t_data *data);
 char	*ft_strjoin(char *s1, char *s2, int dofree);
 char	*ft_cmdpath(char *cmd, char **envp);

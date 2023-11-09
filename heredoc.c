@@ -2,12 +2,63 @@
 
 extern char	*terminal;
 
-void	ft_putheredoc(char *res, char *line, char *limiter, t_data *data)
+int	ft_sizeheredoc(t_data *data, char	*str)
+{
+	char	*env;
+	int		i;
+	int		size;
+
+	i = 0;
+	size = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
+        && str[i + 1] != '$'))
+        {
+            env = ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i);
+            size += ft_strlen(env);
+            free(env);
+        }
+		else
+		{
+			i++;
+			size++;
+		}
+	}
+	return (size + 1);
+}
+
+char    *ft_dupheredoc(t_data *data, char *str)
+{
+    char	*res;
+	int		i;
+    int		j;
+
+    res = malloc(sizeof(char) * ft_sizeheredoc(data, str));
+	i = 0;
+    j = 0;
+    while (str[i])
+    {
+        if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
+        && str[i + 1] != '$'))
+            ft_putenv(res, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
+        else
+        {
+        	res[j] = str[i];
+            j++;
+            i++;
+        }
+    }
+    res[j] = '\0';
+	free(str);
+    return (res);
+}
+
+void	ft_putheredoc(char *res, char *limiter, t_data *data)
 {
 	pid_t	cpid;
 	int		pipefd[2];
 
-	free(line);
 	if (data->ncmd > 0)
 	{
 		pipe(pipefd);
@@ -15,7 +66,9 @@ void	ft_putheredoc(char *res, char *line, char *limiter, t_data *data)
 		if (cpid == 0)
 		{
 			close(pipefd[0]);
+			res = ft_dupheredoc(data, res);
 			ft_putstr_fd(res, pipefd[1]);
+			// faut tout free;
 			free(res);
 			exit(0);
 		}
@@ -30,38 +83,29 @@ void	ft_putheredoc(char *res, char *line, char *limiter, t_data *data)
 
 int		ft_checklimiter(char *limiter, char *next, char **res, t_data *data)
 {
+	char	**all;
 	char	*temp;
 	int		i;
-	int		j;
 
 	*res = NULL;
 	if (!next)
 		return (0);
+	all = ft_split(next, '\n');
 	i = 0;
-	while (next[i])
+	while (all[i])
 	{
-		j = i;
-		while (next[j] != '\n' && next[j])
-			j++;
-		temp = malloc(sizeof(char) * (j - i + 1));
-		j = 0;
-		while (next[i] != '\n' && next[i])
+		if (ft_strcmp(limiter, all[i]) == 0)
 		{
-			temp[j] = next[i];
-			j++;
-			i++;
-		}
-		temp[j] = '\0';
-		i++;
-		if (ft_strcmp(limiter, temp) == 0)
-		{
-			ft_putheredoc(*res, temp, limiter, data);
+			i = 0;
+			ft_freedoubletab(all);
+			ft_putheredoc(*res, limiter, data);
 			return (1);
 		}
-		*res = ft_strjoin(*res, temp, 1);
-		*res = ft_strjoin(*res, temp, 1);
-		free(temp);
+		*res = ft_strjoin(*res, all[i], 1);
+		*res = ft_strjoin(*res, "\n", 1);
+		i++;
 	}
+	ft_freedoubletab(all);
 	return (0);
 }
 
@@ -70,21 +114,26 @@ void	ft_heredoc(char *limiter, char *next, t_data *data)
 	char	*heredoc;
 	char	*res;
 
-	printf("POUR VOIR LE PB A GERER DE HIER GO ft_heredoc (heredoc.c)\n"); // pb de parsing quand une seule ligne avec le \n
 	if (ft_checklimiter(limiter, next, &res, data) == 1)
 		return ;
 	while (1)
 	{
 		heredoc = readline("heredoc> ");
-		terminal = ft_strjoin(terminal, "\n", 1);
-		terminal = ft_strjoin(terminal, heredoc, 1);
-		if (ft_strcmp(heredoc, limiter) == 0)
+		if (heredoc)
 		{
-			ft_putheredoc(res, heredoc, limiter, data);
-			return ;
+			terminal = ft_strjoin(terminal, "\n", 1);
+			terminal = ft_strjoin(terminal, heredoc, 1);
+			if (ft_strcmp(heredoc, limiter) == 0)
+			{
+				free(heredoc);
+				ft_putheredoc(res, limiter, data);
+				return ;
+			}
+			res = ft_strjoin(res, heredoc, 1);
+			res = ft_strjoin(res, "\n", 1);
+			free(heredoc);
 		}
-		res = ft_strjoin(res, heredoc, 1);
-		res = ft_strjoin(res, "\n", 1);
-		free(heredoc);
+		else
+			ft_putstr_fd("\n", 1);
 	}
 }

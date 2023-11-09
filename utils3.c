@@ -24,63 +24,64 @@ char	*ft_strcpy(char *dest, char *src)
 	return (dest);
 }
 
-char    *ft_add_space_before(char *str)
+char	*ft_add_space_before(char *str)
 {
-    int     i;
-    char    *modified_str;
-    char    *new_str;
-    char    quote;
+	int		i;
+	char	*modified_str;
+	char	*new_str;
+	char	quote;
+	i = 0;
+	modified_str = ft_strdup(str);
+	while (modified_str[i])
+	{
+		if (modified_str[i] == '\'' || modified_str[i] == '"')
+		{
+			quote = modified_str[i];
+			i++;
+			while (modified_str[i] != quote && modified_str[i])
+				i++;
+		}
+		else if ((modified_str[i] == '|') && (i == 0 || modified_str[i - 1] != ' ') ||\
+			(modified_str[i] == '<') && (i == 0 || (modified_str[i - 1] != '<')) ||\
+			(modified_str[i] == '-') ||
+			((modified_str[i] == '>') && (i == 0 || modified_str[i - 1] != '>')))
+		{
+			new_str = (char *)malloc(strlen(modified_str) + 2);
+			ft_strncpy(new_str, modified_str, i);
+			new_str[i] = ' ';
+			ft_strcpy(new_str + i + 1, modified_str + i);
+			free(modified_str);
+			modified_str = new_str;
+			i++;
+		}
+		i++;
 
-    i = 0;
-    modified_str = ft_strdup(str);
-    while (modified_str[i]) //before
-    {
-        if (modified_str[i] == '\'' || modified_str[i] == '"')
-        {
-            quote = modified_str[i];
-            i++;
-            while (modified_str[i] != quote && modified_str[i])
-                i++;
-        }
-        else if (((modified_str[i] == '|') && modified_str[i - 1] != ' ')\
-        || ((modified_str[i] == '<') && (modified_str[i - 1] != '<'))\
-        || (modified_str[i] == '-')\
-        || ((modified_str[i] == '>') && (modified_str[i - 1] != '>')))
-        {
-            new_str = malloc(strlen(modified_str) + 2);
-            ft_strncpy(new_str, modified_str, i);
-            new_str[i] = ' ';
-            ft_strcpy(new_str + i + 1, modified_str + i);
-            free(modified_str);
-            modified_str = new_str;
-            i++;
-        }
-        i++;
-    }
-    i = 0;
-    while (modified_str[i]) //after
-    {
-        if (modified_str[i] == '\'' || modified_str[i] == '"')
-        {
-            quote = modified_str[i];
-            i++;
-            while (modified_str[i] != quote && modified_str[i])
-                i++;
-        }
-        else if (((modified_str[i] == '|') && modified_str[i + 1] != ' ')\
-        || ((modified_str[i] == '<') && (modified_str[i + 1] != '<'))\
-        || ((modified_str[i] == '>') && (modified_str[i + 1] != '>')))
-        {
-            new_str = malloc(strlen(modified_str) + 2);
-            ft_strncpy(new_str, modified_str, i + 1);
-            new_str[i + 1] = ' ';
-            ft_strcpy(new_str + i + 2, modified_str + i + 1);
-            free(modified_str);
-            modified_str = new_str;
-        }
-        i++;
-    }
-    return (modified_str);
+	i = 0;
+	while (modified_str[i])
+	{
+		if (modified_str[i] == '\'' || modified_str[i] == '"')
+		{
+			quote = modified_str[i];
+			i++;
+			while (modified_str[i] != quote && modified_str[i])
+			    i++;
+		}
+		else if ((modified_str[i] == '|' && modified_str[i + 1] != ' ') ||\
+			(modified_str[i] == '<' && modified_str[i + 1] != '<') ||\
+			(modified_str[i] == '>' && modified_str[i + 1] != '>'))
+		{
+			new_str = (char *)malloc(strlen(modified_str) + 3);
+			ft_strncpy(new_str, modified_str, i + 1);
+			new_str[i + 1] = ' ';
+			ft_strcpy(new_str + i + 2, modified_str + i + 1);
+			free(modified_str);
+			modified_str = new_str;
+			i += 2;
+		}
+		i++;
+	}
+	return (modified_str);
+	}
 }
 
 char    *ft_envvalue(char *env, int start)
@@ -110,11 +111,11 @@ char    *ft_getenvname(char *str)
     int     i;
 
     i = 0;
-    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=')
+    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' && str[i] != '\n')
         i++;
     res = malloc(sizeof(char) * (i + 1));
     i = 0;
-    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=')
+    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' && str[i] != '\n')
     {
         res[i] = str[i];
         i++;
@@ -149,4 +150,20 @@ char    *ft_getenv(char **envp, int status, char *name, int *k)
     }
     free(name);
     return (NULL);
+}
+
+void    ft_putenv(char *nexttoken, char *env, int *j)
+{
+    int     k;
+
+    k = 0;
+    if (!env)
+        return ;
+    while (env[k])
+    {
+        nexttoken[*j] = env[k];
+        k++;
+        *j += 1;
+    }
+    free(env);
 }

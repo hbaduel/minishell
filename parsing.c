@@ -7,18 +7,39 @@ t_parse *ft_searchlastcmd(t_parse *current)
     return (current);
 }
 
-int ft_isnl(char *token)
+char    *ft_supplastnl(char *token, int i)
 {
-    int i;
+    char    *res;
 
+    res = malloc(sizeof(char) * i);
     i = 0;
     while (token[i])
     {
-        if (token[i] == '\n')
-            return (1);
+        res[i] = token[i];
         i++;
     }
-    return (0);
+    res[i - 1] = '\0';
+    free(token);
+    return (res);
+}
+
+int ft_isnl(char **token)
+{
+    int     i;
+    int     nl;
+
+    i = 0;
+    nl = 0;
+    while (token[0][i])
+    {
+        if (token[0][i] == '\n')
+            nl = 1;
+        i++;
+    }
+    if (nl == 0)
+        return (0);
+    token[0] = ft_supplastnl(token[0], i);
+    return (1);
 }
 
 t_parse *ft_parse(char *terminal, t_data *data)
@@ -117,7 +138,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
                 free(current->next);
                 current->type = APPENDCOMP;
             }
-            else if (ft_isnl(token) == 1)
+            else if (ft_isnl(&token) == 1)
             {
                 current = current->previous;
                 free(current->next);
@@ -185,7 +206,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
 // 	}
 // 	data->envp[i] = NULL;
 //     data->status = 0;
-//     data->parse = ft_parse(argv[1], data);
+//     data->parse = ft_parse("<<fin\nfeur", data);
 //     test = data->parse;
 //     while(data->parse)
 //     {

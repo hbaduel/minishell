@@ -48,22 +48,6 @@ int ft_tokensize(t_data *data, char *str, char delim)
     return (size + 1);
 }
 
-void    ft_putenv(char *nexttoken, char *env, int *j)
-{
-    int     k;
-
-    k = 0;
-    if (!env)
-        return ;
-    while (env[k])
-    {
-        nexttoken[*j] = env[k];
-        k++;
-        *j += 1;
-    }
-    free(env);
-}
-
 char    *ft_tokenquote(t_data *data, char *str, char delim)
 {
     char    *nexttoken;
@@ -147,14 +131,15 @@ char    *ft_tokenheredoc(char *str)
     i = 0;
     while (str[i])
         i++;
-    res = malloc(sizeof(char) * (i + 1));
+    res = malloc(sizeof(char) * (i + 2));
     i = 0;
     while (str[i])
     {
         res[i] = str[i];
         i++;
     }
-    res[i] = '\0';
+    res[i] = '\n';
+    res[i + 1] = '\0';
     return (res);
 }
 
