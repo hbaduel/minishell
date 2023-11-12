@@ -111,11 +111,11 @@ char    *ft_getenvname(char *str)
     int     i;
 
     i = 0;
-    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' && str[i] != '\n')
+    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' &&  str[i] != '\t' && str[i] != '\n')
         i++;
     res = malloc(sizeof(char) * (i + 1));
     i = 0;
-    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' && str[i] != '\n')
+    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' && str[i] != '\t' && str[i] != '\n')
     {
         res[i] = str[i];
         i++;

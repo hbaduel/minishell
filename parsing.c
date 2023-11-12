@@ -59,6 +59,12 @@ t_parse *ft_parse(char *terminal, t_data *data)
     current = first;
     current->previous = NULL;
     token = ft_strtok(data, terminal2);
+    if (!token)
+    {
+        free(current);
+        free(terminal2);
+        return (NULL);
+    }
     terminal2 = ft_cut_terminal(terminal2, token);
     while (token != NULL)
     {
@@ -181,7 +187,6 @@ t_parse *ft_parse(char *terminal, t_data *data)
     }
     current->previous->next = NULL;
     free(current);
-    free(terminal2);
     return (first);
 }
 
@@ -206,7 +211,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
 // 	}
 // 	data->envp[i] = NULL;
 //     data->status = 0;
-//     data->parse = ft_parse("<<fin\nfeur", data);
+//     data->parse = ft_parse("     feur      ", data);
 //     test = data->parse;
 //     while(data->parse)
 //     {

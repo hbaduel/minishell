@@ -14,7 +14,7 @@ int	ft_checkexist(char *unset, char *env)
 	return (0);
 }
 
-int	ft_checkenvname(char *env)
+int	ft_checkexistvalue(char *env)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ int	ft_checkenvname(char *env)
 	return (0);
 }
 
-char	**ft_reallocenvp(char **envp, int donot)
+char	**ft_reallocenvpless(char **envp, int donot)
 {
 	char **temp;
 	int		i;
@@ -69,11 +69,11 @@ void	ft_unset(t_data *data, char **cmd)
 		j = 0;
 		while (data->envp[j])
 		{
-			if (ft_checkenvname(cmd[i]) == 1)
+			if (ft_checkvalue(cmd[i]) == 1)
 				break ;
 			if (ft_checkexist(cmd[i], data->envp[j]) == 1)
 			{
-				data->envp = ft_reallocenvp(data->envp, j);
+				data->envp = ft_reallocenvpless(data->envp, j);
 				break ;
 			}
 			j++;

@@ -10,7 +10,7 @@ char	*ft_strstr(char *haystack, char *needle)
 	while (*haystack != '\0')
 	{
 		h = haystack;
-		n = needle;	
+		n = needle;
 		while (*h != '\0' && *n != '\0' && *h == *n)
 		{
 		    h++;

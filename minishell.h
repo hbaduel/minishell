@@ -33,8 +33,8 @@
 
 
 typedef struct s_parse {
-    int     type;           /*pour identifier le type de commande*/
-    char    **args;         /*pour stocker les arguments de la commande*/
+    int             type;           /*pour identifier le type de commande*/
+    char            **args;         /*pour stocker les arguments de la commande*/
     struct s_parse  *next;
     struct s_parse  *previous;
     struct s_data   *data;
@@ -80,11 +80,10 @@ char	*ft_itoa(int n);
 char    *ft_tokennoquote(t_data *data, char *str);
 char    **ft_realloc(char **args, char *token);
 char	**ft_split(char *s, char c);
-char	**ft_reallocenvp(char **envp, int donot);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 int 	ft_openfile(char *file, t_data *data, int which);
 int 	ft_cmdbuiltin(t_data *data, int outfd, char **cmd);
-int	    ft_checkenvname(char *env);
+int	    ft_checkexistvalue(char *env);
 
 #endif

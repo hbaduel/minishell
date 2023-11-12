@@ -30,7 +30,7 @@ int ft_tokensize(t_data *data, char *str, char delim)
     i = 0;
     while (str[i] != delim && str[i])
     {
-        if (delim == ' ' && str[i] == '\n')
+        if (delim == ' ' && (str[i] == '\n' || str[i] == '\t'))
             break ;
         if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
         && str[i + 1] != '$') && delim != '\'')
@@ -87,7 +87,7 @@ char    *ft_quotemidtoken(t_data *data, char *nexttoken, char *str, int j)
     free(temp);
     while (str[i] != delim)
         i++;
-    if (str[i + 1] != ' ' && str[i + 1])
+    if (str[i + 1] != ' ' && str[i + 1] != '\t' && str[i + 1])
     {
         temp = ft_tokennoquote(data, &str[i + 1]);
         nexttoken = ft_strjoin(nexttoken, temp, 1);
@@ -105,7 +105,7 @@ char    *ft_tokennoquote(t_data *data, char *str)
     nexttoken = malloc(sizeof(char) * (ft_tokensize(data, str, ' ')));
     i = 0;
     j = 0;
-    while (str[i] != ' ' && str[i] != '\n' && str[i])
+    while (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i])
     {
         if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
         && str[i + 1] != '$'))
@@ -149,10 +149,12 @@ char    *ft_strtok(t_data *data, char *str)
     int     end;
     int     i;
 
+    if (!str)
+        return (NULL);
     start = 0;
     end = 0;
     i = 0;
-    while (str[start] == ' ' && str[start])
+    while ((str[start] == ' ' || str[start] == '\t') && str[start])
         start++;
     if (!str[start])
         return (NULL);
@@ -200,7 +202,7 @@ int     ft_cutsize(char *terminal, int *start, int *end)
 
     *start = 0;
     *end = 0;
-    while (terminal[*start] != ' ' && terminal[*start] && terminal[*start] != '\n')
+    while (terminal[*start] != ' ' && terminal[*start] && terminal[*start] != '\n' && terminal[*start] != '\t')
     {
         if (terminal[*start] == '\'' || terminal[*start] == '\"')
         {
@@ -248,7 +250,7 @@ char    *ft_cut_terminal(char *terminal, char *token)
         return (NULL);
     }
     start = 0;
-    while (terminal[start] == ' ')
+    while ((terminal[start] == ' ' || terminal[start] == '\t') && terminal[start])
         start++;
     if (!terminal[start])
     {
@@ -258,7 +260,7 @@ char    *ft_cut_terminal(char *terminal, char *token)
     if (terminal[start] == '\'' || terminal[start] == '\"')
         newterminal = ft_cutquote(&terminal[start + 1], terminal[start]);
     else if (terminal[start] == '\n')
-        newterminal = ft_strdup("");
+        newterminal = NULL;
     else
         newterminal = ft_cutnoquote(&terminal[start]);
     free(terminal);
