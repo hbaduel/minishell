@@ -5,26 +5,26 @@ char	*ft_strdup(char *s)
 	char	*str;
 	int     i;
 
-    if (!s)
-        return (NULL);
+	if (!s)
+		return (NULL);
 	i = 0;
 	str = malloc (sizeof(char) * (ft_strlen(s) + 1));
 	while (s[i])
-    {
-        str[i] = s[i];
-        i++;
-    }
-    str[i] = '\0';
+	{
+		str[i] = s[i];
+		i++;
+	}
+	str[i] = '\0';
 	return (str);
 }
 
 // debut fichier token
 
-int ft_tokensize(t_data *data, char *str, char delim)
+int	ft_tokensize(t_data *data, char *str, char delim)
 {
-    char    *env;
-    int size;
-    int i;
+	char	*env;
+	int		size;
+	int		i;
 
     size = 0;
     i = 0;
@@ -48,36 +48,41 @@ int ft_tokensize(t_data *data, char *str, char delim)
     return (size + 1);
 }
 
-char    *ft_tokenquote(t_data *data, char *str, char delim)
+char	*ft_tokenquote(t_data *data, char *str, char delim)
 {
-    char    *nexttoken;
-    int     i;
-    int     j;
+	char	*nexttoken;
+	char	*env_value;
+	int		i;
+	int		j;
 
-    nexttoken = malloc(sizeof(char) * (ft_tokensize(data, str, delim)));
-    i = 0;
-    j = 0;
-    while (str[i] != delim && str[i])
-    {
-        if (delim != '\'' && str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
-        && str[i + 1] != '$'))
-            ft_putenv(nexttoken, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
-        else
-        {
-            nexttoken[j] = str[i];
-            j++;
-            i++;
-        }
-    }
-    nexttoken[j] = '\0';
-    return (nexttoken);
+	nexttoken = malloc(sizeof(char) * (ft_tokensize(data, str, delim)));
+	i = 0;
+	j = 0;
+	while (str[i] != delim && str[i])
+	{
+		if (delim != '\'' && str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
+		&& str[i + 1] != '$'))
+		{
+			env_value = ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i);
+			ft_putenv(nexttoken, env_value, &j);
+			free(env_value);
+		}
+		else
+		{
+			nexttoken[j] = str[i];
+			j++;
+			i++;
+		}
+	}
+	nexttoken[j] = '\0';
+	return (nexttoken);
 }
 
-char    *ft_quotemidtoken(t_data *data, char *nexttoken, char *str, int j)
+char	*ft_quotemidtoken(t_data *data, char *nexttoken, char *str, int j)
 {
-    char    *temp;
-    char    delim;
-    int     i;
+	char	*temp;
+	char	delim;
+	int		i;
 
     i = 1;
     delim = str[0];
@@ -96,11 +101,12 @@ char    *ft_quotemidtoken(t_data *data, char *nexttoken, char *str, int j)
     return (nexttoken);
 }
 
-char    *ft_tokennoquote(t_data *data, char *str)
+char	*ft_tokennoquote(t_data *data, char *str)
 {
-    char    *nexttoken;
-    int     i;
-    int     j;
+	char	*nexttoken;
+	char	*env_value;
+	int		i;
+	int		j;
 
     nexttoken = malloc(sizeof(char) * (ft_tokensize(data, str, ' ')));
     i = 0;
@@ -123,10 +129,10 @@ char    *ft_tokennoquote(t_data *data, char *str)
     return (nexttoken);
 }
 
-char    *ft_tokenheredoc(char *str)
+char	*ft_tokenheredoc(char *str)
 {
-    char    *res;
-    int     i;
+	char	*res;
+	int		i;
 
     i = 0;
     while (str[i])
@@ -143,11 +149,11 @@ char    *ft_tokenheredoc(char *str)
     return (res);
 }
 
-char    *ft_strtok(t_data *data, char *str)
+char	*ft_strtok(t_data *data, char *str)
 {
-    int     start;
-    int     end;
-    int     i;
+	int	start;
+	int	end;
+	int	i;
 
     if (!str)
         return (NULL);
@@ -170,35 +176,35 @@ char    *ft_strtok(t_data *data, char *str)
 
 // new fichier quote
 
-char    *ft_cutquote(char *terminal, char delim)
+char	*ft_cutquote(char *terminal, char delim)
 {
-    char    *new;
-    int     start;
-    int     end;
-    int     i;
+	char	*new;
+	int		start;
+	int		end;
+	int		i;
 
-    start = 0;
-    while (terminal[start] != delim && terminal[start])
-        start++;
-    end = start;
-    while (terminal[end])
-        end++;
-    new = malloc(sizeof(char) * (end - start + 1));
-    start++;
-    i = 0;
-    while (start < end)
-    {
-        new[i] = terminal[start];
-        start++;
-        i++;
-    }
-    new[i] = '\0';
-    return (new);
+	start = 0;
+	while (terminal[start] != delim && terminal[start])
+		start++;
+	end = start;
+	while (terminal[end])
+		end++;
+	new = malloc(sizeof(char) * (end - start + 1));
+	start++;
+	i = 0;
+	while (start < end)
+	{
+		new[i] = terminal[start];
+		start++;
+		i++;
+	}
+	new[i] = '\0';
+	return (new);
 }
 
-int     ft_cutsize(char *terminal, int *start, int *end)
+int	ft_cutsize(char *terminal, int *start, int *end)
 {
-    char    delim;
+	char	delim;
 
     *start = 0;
     *end = 0;
@@ -218,31 +224,31 @@ int     ft_cutsize(char *terminal, int *start, int *end)
         *end += 1;
 }
 
-char    *ft_cutnoquote(char *terminal)
+char	*ft_cutnoquote(char *terminal)
 {
-    char    *newterminal;
-    int     start;
-    int     end;
-    int     i;
+	char	*newterminal;
+	int		start;
+	int		end;
+	int		i;
 
-    ft_cutsize(terminal, &start, &end);
-    newterminal = malloc(sizeof(char) * (end - start + 1));
-    i = 0;
-    while (start < end)
-    {
-        newterminal[i] = terminal[start];
-        start++;
-        i++;
-    }
-    newterminal[i] = '\0';
-    return (newterminal);
+	ft_cutsize(terminal, &start, &end);
+	newterminal = malloc(sizeof(char) * (end - start + 1));
+	i = 0;
+	while (start < end)
+	{
+		newterminal[i] = terminal[start];
+		start++;
+		i++;
+	}
+	newterminal[i] = '\0';
+	return (newterminal);
 }
 
-char    *ft_cut_terminal(char *terminal, char *token)
+char	*ft_cut_terminal(char *terminal, char *token)
 {
-    char    *newterminal;
-    int     start;
-    int     i;
+	char	*newterminal;
+	int		start;
+	int		i;
 
     if (!token)
     {
@@ -269,24 +275,24 @@ char    *ft_cut_terminal(char *terminal, char *token)
 
 // fin fichier quote
 
-char   **ft_realloc(char **args, char *token)
+char	**ft_realloc(char **args, char *token)
 {
-    int current_size;
-    int i;
-    char    **new_args;
+	int		current_size;
+	int		i;
+	char	**new_args;
 
-    current_size = 0;
-    i = 0;
-    while (args[current_size])
-        current_size++;
-    new_args = malloc(sizeof(char *) * (current_size + 2));
-    while (args[i])
-    {
-        new_args[i] = args[i];
-        i++;
-    }
-    new_args[i] = ft_strdup(token);
-    new_args[i + 1] = NULL;
-    free(args);
-    return (new_args);
+	current_size = 0;
+	i = 0;
+	while (args[current_size])
+		current_size++;
+	new_args = malloc(sizeof(char *) * (current_size + 2));
+	while (args[i])
+	{
+		new_args[i] = args[i];
+		i++;
+	}
+	new_args[i] = ft_strdup(token);
+	new_args[i + 1] = NULL;
+	free(args);
+	return (new_args);
 }

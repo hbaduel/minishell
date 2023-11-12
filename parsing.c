@@ -2,9 +2,9 @@
 
 t_parse *ft_searchlastcmd(t_parse *current)
 {
-    while (current && current->type != CMD)
-        current = current->previous;
-    return (current);
+	while (current && current->type != CMD)
+		current = current->previous;
+	return (current);
 }
 
 char    *ft_supplastnl(char *token, int i)
@@ -42,152 +42,156 @@ int ft_isnl(char **token)
     return (1);
 }
 
-t_parse *ft_parse(char *terminal, t_data *data)
+t_parse	*ft_parse(char *terminal, t_data *data)
 {
-    t_parse *first;
-    t_parse *current;
-    t_parse *temp;
-    char    *token;
-    char    *terminal2;
-    int     i;
+	t_parse	*first;
+	t_parse	*current;
+	t_parse	*temp;
+	char	*token;
+	char	*terminal2;
+	int		i;
 
-    i = 0;
-    terminal2 = ft_add_space_before(terminal);
-    ft_check_quote(terminal2);
-    first = malloc(sizeof(t_parse));
-    data->pipe_detector = 1;
-    current = first;
-    current->previous = NULL;
-    token = ft_strtok(data, terminal2);
-    if (!token)
-    {
-        free(current);
-        free(terminal2);
-        return (NULL);
-    }
-    terminal2 = ft_cut_terminal(terminal2, token);
-    while (token != NULL)
-    {
-        if (ft_strcmp(token, "<") == 0)
-        {
-            current->type = INFILE;
-            current->args = malloc(sizeof(char *) * 2);
-            current->args[0] = ft_strdup("<");
-            current->args[1] = NULL;
-        }
-        else if (ft_strcmp(token, ">") == 0)
-        {
-            current->type = OUTFILE;
-            current->args = malloc(sizeof(char *) * 2);
-            current->args[0] = ft_strdup(">");
-            current->args[1] = NULL;
-        }
-        else if (ft_strcmp(token, "<<") == 0)
-        {
-            current->type = HEREDOC;
-            current->args = malloc(sizeof(char *) * 2);
-            current->args[0] = ft_strdup("<<");
-            current->args[1] = NULL;
-        }
-        else if (ft_strcmp(token, ">>") == 0)
-        {
-            current->type = APPEND;
-            current->args = malloc(sizeof(char *) * 2);
-            current->args[0] = ft_strdup(">>");
-            current->args[1] = NULL;
-        }
-        else if (ft_strcmp(token, "|") == 0)
-        {
-                if (!current->previous || data->pipe_detector == 1)
-                    ft_exiterror("Minishell : parse error near '|'\n");
-                data->pipe_detector = 1;
-                current = current->previous;
-                free(current->next);
-        }
-        else
-        {
-            if (!current->previous)
-            {
-                current->type = CMD;
-                current->args = malloc(sizeof(char *) * 2);
-                current->args[0] = ft_strdup(token);
-
-                current->args[1] = NULL;
-                data->ncmd++;
-                data->pipe_detector = 0;
-            }
-            else if (current->previous->type == INFILE)
-            {
-                current->previous->args = ft_realloc(current->previous->args, token);
-                current = current->previous;
-                free(current->next);
-                current->type = INCOMPLET;
-            }
-            else if (current->previous->type == OUTFILE)
-            {
-                current->previous->args = ft_realloc(current->previous->args, token);
-                current = current->previous;
-                free(current->next);
-                current->type = OUTCOMPLET;
-            }
-            else if (current->previous->type == HEREDOC)
-            {
-                current->previous->args = ft_realloc(current->previous->args, token);
-                current = current->previous;
-                free(current->next);
-                current->type = HDCOMPLET;
-            }
-            else if (current->previous->type == APPEND)
-            {
-                current->previous->args = ft_realloc(current->previous->args, token);
-                current = current->previous;
-                free(current->next);
-                current->type = APPENDCOMP;
-            }
-            else if (ft_isnl(&token) == 1)
-            {
-                current = current->previous;
-                free(current->next);
-                current->next = NULL;
-                while (current->type != HDCOMPLET)
-                    current = current->previous;
-                current->args = ft_realloc(current->args, token);
-                while (current->next)
-                    current = current->next;
-            }
-            else if (data->pipe_detector == 1)
-            {
-                current->type = CMD;
-                current->args = malloc(sizeof(char *) * 2);
-                current->args[0] = ft_strdup(token);
-                current->args[1] = NULL;
-                data->pipe_detector = 0;
-                data->ncmd++;
-            }
-            else if (current->previous->type == CMD)
-            {
-                current->previous->args = ft_realloc(current->previous->args, token);
-                current = current->previous;
-                free(current->next);
-            }
-            else if ((current->previous->type >= 7 && current->previous->type <= 10) && data->pipe_detector == 0)
-            {
-                temp = ft_searchlastcmd(current);
-                temp->args = ft_realloc(temp->args, token);
-                current = current->previous;
-                free(current->next);
-            }
-        }
-        current->next = malloc(sizeof(t_parse));
-        current->next->previous = current;
-        current = current->next;
-        free(token);
-        token = ft_strtok(data, terminal2);
-        terminal2 = ft_cut_terminal(terminal2, token);
-    }
-    current->previous->next = NULL;
-    free(current);
-    return (first);
+	i = 0;
+	terminal2 = ft_add_space_before(terminal);
+	if (ft_check_quote(terminal2) == 1)
+		return (NULL);
+	first = malloc(sizeof(t_parse));
+	data->pipe_detector = 1;
+	current = first;
+	current->previous = NULL;
+	token = ft_strtok(data, terminal2);
+	terminal2 = ft_cut_terminal(terminal2, token);
+	while (token != NULL)
+	{
+		if (ft_strcmp(token, "<") == 0)
+		{
+			current->type = INFILE;
+			current->args = malloc(sizeof(char *) * 2);
+			current->args[0] = ft_strdup("<");
+			current->args[1] = NULL;
+		}
+		else if (ft_strcmp(token, ">") == 0)
+		{
+			current->type = OUTFILE;
+			current->args = malloc(sizeof(char *) * 2);
+			current->args[0] = ft_strdup(">");
+			current->args[1] = NULL;
+		}
+		else if (ft_strcmp(token, "<<") == 0)
+		{
+			current->type = HEREDOC;
+			current->args = malloc(sizeof(char *) * 2);
+			current->args[0] = ft_strdup("<<");
+			current->args[1] = NULL;
+		}
+		else if (ft_strcmp(token, ">>") == 0)
+		{
+			current->type = APPEND;
+			current->args = malloc(sizeof(char *) * 2);
+			current->args[0] = ft_strdup(">>");
+			current->args[1] = NULL;
+		}
+		else if (ft_strcmp(token, "|") == 0)
+		{
+				if (!current->previous || data->pipe_detector == 1)
+				{
+					free(token);
+					free(terminal2);
+					current = current->previous;
+					free(current->next);
+					current->next = NULL;
+					ft_free_all(first);
+					ft_putstr_fd("Minishell : parse error near '|'\n", 1);
+					return (NULL);
+				}
+				data->pipe_detector = 1;
+				current = current->previous;
+				free(current->next);
+		}
+		else
+		{
+			if (!current->previous)
+			{
+				current->type = CMD;
+				current->args = malloc(sizeof(char *) * 2);
+				current->args[0] = ft_strdup(token);
+				current->args[1] = NULL;
+				data->ncmd++;
+				data->pipe_detector = 0;
+			}
+			else if (current->previous->type == INFILE)
+			{
+				current->previous->args = ft_realloc(current->previous->args, token);
+				current = current->previous;
+				free(current->next);
+				current->type = INCOMPLET;
+			}
+			else if (current->previous->type == OUTFILE)
+			{
+				current->previous->args = ft_realloc(current->previous->args, token);
+				current = current->previous;
+				free(current->next);
+				current->type = OUTCOMPLET;
+			}
+			else if (current->previous->type == HEREDOC)
+			{
+				current->previous->args = ft_realloc(current->previous->args, token);
+				current = current->previous;
+				free(current->next);
+				current->type = HDCOMPLET;
+			}
+			else if (current->previous->type == APPEND)
+			{
+				current->previous->args = ft_realloc(current->previous->args, token);
+				current = current->previous;
+				free(current->next);
+				current->type = APPENDCOMP;
+			}
+			else if (ft_isnl(token) == 1)
+			{
+				current = current->previous;
+				free(current->next);
+				current->next = NULL;
+				while (current->type != HDCOMPLET)
+					current = current->previous;
+				current->args = ft_realloc(current->args, token);
+				while (current->next)
+					current = current->next;
+			}
+			else if (data->pipe_detector == 1)
+			{
+				current->type = CMD;
+				current->args = malloc(sizeof(char *) * 2);
+				current->args[0] = ft_strdup(token);
+				current->args[1] = NULL;
+				data->pipe_detector = 0;
+				data->ncmd++;
+			}
+			else if (current->previous->type == CMD)
+			{
+				current->previous->args = ft_realloc(current->previous->args, token);
+				current = current->previous;
+				free(current->next);
+			}
+			else if ((current->previous->type >= 7 && current->previous->type <= 10) && data->pipe_detector == 0)
+			{
+				temp = ft_searchlastcmd(current);
+				temp->args = ft_realloc(temp->args, token);
+				current = current->previous;
+				free(current->next);
+			}
+		}
+		current->next = malloc(sizeof(t_parse));
+		current->next->previous = current;
+		current = current->next;
+		free(token);
+		token = ft_strtok(data, terminal2);
+		terminal2 = ft_cut_terminal(terminal2, token);
+	}
+	current->previous->next = NULL;
+	free(current);
+	free(terminal2);
+	return (first);
 }
 
 // int main(int argc, char **argv, char **envp)
@@ -211,7 +215,7 @@ t_parse *ft_parse(char *terminal, t_data *data)
 // 	}
 // 	data->envp[i] = NULL;
 //     data->status = 0;
-//     data->parse = ft_parse("     feur      ", data);
+//     data->parse = ft_parse("<heredoc ls|wc -l>>outfile", data);
 //     test = data->parse;
 //     while(data->parse)
 //     {
