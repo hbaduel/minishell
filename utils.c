@@ -14,7 +14,7 @@ int	ft_exiterror(char *str)
 	return(0);
 }
 
-void	ft_free_all(t_parse *parse)
+void	ft_free_parse(t_parse *parse)
 {
 	t_parse	*temp;
 	int		i;

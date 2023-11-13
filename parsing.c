@@ -79,7 +79,7 @@ t_parse	*ft_parse(char *terminal, t_data *data)
 					current = current->previous;
 					free(current->next);
 					current->next = NULL;
-					ft_free_all(first);
+					ft_free_parse(first);
 					ft_putstr_fd("Minishell : parse error near '|'\n", 1);
 					return (NULL);
 				}
@@ -194,7 +194,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	data->envp[i] = NULL;
     data->status = 0;
-    data->parse = ft_parse("<<heredoc ls|wc -l>outfile", data);
+    data->parse = ft_parse("ls -wc", data);
     test = data->parse;
     while(data->parse)
     {
