@@ -5,7 +5,6 @@ char	*terminal;
 void	ft_kill()
 {
 	kill(0, 0);
-	ft_putstr_fd("\n", 1);
 }
 
 void	ft_freeline(t_data *data)

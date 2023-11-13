@@ -2,7 +2,7 @@
 
 extern char	*terminal;
 
-int	ft_cmdbuiltin(t_data *data, int outfd, char **cmd, int last)
+int		ft_cmdbuiltin(t_data *data, int outfd, char **cmd, int last)
 {
 	if (ft_strcmp(cmd[0], "echo") == 0)
 	{
@@ -94,7 +94,7 @@ void	ft_execcmd(char **cmd, t_data *data, int outfd)
 	}
 }
 
-int	ft_nextcmd(t_data *data, int infd, char **cmd)
+int		ft_nextcmd(t_data *data, int infd, char **cmd)
 {
 	pid_t	pid;
 	int		tubefd[2];
