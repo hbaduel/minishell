@@ -7,7 +7,6 @@ void	ft_kill()
 	kill(0, 0);
 	ft_putstr_fd("\n", 1);
 	rl_on_new_line();
-	free(terminal);
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
