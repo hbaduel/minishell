@@ -42,6 +42,35 @@ int		ft_isnl(char **token)
 	return (1);
 }
 
+t_parse	*ft_checkredir(t_parse *first, t_parse *temp)
+{
+	while (temp)
+	{
+		if (temp->type == INFILE)
+		{
+			ft_putstr_fd("minishell : parse error near `<'\n", 1);
+			return (ft_free_parse(first));
+		}
+		else if (temp->type == OUTFILE)
+		{
+			ft_putstr_fd("minishell : parse error near `>'\n", 1);
+			return (ft_free_parse(first));
+		}
+		else if (temp->type == HEREDOC)
+		{
+			ft_putstr_fd("minishell : parse error near `<<'\n", 1);
+			return (ft_free_parse(first));
+		}
+		else if (temp->type == APPEND)
+		{
+			ft_putstr_fd("minishell : parse error near `>>'\n", 1);
+			return (ft_free_parse(first));
+		}
+		temp = temp->next;
+	}
+	return (first);
+}
+
 t_parse	*ft_parse(char *terminal, t_data *data)
 {
 	t_parse	*first;
@@ -191,7 +220,7 @@ t_parse	*ft_parse(char *terminal, t_data *data)
 	current->previous->next = NULL;
 	free(current);
 	free(terminal2);
-	return (first);
+	return (ft_checkredir(first, first));
 }
 
 // int main(int argc, char **argv, char **envp)

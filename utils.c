@@ -14,7 +14,7 @@ int		ft_exiterror(char *str)
 	return(0);
 }
 
-void	ft_free_parse(t_parse *parse)
+t_parse	*ft_free_parse(t_parse *parse)
 {
 	t_parse	*temp;
 	int		i;
@@ -32,6 +32,7 @@ void	ft_free_parse(t_parse *parse)
 		parse = parse->next;
 		free(temp);
 	}
+	return (NULL);
 }
 
 void	ft_putstr_fd(char *str, int fd)
