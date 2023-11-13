@@ -55,7 +55,7 @@ typedef struct	s_data
 void	ft_putstr_fd(char *str, int fd);
 void	ft_heredoc(char *limiter, char *next, t_data *data);
 void	ft_pipe(t_data *data, t_parse *parsing);
-void	ft_execcmd(char **cmd, char **envp, int outfd);
+void	ft_execcmd(char **cmd, t_data *data, int outfd);
 void	ft_pwd(t_data *data, int outfd, char **cmd);
 void	ft_echo(t_data *data, char **cmd, int outfd);
 void	ft_freedoubletab(char **tab);

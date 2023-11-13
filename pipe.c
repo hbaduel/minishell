@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+char	*terminal;
+
 int	ft_cmdbuiltin(t_data *data, int outfd, char **cmd)
 {
 	if (ft_strcmp(cmd[0], "echo") == 0)
@@ -30,23 +32,51 @@ int	ft_cmdbuiltin(t_data *data, int outfd, char **cmd)
 	return (0);
 }
 
-void	ft_execcmd(char **cmd, char **envp, int outfd)
+void	ft_cmd_not_found(char **cmd, t_data *data, int outfd)
+{
+	ft_free_all(data->parse);
+	free_cmd(cmd);
+	if (data->envp)
+		free(data->envp);
+	if (outfd != data->outfilefd)
+		close(outfd);
+	if (data->infilefd != -1)
+		close(data->infilefd);
+    if (data->outfilefd != -1)
+		close(data->outfilefd);
+	free_data(data);
+	rl_clear_history();
+	free(terminal);
+	exit(127);
+}
+
+void	ft_execcmd(char **cmd, t_data *data, int outfd)
 {
 	char	*path;
 
-	path = ft_cmdpath(cmd[0], envp);
+	path = ft_cmdpath(cmd[0], data->envp);
 	if (!path)
 	{
 		ft_putstr_fd("minishell: command not found: ", 1);
 		ft_putstr_fd(cmd[0], 1);
 		ft_putstr_fd("\n", 1);
+		ft_cmd_not_found(cmd, data, outfd);
+		// ici appeler une fonction qui fait :
+			// free parse						/
+			// free data->envp					/
+			// close outfilefd infilefd			/
+			// free data						/
+			// rl_clear_history					/
+			// terminal
+			// close outfd si != outfiledfd
 		exit(127);
 	}
 	if (outfd != 1)
 		dup2(outfd, 1);
-	if (execve(path, cmd, envp) == -1)
+	if (execve(path, cmd, data->envp) == -1)
 	{
 		free(path);
+		ft_cmd_not_found(cmd, data, outfd);
 		perror("execve");
 		exit (1);
 	}
@@ -68,7 +98,7 @@ int	ft_nextcmd(t_data *data, int infd, char **cmd)
 	{
 		close(tubefd[0]);
 		dup2(infd, 0);
-		ft_execcmd(cmd, data->envp, tubefd[1]);
+		ft_execcmd(cmd, data, tubefd[1]);
 	}
 	waitpid(pid, &data->status, 0);
 	data->status /= 256;
@@ -99,7 +129,7 @@ void	ft_pipe(t_data *data, t_parse *parsing)
 	if (cpid == 0)
 	{
 		dup2(infd, 0);
-		ft_execcmd(parsing->args, data->envp, data->outfilefd);
+		ft_execcmd(parsing->args, data, data->outfilefd);
 	}
 	waitpid(cpid, &data->status, 0);
 	data->status /= 256;
