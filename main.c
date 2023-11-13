@@ -79,7 +79,7 @@ void	ft_chooseaction(t_data *data)
 		{
 			if (data->infilefd != 0)
 				dup2(data->infilefd, 0);
-			ft_execcmd(data->parse->args, data->envp, data->outfilefd);
+			ft_execcmd(data->parse->args, data, data->outfilefd);
 		}
 		waitpid(cpid, &data->status, 0);
 		data->status /= 256;

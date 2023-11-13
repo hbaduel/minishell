@@ -55,15 +55,16 @@ typedef struct	s_data
 void	ft_putstr_fd(char *str, int fd);
 void	ft_heredoc(char *limiter, char *next, t_data *data);
 void	ft_pipe(t_data *data, t_parse *parsing);
-void	ft_execcmd(char **cmd, char **envp, int outfd);
+void	ft_execcmd(char **cmd, t_data *data, int outfd);
 void	ft_pwd(t_data *data, int outfd, char **cmd);
 void	ft_echo(t_data *data, char **cmd, int outfd);
 void	ft_freedoubletab(char **tab);
 void	ft_env(t_data *data, int outfd, char **cmd);
 void	ft_unset(t_data *data, char **cmd);
 void	ft_export(t_data *data, char **cmd, int outfd);
+void	ft_free_parse(t_parse *parse);
+void	ft_free_all(t_data *data, int outfd);
 void    ft_putenv(char *nexttoken, char *env, int *j);
-void	ft_free_all(t_parse *parse);
 t_parse	*ft_parse(char *, t_data *data);
 char	*ft_strjoin(char *s1, char *s2, int dofree);
 char	*ft_cmdpath(char *cmd, char **envp);

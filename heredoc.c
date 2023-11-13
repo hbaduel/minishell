@@ -68,7 +68,7 @@ void	ft_putheredoc(char *res, char *limiter, t_data *data)
 			close(pipefd[0]);
 			res = ft_dupheredoc(data, res);
 			ft_putstr_fd(res, pipefd[1]);
-			// faut tout free;
+			ft_free_all(data, pipefd[1]);
 			free(res);
 			exit(0);
 		}
