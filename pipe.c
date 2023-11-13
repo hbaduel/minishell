@@ -2,7 +2,7 @@
 
 extern char	*terminal;
 
-int	ft_cmdbuiltin(t_data *data, int outfd, char **cmd)
+int	ft_cmdbuiltin(t_data *data, int outfd, char **cmd, int last)
 {
 	if (ft_strcmp(cmd[0], "echo") == 0)
 	{
@@ -29,24 +29,32 @@ int	ft_cmdbuiltin(t_data *data, int outfd, char **cmd)
 		ft_export(data, cmd, outfd);
 		return (1);
 	}
+	if (ft_strcmp(cmd[0], "exit") == 0)
+	{
+		if (last == 1)
+		{
+			ft_free_all(data, outfd);
+			exit(0);
+		}
+		else
+			return (1);
+	}
 	return (0);
 }
+
 void	ft_free_data(t_data *data)
 {
 	int		i;
 
-	while (data)
+	i = 0;
+	while (data->envp[i])
 	{
-		i = 0;
-		while (data->envp[i])
-		{
-			free(data->envp[i]);
-			i++;
-		}
-		free(data->envp);
+		free(data->envp[i]);
+		i++;
 	}
+	free(data->envp);
+	free(data);
 }
-
 
 void	ft_free_all(t_data *data, int outfd)
 {
@@ -92,7 +100,7 @@ int	ft_nextcmd(t_data *data, int infd, char **cmd)
 	int		tubefd[2];
 
 	pipe(tubefd);
-	if (ft_cmdbuiltin(data, tubefd[1], cmd) == 1)
+	if (ft_cmdbuiltin(data, tubefd[1], cmd, 0) == 1)
 	{
 		close(tubefd[1]);
 		return (tubefd[0]);
@@ -127,7 +135,7 @@ void	ft_pipe(t_data *data, t_parse *parsing)
 	}
 	while(parsing->type != CMD)
 		parsing = parsing->next;
-	if (ft_cmdbuiltin(data, data->outfilefd, parsing->args) == 1)
+	if (ft_cmdbuiltin(data, data->outfilefd, parsing->args, 1) == 1)
 		return ;
 	cpid = fork();
 	if (cpid == 0)

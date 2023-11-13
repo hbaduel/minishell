@@ -8,30 +8,16 @@ void	ft_kill()
 	ft_putstr_fd("\n", 1);
 }
 
-void	ft_freeline(t_data *data, int which)
+void	ft_freeline(t_data *data)
 {
-	t_parse	*temp;
-	int		i;
-
-	while (data->parse)
-	{
-		i = 0;
-		while (data->parse->args[i])
-		{
-			free(data->parse->args[i]);
-			i++;
-		}
-		free(data->parse->args);
-		temp = data->parse;
-		data->parse = data->parse->next;
-		free(temp);
-	}
+	ft_free_parse(data->parse);
 	if (data->infilefd != 0)
 		close(data->infilefd);
 	if (data->outfilefd != 1)
 		close(data->outfilefd);
-	if (which == 1)
-		free(data);
+	data->ncmd = 0;
+	data->infilefd = 0;
+	data->outfilefd = 1;
 }
 
 char	*ft_cmdpath(char *cmd, char **envp)
@@ -72,7 +58,7 @@ void	ft_chooseaction(t_data *data)
 	{
 		while (data->parse->type != CMD)
 			data->parse = data->parse->next;
-		if (ft_cmdbuiltin(data, data->outfilefd, data->parse->args) == 1)
+		if (ft_cmdbuiltin(data, data->outfilefd, data->parse->args, 1) == 1)
 			return ;
 		cpid = fork();
 		if (cpid == 0)
@@ -98,13 +84,11 @@ void	ft_readterminal(t_data *data)
 	while (1)
 	{
 		operror = 0;
-		data->ncmd = 0;
-		data->infilefd = 0;
-		data->outfilefd = 1;
 		terminal = readline("\e[1;35mmi\e[1;34mni\e[1;32msh\e[1;33mel\e[1;31ml>\e[0;37m ");
 		if (!terminal)
 		{
-			free(data);
+			ft_free_data(data);
+			rl_clear_history();
 			exit(0);
 		}
 		if (terminal[0])
@@ -129,7 +113,7 @@ void	ft_readterminal(t_data *data)
 				}
 				if (data->ncmd > 0 && operror == 0)
 					ft_chooseaction(data);
-				ft_freeline(data, 0);
+				ft_freeline(data);
 			}
 			add_history(terminal);
 		}
@@ -148,6 +132,9 @@ int		main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
 	data->status = 0;
+	data->ncmd = 0;
+	data->infilefd = 0;
+	data->outfilefd = 1;
 	i = 0;
 	while (envp[i])
 		i++;
@@ -160,7 +147,6 @@ int		main(int argc, char **argv, char **envp)
 	}
 	data->envp[i] = NULL;
 	ft_readterminal(data);
-	rl_clear_history();
 	return (0);
 }
 // segfault quand on prend l'historique d'un heredoc puis qu'on efface puis entrée

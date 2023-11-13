@@ -133,7 +133,5 @@ void	ft_heredoc(char *limiter, char *next, t_data *data)
 			res = ft_strjoin(res, "\n", 1);
 			free(heredoc);
 		}
-		else
-			ft_putstr_fd("\n", 1);
 	}
 }
