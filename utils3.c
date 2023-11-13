@@ -117,18 +117,18 @@ char	*ft_getenvname(char *str)
 	char	*res;
 	int		i;
 
-    i = 0;
-    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' &&  str[i] != '\t' && str[i] != '\n')
-        i++;
-    res = malloc(sizeof(char) * (i + 1));
-    i = 0;
-    while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' && str[i] != '\t' && str[i] != '\n')
-    {
-        res[i] = str[i];
-        i++;
-    }
-    res[i] = '\0';
-    return (res);
+	i = 0;
+	while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' &&  str[i] != '\t' && str[i] != '\n')
+		i++;
+	res = malloc(sizeof(char) * (i + 1));
+	i = 0;
+	while (str[i] && str[i] != '\'' && str[i] != '\"' && str[i] != ' ' && str[i] != '=' && str[i] != '\t' && str[i] != '\n')
+	{
+		res[i] = str[i];
+		i++;
+	}
+	res[i] = '\0';
+	return (res);
 }
 
 char	*ft_getenv(char **envp, int status, char *name, int *k)
@@ -161,16 +161,16 @@ char	*ft_getenv(char **envp, int status, char *name, int *k)
 
 void    ft_putenv(char *nexttoken, char *env, int *j)
 {
-    int     k;
+	int		k;
 
-    k = 0;
-    if (!env)
-        return ;
-    while (env[k])
-    {
-        nexttoken[*j] = env[k];
-        k++;
-        *j += 1;
-    }
-    free(env);
+	k = 0;
+	if (!env)
+		return ;
+	while (env[k])
+	{
+		nexttoken[*j] = env[k];
+		k++;
+		*j += 1;
+	}
+	free(env);
 }

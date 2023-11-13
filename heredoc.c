@@ -13,12 +13,12 @@ int	ft_sizeheredoc(t_data *data, char	*str)
 	while (str[i])
 	{
 		if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
-        && str[i + 1] != '$'))
-        {
-            env = ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i);
-            size += ft_strlen(env);
-            free(env);
-        }
+		&& str[i + 1] != '$'))
+		{
+			env = ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i);
+			size += ft_strlen(env);
+			free(env);
+		}
 		else
 		{
 			i++;
@@ -28,30 +28,30 @@ int	ft_sizeheredoc(t_data *data, char	*str)
 	return (size + 1);
 }
 
-char    *ft_dupheredoc(t_data *data, char *str)
+char	*ft_dupheredoc(t_data *data, char *str)
 {
-    char	*res;
+	char	*res;
 	int		i;
-    int		j;
+	int		j;
 
-    res = malloc(sizeof(char) * ft_sizeheredoc(data, str));
+	res = malloc(sizeof(char) * ft_sizeheredoc(data, str));
 	i = 0;
-    j = 0;
-    while (str[i])
-    {
-        if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
-        && str[i + 1] != '$'))
-            ft_putenv(res, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
-        else
-        {
-        	res[j] = str[i];
-            j++;
-            i++;
-        }
-    }
-    res[j] = '\0';
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
+		&& str[i + 1] != '$'))
+			ft_putenv(res, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
+		else
+		{
+			res[j] = str[i];
+			j++;
+			i++;
+		}
+	}
+	res[j] = '\0';
 	free(str);
-    return (res);
+	return (res);
 }
 
 void	ft_putheredoc(char *res, char *limiter, t_data *data)

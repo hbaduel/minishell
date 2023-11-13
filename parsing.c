@@ -1,45 +1,45 @@
 #include "minishell.h"
 
-t_parse *ft_searchlastcmd(t_parse *current)
+t_parse	*ft_searchlastcmd(t_parse *current)
 {
 	while (current && current->type != CMD)
 		current = current->previous;
 	return (current);
 }
 
-char    *ft_supplastnl(char *token, int i)
+char	*ft_supplastnl(char *token, int i)
 {
-    char    *res;
+	char	*res;
 
-    res = malloc(sizeof(char) * i);
-    i = 0;
-    while (token[i])
-    {
-        res[i] = token[i];
-        i++;
-    }
-    res[i - 1] = '\0';
-    free(token);
-    return (res);
+	res = malloc(sizeof(char) * i);
+	i = 0;
+	while (token[i])
+	{
+		res[i] = token[i];
+		i++;
+	}
+	res[i - 1] = '\0';
+	free(token);
+	return (res);
 }
 
-int ft_isnl(char **token)
+int		ft_isnl(char **token)
 {
-    int     i;
-    int     nl;
+	int		i;
+	int		nl;
 
-    i = 0;
-    nl = 0;
-    while (token[0][i])
-    {
-        if (token[0][i] == '\n')
-            nl = 1;
-        i++;
-    }
-    if (nl == 0)
-        return (0);
-    token[0] = ft_supplastnl(token[0], i);
-    return (1);
+	i = 0;
+	nl = 0;
+	while (token[0][i])
+	{
+		if (token[0][i] == '\n')
+			nl = 1;
+		i++;
+	}
+	if (nl == 0)
+		return (0);
+	token[0] = ft_supplastnl(token[0], i);
+	return (1);
 }
 
 t_parse	*ft_parse(char *terminal, t_data *data)

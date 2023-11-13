@@ -1,13 +1,13 @@
 #include "minishell.h"
 
-int	ft_exitperror(char *str)
+int		ft_exitperror(char *str)
 {
 	if (str)
 		perror(str);
 	return(0);
 }
 
-int	ft_exiterror(char *str)
+int		ft_exiterror(char *str)
 {
 	if (str)
 		ft_putstr_fd(str, 1);

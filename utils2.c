@@ -84,21 +84,21 @@ char	*ft_quotemidtoken(t_data *data, char *nexttoken, char *str, int j)
 	char	delim;
 	int		i;
 
-    i = 1;
-    delim = str[0];
-    nexttoken[j] = '\0';
-    temp = ft_tokenquote(data, &str[i], str[0]);
-    nexttoken = ft_strjoin(nexttoken, temp, 1);
-    free(temp);
-    while (str[i] != delim)
-        i++;
-    if (str[i + 1] != ' ' && str[i + 1] != '\t' && str[i + 1])
-    {
-        temp = ft_tokennoquote(data, &str[i + 1]);
-        nexttoken = ft_strjoin(nexttoken, temp, 1);
-        free(temp);
-    }
-    return (nexttoken);
+	i = 1;
+	delim = str[0];
+	nexttoken[j] = '\0';
+	temp = ft_tokenquote(data, &str[i], str[0]);
+	nexttoken = ft_strjoin(nexttoken, temp, 1);
+	free(temp);
+	while (str[i] != delim)
+		i++;
+	if (str[i + 1] != ' ' && str[i + 1] != '\t' && str[i + 1])
+	{
+		temp = ft_tokennoquote(data, &str[i + 1]);
+		nexttoken = ft_strjoin(nexttoken, temp, 1);
+		free(temp);
+	}
+	return (nexttoken);
 }
 
 char	*ft_tokennoquote(t_data *data, char *str)
@@ -108,25 +108,25 @@ char	*ft_tokennoquote(t_data *data, char *str)
 	int		i;
 	int		j;
 
-    nexttoken = malloc(sizeof(char) * (ft_tokensize(data, str, ' ')));
-    i = 0;
-    j = 0;
-    while (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i])
-    {
-        if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
-        && str[i + 1] != '$'))
-            ft_putenv(nexttoken, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
-        else if (str[i] == '\'' || str[i] == '\"')
-            return (ft_quotemidtoken(data, nexttoken, &str[i], j));
-        else
-        {
-            nexttoken[j] = str[i];
-            j++;
-            i++;
-        }
-    }
-    nexttoken[j] = '\0';
-    return (nexttoken);
+	nexttoken = malloc(sizeof(char) * (ft_tokensize(data, str, ' ')));
+	i = 0;
+	j = 0;
+	while (str[i] != ' ' && str[i] != '\t' && str[i] != '\n' && str[i])
+	{
+		if (str[i] == '$' && (str[i + 1] != ' ' && str[i + 1] != '\0'\
+		&& str[i + 1] != '$'))
+			ft_putenv(nexttoken, ft_getenv(data->envp, data->status, ft_getenvname(&str[i + 1]), &i), &j);
+		else if (str[i] == '\'' || str[i] == '\"')
+			return (ft_quotemidtoken(data, nexttoken, &str[i], j));
+		else
+		{
+			nexttoken[j] = str[i];
+			j++;
+			i++;
+		}
+	}
+	nexttoken[j] = '\0';
+	return (nexttoken);
 }
 
 char	*ft_tokenheredoc(char *str)
@@ -134,19 +134,19 @@ char	*ft_tokenheredoc(char *str)
 	char	*res;
 	int		i;
 
-    i = 0;
-    while (str[i])
-        i++;
-    res = malloc(sizeof(char) * (i + 2));
-    i = 0;
-    while (str[i])
-    {
-        res[i] = str[i];
-        i++;
-    }
-    res[i] = '\n';
-    res[i + 1] = '\0';
-    return (res);
+	i = 0;
+	while (str[i])
+		i++;
+	res = malloc(sizeof(char) * (i + 2));
+	i = 0;
+	while (str[i])
+	{
+		res[i] = str[i];
+		i++;
+	}
+	res[i] = '\n';
+	res[i + 1] = '\0';
+	return (res);
 }
 
 char	*ft_strtok(t_data *data, char *str)
@@ -155,21 +155,21 @@ char	*ft_strtok(t_data *data, char *str)
 	int	end;
 	int	i;
 
-    if (!str)
-        return (NULL);
-    start = 0;
-    end = 0;
-    i = 0;
-    while ((str[start] == ' ' || str[start] == '\t') && str[start])
-        start++;
-    if (!str[start])
-        return (NULL);
-    if (str[start] == '\'' || str[start] == '"')
-        return (ft_tokenquote(data, &str[start + 1], str[start]));
-    else if (str[start] == '\n')
-        return (ft_tokenheredoc(&str[start + 1]));
-    else
-        return (ft_tokennoquote(data, &str[start]));
+	if (!str)
+		return (NULL);
+	start = 0;
+	end = 0;
+	i = 0;
+	while ((str[start] == ' ' || str[start] == '\t') && str[start])
+		start++;
+	if (!str[start])
+		return (NULL);
+	if (str[start] == '\'' || str[start] == '"')
+		return (ft_tokenquote(data, &str[start + 1], str[start]));
+	else if (str[start] == '\n')
+		return (ft_tokenheredoc(&str[start + 1]));
+	else
+		return (ft_tokennoquote(data, &str[start]));
 }
 
 // fin fichier quote
@@ -206,22 +206,22 @@ int	ft_cutsize(char *terminal, int *start, int *end)
 {
 	char	delim;
 
-    *start = 0;
-    *end = 0;
-    while (terminal[*start] != ' ' && terminal[*start] && terminal[*start] != '\n' && terminal[*start] != '\t')
-    {
-        if (terminal[*start] == '\'' || terminal[*start] == '\"')
-        {
-            delim = terminal[*start];
-            *start += 1;
-            while (terminal[*start] != delim && terminal[*start])
-                *start += 1;
-        }
-        *start += 1;
-    }
-    *end = *start;
-    while (terminal[*end])
-        *end += 1;
+	*start = 0;
+	*end = 0;
+	while (terminal[*start] != ' ' && terminal[*start] && terminal[*start] != '\n' && terminal[*start] != '\t')
+	{
+		if (terminal[*start] == '\'' || terminal[*start] == '\"')
+		{
+			delim = terminal[*start];
+			*start += 1;
+			while (terminal[*start] != delim && terminal[*start])
+				*start += 1;
+		}
+		*start += 1;
+	}
+	*end = *start;
+	while (terminal[*end])
+		*end += 1;
 }
 
 char	*ft_cutnoquote(char *terminal)
@@ -250,27 +250,27 @@ char	*ft_cut_terminal(char *terminal, char *token)
 	int		start;
 	int		i;
 
-    if (!token)
-    {
-        free(terminal);
-        return (NULL);
-    }
-    start = 0;
-    while ((terminal[start] == ' ' || terminal[start] == '\t') && terminal[start])
-        start++;
-    if (!terminal[start])
-    {
-        free(terminal);
-        return (NULL);
-    }
-    if (terminal[start] == '\'' || terminal[start] == '\"')
-        newterminal = ft_cutquote(&terminal[start + 1], terminal[start]);
-    else if (terminal[start] == '\n')
-        newterminal = NULL;
-    else
-        newterminal = ft_cutnoquote(&terminal[start]);
-    free(terminal);
-    return (newterminal);
+	if (!token)
+	{
+		free(terminal);
+		return (NULL);
+	}
+	start = 0;
+	while ((terminal[start] == ' ' || terminal[start] == '\t') && terminal[start])
+		start++;
+	if (!terminal[start])
+	{
+		free(terminal);
+		return (NULL);
+	}
+	if (terminal[start] == '\'' || terminal[start] == '\"')
+		newterminal = ft_cutquote(&terminal[start + 1], terminal[start]);
+	else if (terminal[start] == '\n')
+		newterminal = NULL;
+	else
+		newterminal = ft_cutnoquote(&terminal[start]);
+	free(terminal);
+	return (newterminal);
 }
 
 // fin fichier quote

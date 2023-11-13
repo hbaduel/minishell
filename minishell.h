@@ -33,18 +33,18 @@
 
 
 typedef struct s_parse {
-    int             type;           /*pour identifier le type de commande*/
-    char            **args;         /*pour stocker les arguments de la commande*/
-    struct s_parse  *next;
-    struct s_parse  *previous;
-    struct s_data   *data;
-}       t_parse;
+	int				type;
+	char			**args;
+	struct s_parse	*next;
+	struct s_parse	*previous;
+	struct s_data	*data;
+}		t_parse;
 
 typedef struct	s_data
 {
 	char	**envp;
-	int 	infilefd;
-	int 	outfilefd;
+	int		infilefd;
+	int		outfilefd;
 	int 	ncmd;
 	int		status;
 	int		pipe_detector;
@@ -84,8 +84,8 @@ char	**ft_realloc(char **args, char *token);
 char	**ft_split(char *s, char c);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
-int 	ft_openfile(char *file, t_data *data, int which);
-int 	ft_cmdbuiltin(t_data *data, int outfd, char **cmd, int last);
+int		ft_openfile(char *file, t_data *data, int which);
+int		ft_cmdbuiltin(t_data *data, int outfd, char **cmd, int last);
 int		ft_strncmp(char *s1, char *s2, int n);
 int		ft_check_quote(char *str);
 int		ft_checkequal(char *env);
