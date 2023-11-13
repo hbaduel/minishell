@@ -5,26 +5,14 @@ int	ft_checkexist(char *unset, char *env)
 	int	i;
 
 	i = 0;
+	if (ft_checkequal(unset) == 1)
+		return (0);
 	while (unset[i] == env[i] && unset[i] && env[i])
 		i++;
 	if (!unset[i] && !env[i])
 		return (1);
 	if (!unset[i] && env[i] == '=')
 		return (1);
-	return (0);
-}
-
-int	ft_checkexistvalue(char *env)
-{
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		if (env[i] == '=')
-			return (1);
-		i++;
-	}
 	return (0);
 }
 
@@ -58,19 +46,21 @@ char	**ft_reallocenvpless(char **envp, int donot)
 
 void	ft_unset(t_data *data, char **cmd)
 {
-	char	*temp;
 	int		i;
 	int		j;
-	int		size;
 
-	i = 0;
+	i = 1;
+	if (cmd[1][0] == '-')
+	{
+		ft_putstr_fd("minishell: bad option: unset does not take any option.\n", 1);
+		data->status = 1;
+		return ;
+	}
 	while (cmd[i])
 	{
 		j = 0;
 		while (data->envp[j])
 		{
-			if (ft_checkvalue(cmd[i]) == 1)
-				break ;
 			if (ft_checkexist(cmd[i], data->envp[j]) == 1)
 			{
 				data->envp = ft_reallocenvpless(data->envp, j);

@@ -147,7 +147,7 @@ t_parse	*ft_parse(char *terminal, t_data *data)
 				free(current->next);
 				current->type = APPENDCOMP;
 			}
-			else if (ft_isnl(token) == 1)
+			else if (ft_isnl(&token) == 1)
 			{
 				current = current->previous;
 				free(current->next);

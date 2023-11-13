@@ -84,6 +84,8 @@ int		ft_strcmp(char *s1, char *s2);
 int		ft_strlen(char *str);
 int 	ft_openfile(char *file, t_data *data, int which);
 int 	ft_cmdbuiltin(t_data *data, int outfd, char **cmd);
-int	    ft_checkexistvalue(char *env);
+int		ft_strncmp(char *s1, char *s2, int n);
+int		ft_check_quote(char *str);
+int		ft_checkequal(char *env);
 
 #endif
