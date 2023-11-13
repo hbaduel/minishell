@@ -6,6 +6,8 @@ void	ft_kill()
 {
 	kill(0, 0);
 	ft_putstr_fd("\n", 1);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 void	ft_freeline(t_data *data)
@@ -149,4 +151,3 @@ int		main(int argc, char **argv, char **envp)
 	ft_readterminal(data);
 	return (0);
 }
-// segfault quand on prend l'historique d'un heredoc puis qu'on efface puis entrée
