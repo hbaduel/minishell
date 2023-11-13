@@ -28,9 +28,9 @@ int	ft_quote(char *str, int *i, char quote)
 	*i += 1;
 	while (str[*i] != quote && str[*i])
 	{
-		if (str[*i] == '(' || str[*i] == '{' || str[*i] == ')' || str[*i] == '}' || str[*i] == '\\' || str[*i] == ';')
+		if (str[*i] == '\\' || str[*i] == ';')
 		{
-			ft_putstr_fd("Error : '()', '{}', '\\' and ';' are not interpreted.\n", 1);
+			ft_putstr_fd("Error : '\\' and ';' are not interpreted.\n", 1);
 			return (1);
 		}
 		*i += 1;
@@ -50,7 +50,7 @@ int	ft_check_quote(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == 39 || str[i] == 34)			//simple quote
+		if (str[i] == 39 || str[i] == 34)
 		{
 			if (ft_quote(str, &i, str[i]) == 1)
 			{
@@ -58,10 +58,10 @@ int	ft_check_quote(char *str)
 				return (1);
 			}
 		}
-		else if (str[i] == '(' || str[i] == '{' || str[i] == ')' || str[i] == '}' || str[i] == '\\' || str[i] == ';')
+		else if (str[i] == '\\' || str[i] == ';')
 		{
 			free(str);
-			ft_putstr_fd("Error : '()', '{}', '\\' and ';' are not interpreted.\n", 1);
+			ft_putstr_fd("Error : '\\' and ';' are not interpreted.\n", 1);
 			return (1);
 		}
 		i++;
