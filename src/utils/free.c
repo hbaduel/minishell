@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:00:28 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/14 18:21:42 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/15 18:07:15 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	ft_free_data(t_data *data)
 		i++;
 	}
 	free(data->envp);
+	free(data->display);
 	free(data);
 }
 

@@ -6,19 +6,11 @@
 /*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:17:00 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/15 13:17:21 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/15 22:44:12 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	g_stop;
-
-void	ft_ctrlc_hd(int i)
-{
-	(void) i;
-	g_stop = 1;
-}
 
 int	ft_sizeheredoc(t_data *data, char	*str)
 {
@@ -101,31 +93,29 @@ void	ft_putheredoc(char *terminal, char *res, char *limiter, t_data *data)
 	free(res);
 }
 
-void	ft_heredoc(char *terminal, char *limiter, char *next, t_data *data)
+int	ft_heredoc(char *terminal, char *limiter, char *next, t_data *data)
 {
 	char	*heredoc;
 	char	*res;
 
 	res = NULL;
-	g_stop = 0;
-	while (g_stop == 0)
+	while (1)
 	{
 		heredoc = readline("heredoc> ");
-		if (g_stop == 1)
-			break ;
-		if (heredoc)
+		if (!heredoc)
 		{
-			if (ft_strcmp(heredoc, limiter) == 0)
-			{
-				free(heredoc);
-				ft_putheredoc(terminal, res, limiter, data);
-				return ;
-			}
-			res = ft_strjoin(res, heredoc, 1);
-			res = ft_strjoin(res, "\n", 1);
-			free(heredoc);
+			if (res)
+				free(res);
+			return (1);
 		}
+		if (ft_strcmp(heredoc, limiter) == 0)
+		{
+			free(heredoc);
+			ft_putheredoc(terminal, res, limiter, data);
+			return (0);
+		}
+		res = ft_strjoin(res, heredoc, 1);
+		res = ft_strjoin(res, "\n", 1);
+		free(heredoc);
 	}
-	if (res)
-		free(res);
 }

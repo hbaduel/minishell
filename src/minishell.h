@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:35:49 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/15 14:35:34 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/15 22:43:52 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <fcntl.h>
 
-# define BLACK  "\e[1;30m"
-# define RED  "\e[1;31m"
-# define GREEN  "\e[1;32m"
-# define YELLOW  "\e[1;33m"
-# define BLUE  "\e[1;34m"
-# define PURPLE  "\e[1;35m"
-# define WHITE  "\e[1;37m"
 # define CMD		0
 # define INFILE		1
 # define OUTFILE	2
@@ -50,6 +44,7 @@ typedef struct s_parse {
 }		t_parse;
 
 typedef struct s_data {
+	char	*display;
 	char	**envp;
 	int		infilefd;
 	int		outfilefd;
@@ -61,9 +56,6 @@ typedef struct s_data {
 
 void	ft_readterminal(t_data *data);
 void	ft_putstr_fd(char *str, int fd);
-void	ft_ctrlc(int pid);
-void	ft_ctrlc_hd(int i);
-void	ft_heredoc(char *terminal, char *limiter, char *next, t_data *data);
 void	ft_pipe(t_data *data, t_parse *parsing, char *terminal);
 void	ft_execcmd(char *term, char **cmd, t_data *data, int outfd);
 void	ft_pwd(t_data *data, int outfd, char **cmd);
@@ -109,5 +101,6 @@ int		ft_strncmp(char *s1, char *s2, int n);
 int		ft_check_quote(char *str);
 int		ft_checkequal(char *env);
 int		ft_parseredir(t_parse *current, char *token);
+int		ft_heredoc(char *terminal, char *limiter, char *next, t_data *data);
 
 #endif
