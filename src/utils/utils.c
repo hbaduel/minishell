@@ -1,39 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/14 13:01:30 by hbaduel           #+#    #+#             */
+/*   Updated: 2023/11/14 18:21:49 by hbaduel          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int		ft_exitperror(char *str)
-{
-	if (str)
-		perror(str);
-	return(0);
-}
-
-int		ft_exiterror(char *str)
-{
-	if (str)
-		ft_putstr_fd(str, 1);
-	return(0);
-}
-
-t_parse	*ft_free_parse(t_parse *parse)
-{
-	t_parse	*temp;
-	int		i;
-
-	while (parse)
-	{
-		i = 0;
-		while (parse->args[i])
-		{
-			free(parse->args[i]);
-			i++;
-		}
-		free(parse->args);
-		temp = parse;
-		parse = parse->next;
-		free(temp);
-	}
-	return (NULL);
-}
+#include "../minishell.h"
 
 void	ft_putstr_fd(char *str, int fd)
 {
@@ -43,7 +20,6 @@ void	ft_putstr_fd(char *str, int fd)
 	if (!str)
 		return ;
 	while (str[i])
-
 	{
 		write(fd, &str[i], 1);
 		i++;
@@ -88,19 +64,6 @@ char	*ft_strjoin(char *s1, char *s2, int dofree)
 	if (s1 && dofree == 1)
 		free(s1);
 	return (res);
-}
-
-void	ft_freedoubletab(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
 }
 
 int	ft_strncmp(char *s1, char *s2, int n)

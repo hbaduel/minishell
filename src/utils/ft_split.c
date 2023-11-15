@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 17:52:56 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/10/25 10:51:00 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/14 18:21:45 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static int	ft_numbstr(char *s, char c)
 {

@@ -1,6 +1,10 @@
 NAME = minishell
 
-SRC = main.c utils.c heredoc.c redir.c pipe.c utils2.c utils3.c quotes.c parsing.c ft_split.c ft_itoa.c builtin/env.c builtin/pwd.c builtin/echo.c builtin/unset.c builtin/export.c
+SRC = src/main.c \
+src/builtin/cd.c src/builtin/choosebuiltin.c src/builtin/echo.c src/builtin/env.c src/builtin/export.c src/builtin/printexport.c src/builtin/pwd.c src/builtin/unset.c \
+src/command/execcmd.c src/command/heredoc.c src/command/readterminal.c src/command/path.c\
+src/parsing/cut.c src/parsing/editline.c src/parsing/envp.c src/parsing/parsecmd.c src/parsing/parseredir.c src/parsing/parsing.c src/parsing/token.c src/parsing/checkline.c\
+src/utils/free.c src/utils/ft_itoa.c src/utils/ft_split.c src/utils/utils.c src/utils/utils2.c
 
 OBJS = ${SRC:%.c=%.o}
 

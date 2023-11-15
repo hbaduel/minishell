@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 18:32:41 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/08 13:56:52 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/14 18:21:44 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static int	ft_lennumb(long nb)
 {
