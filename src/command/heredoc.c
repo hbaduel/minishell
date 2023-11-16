@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:17:00 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/15 22:44:12 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/16 16:02:53 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int	ft_heredoc(char *terminal, char *limiter, char *next, t_data *data)
 		{
 			if (res)
 				free(res);
+			write(1, "\n", 1);
 			return (1);
 		}
 		if (ft_strcmp(heredoc, limiter) == 0)
