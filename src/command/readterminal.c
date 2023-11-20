@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:18:24 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/15 22:45:09 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/20 15:15:07 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ int	ft_rediropen(char *terminal, t_data *data)
 		if (redir->type == APPENDCOMP)
 			operror = ft_openfile(redir->args[1], data, 2);
 		if (redir->type == HDCOMPLET)
-			operror = ft_heredoc(terminal, redir->args[1], redir->args[2], data);
+			operror = \
+			ft_heredoc(terminal, redir->args[1], redir->args[2], data);
 		if (redir->type == INCOMPLET)
 			operror = ft_openfile(redir->args[1], data, 0);
 		redir = redir->next;
