@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   readterminal.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:18:24 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/20 15:15:07 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/21 11:07:04 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	ft_chooseaction(t_data *data, char *terminal)
 	pid_t	cpid;
 	int		didbuiltin;
 
+	signal(SIGQUIT, &ft_signalhandler);
 	if (data->ncmd == 1)
 	{
 		while (data->parse->type != CMD)

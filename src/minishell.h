@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:35:49 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/15 22:43:52 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/21 11:07:21 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	ft_pwd(t_data *data, int outfd, char **cmd);
 void	ft_echo(t_data *data, char **cmd, int outfd);
 void	ft_freedoubletab(char **tab);
 void	ft_env(t_data *data, int outfd, char **cmd);
+void	ft_signalhandler(int sig);
 void	ft_unset(t_data *data, char **cmd);
 void	ft_export(t_data *data, char **cmd, int outfd);
 void	ft_free_data(t_data *data);
