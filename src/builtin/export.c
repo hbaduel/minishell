@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:03:35 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/14 18:21:03 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/21 16:02:15 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,13 @@ void	ft_addenvp(t_data *data, char *name, char *cmd)
 	data->envp = ft_reallocenvpmore(data->envp, cmd, i);
 }
 
-int	ft_checkarg(char *name, int i, int isletter)
+int	ft_checkarg(char *name, int isletter)
 {
+	int	i;
+
+	i = 0;
 	if (!name[i])
-	{
-		ft_putstr_fd("export: not valid in this context: ", 1);
-		ft_putstr_fd(name, 1);
-		write(1, "\n", 1);
 		return (1);
-	}
 	while (name[i])
 	{
 		if (((name[i] >= 'A' && name[i] <= 'Z') || (name[i] >= 'a' && \
@@ -67,9 +65,9 @@ int	ft_checkarg(char *name, int i, int isletter)
 		&& name[i] <= 64) || (name[i] >= 91 && name[i] <= 96) || \
 		(name[i] >= 123 && name[i] <= 126))
 		{
-			ft_putstr_fd("export: not valid in this context: ", 1);
+			ft_putstr_fd("minishell: export: '", 1);
 			ft_putstr_fd(name, 1);
-			write(1, "\n", 1);
+			ft_putstr_fd("': not a valid identifier\n", 1);
 			return (1);
 		}
 		i++;
@@ -77,12 +75,31 @@ int	ft_checkarg(char *name, int i, int isletter)
 	return (0);
 }
 
+char	*ft_exportname(char *arg)
+{
+	char	*name;
+	int		i;
+
+	i = 0;
+	while (arg[i] != '=' && arg[i])
+		i++;
+	name = malloc(sizeof(char) * (i + 1));
+	i = 0;
+	while (arg[i] != '=' && arg[i])
+	{
+		name[i] = arg[i];
+		i++;
+	}
+	name[i] = '\0';
+	return (name);
+}
+
 void	ft_export(t_data *data, char **cmd, int outfd)
 {
 	char	*name;
 	int		i;
 
-	i = 1;
+	i = 0;
 	if (!cmd[1])
 	{
 		while (data->envp[i])
@@ -96,10 +113,10 @@ void	ft_export(t_data *data, char **cmd, int outfd)
 		data->status = 1;
 		return ;
 	}
-	while (cmd[i++])
+	while (cmd[++i])
 	{
-		name = ft_name(cmd[i]);
-		if (ft_checkarg(name, 0, 0) == 0)
+		name = ft_exportname(cmd[i]);
+		if (ft_checkarg(name, 0) == 0)
 			ft_addenvp(data, name, cmd[i]);
 		free(name);
 	}

@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:18:24 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/21 11:07:04 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/21 14:25:07 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void	ft_readterminal(t_data *data)
 
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN);
 		terminal = readline(data->display);
 		if (!terminal)
 		{

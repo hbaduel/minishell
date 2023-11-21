@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:35:49 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/21 11:07:21 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/21 15:39:55 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int		ft_strncmp(char *s1, char *s2, int n);
 int		ft_check_quote(char *str);
 int		ft_checkequal(char *env);
 int		ft_parseredir(t_parse *current, char *token);
+int		ft_checkname(char c, int pos);
 int		ft_heredoc(char *terminal, char *limiter, char *next, t_data *data);
 
 #endif

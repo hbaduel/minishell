@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cut.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:19:38 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/14 18:21:23 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/21 14:51:01 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ int	ft_cutsize(char *term, int *i, int *j)
 	char	delim;
 
 	*i = 0;
-	while (term[*i] != ' ' && term[*i] && term[*i] != '\n' \
-	&& term[*i] != '\t')
+	while (term[*i] != ' ' && term[*i] && term[*i] != '\t')
 	{
 		if (term[*i] == '\'' || term[*i] == '\"')
 		{

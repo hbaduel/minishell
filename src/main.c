@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 12:57:40 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/21 11:07:39 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/21 14:21:29 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ int	main(int argc, char **argv, char **envp)
 	ft_putstr_fd("                    \e[1;35mby hb\e[1;34madue\e[1;32ml ", 1);
 	ft_putstr_fd("and \e[1;33maand\e[1;31mrieu 🍗\n\n\n", 1);
 	signal(SIGINT, &ft_signalhandler);
-	signal(SIGQUIT, SIG_IGN);
 	data = malloc(sizeof(t_data));
 	ft_setupdata(data, envp);
 	ft_readterminal(data);
