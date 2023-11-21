@@ -15,6 +15,8 @@
 void	ft_signalhandler(int sig)
 {
 	kill(0, 0);
+	if (sig == SIGQUIT)
+		ft_putstr_fd("Quit (core dumped)\n", 1);
 	if (sig == SIGINT)
 	{
 		write(1, "\n", 1);
