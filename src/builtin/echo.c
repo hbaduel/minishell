@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:03:30 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/21 15:19:51 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/22 20:48:58 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_checkoptionecho(char **cmd, int *start)
 	int	i;
 
 	donl = 1;
-	while (ft_strncmp(cmd[*start], "-n", 2) == 0)
+	while (cmd[*start] && ft_strncmp(cmd[*start], "-n", 2) == 0)
 	{
 		i = 1;
 		while (cmd[*start][i] == 'n')
