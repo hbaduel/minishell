@@ -1,6 +1,8 @@
-### Minishell
+### <center>Minishell</center>
 
-[![hbaduel's 42 minishell Score](https://badge42.coday.fr/api/v2/clp5m5snf023301t6xzuyuuls/project/3352113)](https://github.com/Coday-meric/badge42)
+
+<center>[![hbaduel's 42 minishell Score](https://badge42.coday.fr/api/v2/clp5m5snf023301t6xzuyuuls/project/3352113)](https://github.com/Coday-meric/badge42)</center>
+
 
 ## The Project 💻
 
