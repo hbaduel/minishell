@@ -1,9 +1,5 @@
 ### <div align="center">Minishell</div>
 
-<div align="center">
-<a href="https://github.com/Coday-meric/badge42"><img src="https://badge42.coday.fr/api/v2/clp5m5snf023301t6xzuyuuls/project/3352113" alt="hbaduel's 42 minishell Score" /></a>
-</div>
-
 ## The Project 💻
 
 Minishell is a 2-person project in C coded as part of my schooling at 42 Perpignan.
@@ -19,3 +15,9 @@ He took care of the parsing, including redirects, quote management and command l
 
 We didn't want to do bonuses but there is a hidden one that we coded without knowing that it was a bonus: the management of double quotes in single quotes (or the opposite).
 However, this bonus only provides one point.
+
+
+
+<div align="center">
+<a href="https://github.com/Coday-meric/badge42"><img src="https://badge42.coday.fr/api/v2/clp5m5snf023301t6xzuyuuls/project/3352113" alt="hbaduel's 42 minishell Score" /></a>
+</div>
