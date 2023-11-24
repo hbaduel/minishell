@@ -6,25 +6,11 @@
 /*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 12:57:40 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/21 14:21:29 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/24 18:02:02 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_signalhandler(int sig)
-{
-	kill(0, 0);
-	if (sig == SIGQUIT)
-		ft_putstr_fd("Quit (core dumped)\n", 1);
-	if (sig == SIGINT)
-	{
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
 
 char	*ft_setupdisplay(t_data *data)
 {
@@ -111,7 +97,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_putstr_fd("\e[1;36m                                             ", 1);
 	ft_putstr_fd("                    \e[1;35mby hb\e[1;34madue\e[1;32ml ", 1);
 	ft_putstr_fd("and \e[1;33maand\e[1;31mrieu 🍗\n\n\n", 1);
-	signal(SIGINT, &ft_signalhandler);
+	signal(SIGINT, &ft_signalnewline);
 	data = malloc(sizeof(t_data));
 	ft_setupdata(data, envp);
 	ft_readterminal(data);

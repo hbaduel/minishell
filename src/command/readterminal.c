@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:18:24 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/21 14:25:07 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/24 18:02:30 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	ft_chooseaction(t_data *data, char *terminal)
 	pid_t	cpid;
 	int		didbuiltin;
 
-	signal(SIGQUIT, &ft_signalhandler);
+	signal(SIGQUIT, &ft_signalquit);
+	signal(SIGINT, &ft_signalquit);
 	if (data->ncmd == 1)
 	{
 		while (data->parse->type != CMD)
@@ -63,6 +64,7 @@ void	ft_chooseaction(t_data *data, char *terminal)
 	}
 	else if (data->ncmd > 1)
 		ft_pipe(data, data->parse, terminal);
+	signal(SIGINT, &ft_signalnewline);
 }
 
 int	ft_rediropen(char *terminal, t_data *data)

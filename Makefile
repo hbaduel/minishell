@@ -1,6 +1,6 @@
 NAME = minishell
 
-SRC = src/main.c \
+SRC = src/main.c src/signal.c\
 src/builtin/cd.c src/builtin/choosebuiltin.c src/builtin/echo.c src/builtin/env.c src/builtin/export.c src/builtin/printexport.c src/builtin/pwd.c src/builtin/unset.c \
 src/command/execcmd.c src/command/heredoc.c src/command/readterminal.c src/command/path.c\
 src/parsing/cut.c src/parsing/editline.c src/parsing/envp.c src/parsing/parsecmd.c src/parsing/parseredir.c src/parsing/parsing.c src/parsing/token.c src/parsing/checkline.c\
