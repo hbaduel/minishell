@@ -6,28 +6,63 @@
 /*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:03:26 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/15 15:06:59 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/24 20:57:44 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+char	*ft_changebackcd(char *oldpwd, char *arg, int nullreturn)
+{
+	char	*temp;
+	int		i;
+	int		j;
+
+	if (ft_strcmp(arg, "..") != 0 && nullreturn == 1)
+		return (NULL);
+	i = 0;
+	while (oldpwd[i])
+		i++;
+	while (oldpwd[i] != '/' && i != 0)
+		i--;
+	temp = malloc(sizeof(char) * (i + 1));
+	j = 0;
+	while (j < i)
+	{
+		temp[j] = oldpwd[j];
+		j++;
+	}
+	temp[j] = '\0';
+	return (temp);
+}
+
 void	ft_envpchange(t_data *data, char *env)
 {
+	char	*end;
 	char	*oldpwd;
 	char	*temp;
 
 	oldpwd = ft_getenv(data->envp, 0, ft_name("PWD"), NULL);
+	end = ft_changebackcd(oldpwd, env, 1);
 	if (oldpwd)
 	{
 		temp = ft_strjoin("OLDPWD=", oldpwd, 0);
-		free(oldpwd);
 		ft_addenvp(data, "OLDPWD", temp);
 		free(temp);
 	}
-	temp = ft_strjoin("PWD=", env, 0);
+	if (end)
+		temp = ft_strjoin("PWD=", end, 0);
+	else
+	{
+		temp = ft_strjoin("PWD=", oldpwd, 0);
+		temp = ft_strjoin(temp, "/", 1);
+		end = ft_changebackcd(env, env, 0);
+		temp = ft_strjoin(temp, end, 1);
+	}
 	ft_addenvp(data, "PWD", temp);
 	free(temp);
+	free(oldpwd);
+	free(end);
 }
 
 void	ft_openhome(t_data *data)
