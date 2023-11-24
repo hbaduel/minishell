@@ -17,7 +17,7 @@ char	**ft_reallocenvpmore(char **envp, char *new, int size)
 	char	**temp;
 	int		i;
 
-	temp = malloc(sizeof(char *) * (i + 1));
+	temp = malloc(sizeof(char *) * (size + 2));
 	i = 0;
 	while (envp[i])
 	{
