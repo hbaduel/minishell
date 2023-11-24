@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:19:44 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/14 19:35:46 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/24 21:24:31 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,71 +101,3 @@ t_parse	*ft_parse(char *terminal, t_data *data)
 	free(current);
 	return (ft_checkredir(data->parse, data->parse));
 }
-
-// int main(int argc, char **argv, char **envp)
-// {
-//     t_data  *data;
-//     t_parse *test;
-//     t_parse *temp;
-//     int i;
-
-// 	if (argc == 1)
-// 	{
-// 		printf("tu as oublié un arg avec a.out");
-// 		return (0);
-// 	}
-//     data = malloc(sizeof(t_data));
-//     data->ncmd = 0;
-//     i = 0;
-// 	while (envp[i])
-// 		i++;
-// 	data->envp = malloc(sizeof(char *) * (i + 1));
-// 	i = 0;
-// 	while (envp[i])
-// 	{
-// 		data->envp[i] = ft_strdup(envp[i]);
-// 		i++;
-// 	}
-// 	data->envp[i] = NULL;
-//     data->status = 0;
-//     data->parse = ft_parse(argv[1], data);
-//     test = data->parse;
-//     while(data->parse)
-//     {
-//         printf("Type : %d\n", data->parse->type);
-//         i = 0;
-//         while(data->parse->args[i])
-//         {
-//             printf("%s", data->parse->args[i]);
-//             if (data->parse->args[i + 1])
-//                 printf("\n");
-//             i++;
-//         }
-//         printf("\n");
-//         printf("\n");
-//         data->parse = data->parse->next;
-//     }
-//     printf("NCMD : %d\n", data->ncmd);
-//     while (test)
-// 	{
-// 		i = 0;
-// 		while (test->args[i])
-// 		{
-// 			free(test->args[i]);
-// 			i++;
-// 		}
-// 		free(test->args);
-// 		temp = test;
-// 		test = test->next;
-// 		free(temp);
-// 	}
-//     i = 0;
-//     while (data->envp[i])
-//     {
-//         free(data->envp[i]);
-//         i++;
-//     }
-//     free(data->envp);
-//     free(data);
-//     return (0);
-// }
