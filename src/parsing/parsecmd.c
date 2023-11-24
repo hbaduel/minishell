@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 14:59:02 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/14 18:21:30 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/24 21:22:54 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ t_parse	*ft_parsecmdarg(t_data *data, t_parse *current, char *token)
 		free(current->next);
 		return (current);
 	}
-	else if ((current->previous->type >= 7 && \
-	current->previous->type <= 10) && data->pipe_detector == 0)
+	else if ((current->previous->type >= 5 && \
+	current->previous->type <= 8) && data->pipe_detector == 0)
 	{
-		temp = current;
+		temp = current->previous;
 		while (temp && temp->type != CMD)
 			temp = temp->previous;
 		temp->args = ft_reallocargs(temp, token);

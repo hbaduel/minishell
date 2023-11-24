@@ -6,7 +6,7 @@
 /*   By: hbaduel <hbaduel@student.42perpignan.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 13:01:39 by hbaduel           #+#    #+#             */
-/*   Updated: 2023/11/14 18:21:51 by hbaduel          ###   ########.fr       */
+/*   Updated: 2023/11/24 21:21:07 by hbaduel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,11 @@ char	**ft_reallocargs(t_parse *current, char *token)
 	new_args = malloc(sizeof(char *) * (current_size + 2));
 	while (current->args[i])
 	{
-		new_args[i] = current->args[i];
+		new_args[i] = ft_strdup(current->args[i]);
 		i++;
 	}
 	new_args[i] = ft_strdup(token);
 	new_args[i + 1] = NULL;
-	free(current->args);
+	ft_freedoubletab(current->args);
 	return (new_args);
 }
