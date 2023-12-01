@@ -1,4 +1,4 @@
-### <div align="center">Minishell</div>
+<h1 id="-minishell"><div align =center>Minishell</div></h1>
 
 ## The Project 💻
 
